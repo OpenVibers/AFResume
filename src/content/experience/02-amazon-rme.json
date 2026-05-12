@@ -1,0 +1,14 @@
+{
+  "company": "Amazon",
+  "role": "Reliability, Maintenance & Engineering",
+  "start": "2023",
+  "end": "2024",
+  "location": "ARS launch site",
+  "bullets": [
+    "Supported launch-stage ARS robotics and conveyance operations, monitoring automation flow, floor conditions, and equipment behavior.",
+    "Assisted troubleshooting across robotics, uptime, safety, and electro-mechanical issues in a high-change launch environment."
+  ],
+  "stack": ["Robotics", "Conveyance", "Electro-mechanical", "PLC awareness"],
+  "featured": true,
+  "order": 2
+}

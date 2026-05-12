@@ -1,0 +1,16 @@
+---
+import Base from "../layouts/Base.astro";
+---
+<Base title="404 — Lost in the woods">
+  <section class="container nf">
+    <div class="section-eyebrow">404</div>
+    <h1>Lost in the woods.</h1>
+    <p>That page doesn't exist — or maybe it's just hiding behind a Douglas fir.</p>
+    <a href="/" class="btn btn--primary">Take me home →</a>
+  </section>
+</Base>
+<style>
+  .nf { padding: 120px 0; text-align: center; }
+  .nf h1 { font-size: clamp(2.6rem, 7vw, 5rem); }
+  .nf p { max-width: 50ch; margin: 0 auto 1.5rem; }
+</style>

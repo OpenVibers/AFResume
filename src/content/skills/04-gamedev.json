@@ -1,0 +1,12 @@
+{
+  "group": "Game Dev / Product",
+  "order": 4,
+  "items": [
+    { "name": "Lua", "level": "core" },
+    { "name": "C# / C++", "level": "familiar" },
+    { "name": "Gameplay Systems", "level": "strong" },
+    { "name": "Creator Tooling", "level": "core" },
+    { "name": "UX & Product Thinking", "level": "core" },
+    { "name": "Source Engine", "level": "strong" }
+  ]
+}

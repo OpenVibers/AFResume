@@ -1,0 +1,14 @@
+{
+  "company": "Hobo Network (hobo.tools)",
+  "role": "Founder · Product Engineer · Streaming & Game Builder",
+  "start": "2022",
+  "end": "Present",
+  "bullets": [
+    "Built and operate the Hobo Network — 14 live services including HoboStreamer (live streaming + restream), HoboQuest (browser MMORPG + pixel canvas), HoboMaps (survival resource map), and 200+ tools across hobo.tools subdomains.",
+    "Developed HoboStreamer from scratch: WebRTC/HLS ingest, multi-destination RTMP restream, clips, auto-recorded VODs, real-time chat, voice channels, moderation, stream analytics, and paste/file sharing. Fully open source on GitHub.",
+    "Built HoboQuest browser MMORPG: server-authoritative tick loop, 7 skill systems, open-world PvP, dungeons, base building, daily quests, collaborative pixel canvas, and live leaderboards. Integrated directly into HoboStreamer for viewer gameplay during broadcasts."
+  ],
+  "stack": ["TypeScript", "Node.js", "Electron", "React", "Vue", "Lua", "C#", "C++"],
+  "featured": true,
+  "order": 4
+}

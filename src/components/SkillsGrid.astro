@@ -1,0 +1,50 @@
+---
+import { getCollection } from "astro:content";
+const groups = (await getCollection("skills")).sort((a, b) => a.data.order - b.data.order);
+---
+<section class="skills" id="skills">
+  <div class="container">
+    <div class="section-eyebrow"><i class="fa-solid fa-code"></i> Stack</div>
+    <h2 class="section-title"><i class="fa-solid fa-code"></i> Skills & tooling</h2>
+    <div class="skills__grid">
+      {groups.map((g) => (
+        <article class="card skills__card" data-reveal>
+          <h3>{g.data.group}</h3>
+          <ul>
+            {g.data.items.map((it) => (
+              <li class={`skills__item skills__item--${it.level ?? "strong"}`}>
+                <span>{it.name}</span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .skills__grid {
+    display: grid; gap: 18px;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  }
+  .skills__card h3 {
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .skills__card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .skills__item {
+    padding: 6px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    font: 500 .85rem var(--font-body);
+    color: var(--fg);
+    background: rgba(255,255,255,0.02);
+    transition: transform .2s var(--ease), border-color .2s var(--ease);
+  }
+  .skills__item:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .skills__item--core { border-color: rgba(76,201,176,.35); color: var(--accent); }
+  .skills__item--familiar { color: var(--dim); }
+</style>

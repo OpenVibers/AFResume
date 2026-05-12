@@ -1,0 +1,14 @@
+{
+  "group": "Engineering / Web",
+  "order": 2,
+  "items": [
+    { "name": "JavaScript / TypeScript", "level": "core" },
+    { "name": "Node.js", "level": "core" },
+    { "name": "Python", "level": "core" },
+    { "name": "PHP", "level": "strong" },
+    { "name": "React / Vue", "level": "strong" },
+    { "name": "Electron", "level": "strong" },
+    { "name": "HTML5 / CSS / SASS", "level": "core" },
+    { "name": "REST APIs", "level": "core" }
+  ]
+}

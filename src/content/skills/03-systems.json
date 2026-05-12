@@ -1,0 +1,13 @@
+{
+  "group": "Systems / Infrastructure",
+  "order": 3,
+  "items": [
+    { "name": "Linux (Debian/Ubuntu)", "level": "core" },
+    { "name": "Windows Server", "level": "strong" },
+    { "name": "NGINX / Apache", "level": "core" },
+    { "name": "MongoDB / Redis / MySQL", "level": "core" },
+    { "name": "Cloudflare", "level": "strong" },
+    { "name": "DDoS Resilience", "level": "strong" },
+    { "name": "Datacenter / 1U-2U builds", "level": "strong" }
+  ]
+}

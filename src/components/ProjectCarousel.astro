@@ -1,0 +1,135 @@
+---
+import { getCollection } from "astro:content";
+const all = await getCollection("projects", ({ data }) => data.featured);
+const featured = all.sort((a, b) => a.data.order - b.data.order);
+---
+<section class="featured" id="work">
+  <div class="container">
+    <div class="section-eyebrow"><i class="fa-solid fa-star"></i> Featured Work</div>
+    <h2 class="section-title"><i class="fa-solid fa-star"></i> Things I've shipped</h2>
+    <p class="featured__lead">
+      A rotating gallery of the products, tools, and agents I've built —
+      from Amazon ICQA analytics to the Hobo Network creator stack.
+    </p>
+
+    <div class="swiper featured-swiper">
+      <div class="swiper-wrapper">
+        {featured.map((p) => (
+          <div class="swiper-slide">
+            <a href={`/portfolio/${p.slug}`} class="featured-card card" data-reveal>
+              <div class="featured-card__media">
+                {p.data.image ? (
+                  <img src={p.data.image} alt={p.data.title} loading="lazy" decoding="async" />
+                ) : (
+                  <div class="featured-card__placeholder">
+                    <span>{p.data.title}</span>
+                  </div>
+                )}
+              </div>
+              <div class="featured-card__body">
+                <span class="chip">{p.data.category}</span>
+                <h3>{p.data.title}</h3>
+                <p>{p.data.summary}</p>
+                <ul class="featured-card__tech">
+                  {p.data.tech.slice(0, 5).map((t) => <li>{t}</li>)}
+                </ul>
+                <div class="featured-card__cta">
+                  <span><i class="fa-solid fa-arrow-up-right-from-square"></i> View Project</span>
+                </div>
+              </div>
+            </a>
+          </div>
+        ))}
+      </div>
+      <div class="swiper-pagination"></div>
+      <div class="swiper-button-prev"></div>
+      <div class="swiper-button-next"></div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .featured__lead { max-width: 60ch; }
+  .featured-swiper {
+    margin-top: 2rem;
+    padding: 20px 0 60px;
+    --swiper-theme-color: var(--accent);
+  }
+  .featured-card {
+    display: grid;
+    grid-template-rows: 220px auto;
+    height: 100%;
+    overflow: hidden;
+    color: var(--fg);
+    text-decoration: none;
+  }
+  .featured-card:hover { text-decoration: none; }
+  .featured-card__media {
+    position: relative;
+    background: linear-gradient(135deg, #14253b, #0f1a2b);
+    border-radius: 14px;
+    overflow: hidden;
+    margin: -8px -8px 18px;
+  }
+  .featured-card__media img {
+    width: 100%; height: 100%; object-fit: cover;
+  }
+  .featured-card__placeholder {
+    display: grid; place-items: center;
+    width: 100%; height: 100%;
+    font-family: var(--font-display);
+    font-size: 1.4rem;
+    color: var(--muted);
+    background:
+      radial-gradient(circle at 30% 30%, rgba(76,201,176,.25), transparent 60%),
+      radial-gradient(circle at 70% 70%, rgba(122,162,247,.25), transparent 60%),
+      var(--bg-3);
+  }
+  .featured-card__body h3 {
+    margin: .6rem 0 .4rem;
+    font-size: 1.4rem;
+  }
+  .featured-card__tech {
+    list-style: none; padding: 0; margin: 1rem 0 0;
+    display: flex; gap: 6px; flex-wrap: wrap;
+  }
+  .featured-card__tech li {
+    font: 500 .72rem var(--font-mono);
+    color: var(--dim);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 2px 8px;
+  }
+  .featured-card__cta {
+    margin-top: 1rem;
+    font: 600 0.85rem var(--font-body);
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  .featured-card__cta i { font-size: 0.8rem; }
+</style>
+
+<script>
+  const swiperScript = document.createElement("script");
+  swiperScript.src = "/assets/vendor/swiper/swiper-bundle.min.js";
+  swiperScript.onload = () => {
+    // @ts-ignore
+    new window.Swiper(".featured-swiper", {
+      slidesPerView: 1.05,
+      spaceBetween: 18,
+      centeredSlides: false,
+      loop: true,
+      autoplay: { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true },
+      pagination: { el: ".swiper-pagination", clickable: true },
+      navigation: { nextEl: ".swiper-button-next", prevEl: ".swiper-button-prev" },
+      keyboard: { enabled: true },
+      breakpoints: {
+        640: { slidesPerView: 2, spaceBetween: 22 },
+        1024: { slidesPerView: 3, spaceBetween: 26 },
+      },
+    });
+  };
+  document.head.appendChild(swiperScript);
+</script>

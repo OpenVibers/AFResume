@@ -1,0 +1,19 @@
+{
+  "name": "alexfrison-net",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview --host",
+    "vendor:fetch": "node scripts/fetch-vendor.mjs"
+  },
+  "dependencies": {
+    "@astrojs/mdx": "^3.1.9",
+    "@astrojs/sitemap": "^3.2.1",
+    "@fortawesome/fontawesome-free": "^7.2.0",
+    "astro": "^4.16.18",
+    "sharp": "^0.33.5"
+  }
+}

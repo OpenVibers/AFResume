@@ -1,0 +1,12 @@
+{
+  "company": "Devolved · GModStore · eBay",
+  "role": "Earlier Technical & Business Experience",
+  "start": "2012",
+  "end": "2015",
+  "bullets": [
+    "Built multiplayer game systems, monetized in-game economies, and digital products sold through ScriptFodder/GModStore.",
+    "Created graphics, support docs, e-commerce listings, moderation workflows, and ran online communities at scale."
+  ],
+  "stack": ["Lua", "PHP", "MySQL", "Photoshop", "Source Engine"],
+  "order": 6
+}

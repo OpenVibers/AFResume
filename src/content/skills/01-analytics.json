@@ -1,0 +1,12 @@
+{
+  "group": "Analytics / Data",
+  "order": 1,
+  "items": [
+    { "name": "SQL", "level": "core" },
+    { "name": "Excel / Power Query", "level": "core" },
+    { "name": "ICQA Reporting", "level": "core" },
+    { "name": "Defect Research", "level": "core" },
+    { "name": "Dashboards", "level": "strong" },
+    { "name": "Root Cause Analysis", "level": "core" }
+  ]
+}

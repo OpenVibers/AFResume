@@ -1,0 +1,15 @@
+{
+  "group": "Robotics · Hardware · Leadership",
+  "order": 5,
+  "items": [
+    { "name": "ARS Robotics Support", "level": "strong" },
+    { "name": "Electro-mechanical Troubleshooting", "level": "strong" },
+    { "name": "3D Printing (MP Select Mini)", "level": "strong" },
+    { "name": "Photoshop / Graphics", "level": "core" },
+    { "name": "Consultative Sales", "level": "strong" },
+    { "name": "Team Leadership & Coaching", "level": "strong" },
+    { "name": "Quota Attainment", "level": "strong" },
+    { "name": "Customer Retention", "level": "core" },
+    { "name": "Customer Support", "level": "core" }
+  ]
+}

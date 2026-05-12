@@ -1,0 +1,116 @@
+---
+import Base from "../layouts/Base.astro";
+import { getCollection } from "astro:content";
+
+const exp = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
+const skills = (await getCollection("skills")).sort((a, b) => a.data.order - b.data.order);
+---
+<Base title="Resume — Alex Frison">
+  <article class="resume container">
+    <header class="resume__head">
+      <div>
+        <h1>Alex Frison</h1>
+        <p class="resume__sub">Data Analyst · Software Engineer · Systems Builder</p>
+      </div>
+      <div class="resume__contact">
+        <div>Seattle / Arlington, WA</div>
+        <div><a href="mailto:alex@alexfrison.net">alex@alexfrison.net</a></div>
+        <div><a href="tel:+14253673997">(425) 367-3997</a></div>
+        <div><a href="https://alexfrison.net">alexfrison.net</a></div>
+      </div>
+    </header>
+
+    <section>
+      <h2>Profile</h2>
+      <p>
+        Versatile data analyst and systems-minded builder with experience across
+        Amazon ICQA analytics, Amazon RME robotics support, retail sales
+        leadership, and full-stack product development. Strong at turning
+        operational context into clear reporting, stakeholder-ready analysis,
+        practical tools, and process improvements.
+      </p>
+    </section>
+
+    <section>
+      <h2>Experience</h2>
+      {exp.map((e) => (
+        <div class="resume__job">
+          <div class="resume__job-head">
+            <strong>{e.data.role}</strong>
+            <span>{e.data.start} — {e.data.end}</span>
+          </div>
+          <div class="resume__company">{e.data.company}{e.data.location ? ` · ${e.data.location}` : ""}</div>
+          <ul>{e.data.bullets.map((b) => <li>{b}</li>)}</ul>
+        </div>
+      ))}
+    </section>
+
+    <section>
+      <h2>Core Stack</h2>
+      <div class="resume__skills">
+        {skills.map((g) => (
+          <div>
+            <h3>{g.data.group}</h3>
+            <p>{g.data.items.map((i) => i.name).join(" · ")}</p>
+          </div>
+        ))}
+      </div>
+    </section>
+
+    <section>
+      <h2>Education</h2>
+      <p>
+        Snohomish High School, WA — AP Statistics, Calculus, English, Creative
+        Writing, Spanish. Self-taught systems builder focused on analytics,
+        infrastructure, graphics, photography, and practical problem solving.
+      </p>
+    </section>
+
+    <p class="resume__print">
+      <a href="/Alex_Frison_Resume.pdf" class="btn btn--primary">Download PDF</a>
+      <button onclick="window.print()" class="btn">Print</button>
+    </p>
+  </article>
+</Base>
+
+<style>
+  .resume { padding: 60px 0 80px; max-width: 880px; }
+  .resume__head {
+    display: flex; justify-content: space-between; align-items: flex-end; gap: 18px;
+    flex-wrap: wrap;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 28px;
+  }
+  .resume__head h1 { font-size: 2.6rem; margin: 0; }
+  .resume__sub { color: var(--accent); margin: .4rem 0 0; }
+  .resume__contact { text-align: right; color: var(--muted); font-size: .92rem; line-height: 1.7; }
+  .resume section { padding: 18px 0; border-top: 1px solid var(--border); }
+  .resume section:first-of-type { border-top: 0; }
+  .resume h2 {
+    font-family: var(--font-display); font-size: 1rem;
+    text-transform: uppercase; letter-spacing: .14em; color: var(--accent);
+    margin-bottom: 1rem;
+  }
+  .resume__job { margin-bottom: 1.2rem; }
+  .resume__job-head { display: flex; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+  .resume__job-head strong { color: var(--fg); }
+  .resume__job-head span { color: var(--dim); font-family: var(--font-mono); font-size: .85rem; }
+  .resume__company { color: var(--muted); margin: .2rem 0 .5rem; }
+  .resume__job ul { margin: 0; padding-left: 1.2rem; color: var(--muted); }
+  .resume__skills { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .resume__skills h3 { font-family: var(--font-mono); font-size: .85rem; color: var(--accent); text-transform: uppercase; letter-spacing: .08em; margin: 0 0 .3rem; }
+  .resume__skills p { margin: 0; }
+  .resume__print { display: flex; gap: 10px; margin-top: 2rem; }
+  @media (max-width: 600px) { .resume__skills { grid-template-columns: 1fr; } }
+
+  @media print {
+    body { background: #fff !important; color: #000 !important; }
+    header, footer, .resume__print, .marquee, .skip-link, .nav { display: none !important; }
+    .resume { max-width: 100%; padding: 0; }
+    .resume h2 { color: #000; }
+    .resume__sub, .resume__company, .resume__job ul, .resume p { color: #222 !important; }
+    .resume__contact a, .resume__head h1 { color: #000 !important; }
+    .resume section { border-color: #ccc !important; }
+  }
+</style>

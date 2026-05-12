@@ -1,0 +1,65 @@
+---
+import { getCollection } from "astro:content";
+const items = (await getCollection("experience"))
+  .sort((a, b) => a.data.order - b.data.order);
+---
+<section class="exp" id="experience">
+  <div class="container">
+    <div class="section-eyebrow"><i class="fa-solid fa-briefcase"></i> Experience</div>
+    <h2 class="section-title"><i class="fa-solid fa-timeline"></i> A decade-plus of building</h2>
+    <ol class="exp__list">
+      {items.map((it) => (
+        <li class="exp__item card" data-reveal>
+          <div class="exp__dates">
+            <span class="exp__dot" aria-hidden="true"></span>
+            <span><i class="fa-regular fa-calendar-days"></i> {it.data.start} — {it.data.end}</span>
+          </div>
+          <div class="exp__body">
+            <h3>{it.data.role}</h3>
+            <div class="exp__company">
+              <i class="fa-solid fa-building"></i> {it.data.company}{it.data.location ? (<><i class="fa-solid fa-location-dot" style="margin-left:.5rem"></i> {it.data.location}</>) : ""}
+            </div>
+            <ul>{it.data.bullets.map((b) => <li>{b}</li>)}</ul>
+            {it.data.stack.length > 0 && (
+              <div class="exp__stack">
+                {it.data.stack.map((s) => <span class="chip">{s}</span>)}
+              </div>
+            )}
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .exp__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+  .exp__item {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 20px;
+  }
+  @media (max-width: 720px) {
+    .exp__item { grid-template-columns: 1fr; }
+  }
+  .exp__dates {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: .9rem;
+  }
+  .exp__dot {
+    width: 10px; height: 10px; border-radius: 50%;
+    background: var(--accent); box-shadow: 0 0 14px var(--accent);
+  }
+  .exp__body h3 {
+    font-family: var(--font-display);
+    font-size: 1.25rem; margin: 0 0 .3rem;
+  }
+  .exp__company { color: var(--accent); margin-bottom: .8rem; font-weight: 600; }
+  .exp__body ul {
+    margin: 0 0 1rem; padding-left: 1.1rem;
+    color: var(--muted); line-height: 1.7;
+  }
+  .exp__stack { display: flex; flex-wrap: wrap; gap: 6px; }
+</style>

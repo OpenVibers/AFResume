@@ -1,0 +1,35 @@
+---
+const tech = [
+  "Python", "TypeScript", "Node.js", "SQL", "Anthropic", "OpenAI", "Machine Learning", "Electron", "React", "Vue",
+  "Lua", "C#", "Linux", "NGINX", "MongoDB", "Redis", "FFmpeg", "Excel", "PHP", "TamperMonkey",
+];
+---
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__track">
+    {tech.concat(tech).map((t) => <span>{t}</span>)}
+  </div>
+</div>
+
+<style>
+  .marquee {
+    overflow: hidden;
+    border-block: 1px solid var(--border);
+    background: var(--surface);
+    backdrop-filter: blur(8px);
+  }
+  .marquee__track {
+    display: flex; gap: 56px; padding: 18px 0;
+    width: max-content;
+    animation: scroll 40s linear infinite;
+    font-family: var(--font-mono);
+    color: var(--muted);
+    font-size: .95rem;
+    letter-spacing: 0.04em;
+  }
+  .marquee__track span { white-space: nowrap; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  @keyframes scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+  }
+</style>

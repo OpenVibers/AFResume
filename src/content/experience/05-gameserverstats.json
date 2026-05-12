@@ -1,0 +1,13 @@
+{
+  "company": "GameServerStats, LLC",
+  "role": "Founder · Developer · Systems Admin",
+  "start": "2015",
+  "end": "Present",
+  "bullets": [
+    "Built analytics-focused web platforms tracking 200,000+ live game servers using JavaScript, Node.js, PHP, Python, SQL, MongoDB, Redis, HTML, and CSS.",
+    "Designed ingestion, search, dashboards, Linux infrastructure, scaling, DDoS resilience, support workflows, and business reporting.",
+    "Self-built and collocated 1U / 2U servers in datacenters; ran the entire LLC including licenses, taxes, and partner relations."
+  ],
+  "stack": ["Node.js", "PHP", "Python", "MongoDB", "MySQL", "Redis", "NGINX", "Linux"],
+  "order": 5
+}

@@ -1,0 +1,185 @@
+---
+const links = [
+  { href: "/#work",       label: "Work",       icon: "fa-solid fa-briefcase" },
+  { href: "/#experience", label: "Experience",  icon: "fa-solid fa-clock-rotate-left" },
+  { href: "/#skills",     label: "Skills",      icon: "fa-solid fa-code" },
+  { href: "/portfolio",   label: "Portfolio",   icon: "fa-solid fa-folder-open" },
+  { href: "/resume",      label: "Resume",      icon: "fa-solid fa-file-lines" },
+  { href: "/#contact",    label: "Contact",     icon: "fa-solid fa-envelope" },
+];
+---
+<header class="nav">
+  <div class="container nav__row">
+    <a href="/" class="nav__brand">
+      <span class="nav__mark">AF</span>
+      <span class="nav__name">Alex Frison</span>
+    </a>
+
+    <!-- Desktop nav links (hidden on mobile) -->
+    <nav class="nav__desktop" aria-label="Primary">
+      <ul class="nav__links">
+        {links.map((l) => (
+          <li><a href={l.href}><i class={l.icon}></i> {l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <!-- Right-side controls: theme toggle + hamburger -->
+    <div class="nav__end">
+      <button class="nav__toggle" data-theme-toggle aria-label="Toggle theme">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </button>
+      <button class="nav__burger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-drawer">
+        <i class="fa-solid fa-bars"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile drawer (all links) -->
+  <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
+    <nav aria-label="Mobile primary">
+      <ul class="nav__drawer-links">
+        {links.map((l) => (
+          <li><a href={l.href}><i class={l.icon}></i> {l.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .nav {
+    position: sticky; top: 0; z-index: 50;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    background: color-mix(in oklab, var(--bg) 70%, transparent);
+    border-bottom: 1px solid var(--border);
+  }
+  .nav__row {
+    display: flex; align-items: center; gap: 16px;
+    padding: 14px 0;
+  }
+
+  /* Brand */
+  .nav__brand {
+    display: flex; align-items: center; gap: 10px;
+    color: var(--fg); text-decoration: none;
+    font-family: var(--font-display); font-weight: 700;
+    flex-shrink: 0;
+    margin-left:16px;
+  }
+  .nav__brand:hover { text-decoration: none; }
+  .nav__mark {
+    display: inline-grid; place-items: center;
+    width: 34px; height: 34px;
+    border-radius: 10px;
+    background: linear-gradient(135deg, var(--accent), var(--accent-3));
+    color: #06221c; font-size: 0.9rem; letter-spacing: -0.02em;
+  }
+
+  /* Desktop nav — fills middle, centered */
+  .nav__desktop {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+  }
+  .nav__links {
+    list-style: none; display: flex; gap: 22px;
+    margin: 0; padding: 0;
+  }
+  .nav__links a {
+    color: var(--muted);
+    font: 500 0.92rem var(--font-body);
+    text-decoration: none;
+    transition: color .2s var(--ease);
+    display: inline-flex; align-items: center; gap: 5px;
+    white-space: nowrap;
+  }
+  .nav__links a i { font-size: 0.82rem; opacity: 0.75; }
+  .nav__links a:hover { color: var(--fg); text-decoration: none; }
+
+  /* Right-side controls group — always floats right */
+  .nav__end {
+    display: flex; align-items: center; gap: 8px;
+    margin-left: auto;
+    flex-shrink: 0;
+    margin-right:20px;
+  }
+
+  /* Icon buttons (theme toggle + burger) */
+  .nav__toggle,
+  .nav__burger {
+    background: transparent; border: 1px solid var(--border);
+    color: var(--muted); padding: 8px; border-radius: 10px;
+    cursor: pointer; transition: all .2s var(--ease);
+    display: inline-grid; place-items: center;
+    width: 38px; height: 38px;
+  }
+  .nav__toggle:hover,
+  .nav__burger:hover { color: var(--fg); border-color: var(--border-strong); }
+  .nav__burger { font-size: 1rem; }
+
+  /* Hamburger hidden on desktop */
+  .nav__burger { display: none; }
+
+  /* Mobile drawer */
+  .nav__drawer {
+    overflow: hidden;
+    max-height: 0;
+    transition: max-height 0.3s var(--ease);
+    border-top: 1px solid transparent;
+  }
+  .nav__drawer.is-open {
+    max-height: 360px;
+    border-top-color: var(--border);
+  }
+  .nav__drawer-links {
+    list-style: none;
+    display: flex; flex-direction: column;
+    margin: 0; padding: 10px 0 14px;
+    gap: 2px;
+  }
+  .nav__drawer-links a {
+    display: flex; align-items: center; gap: 10px;
+    padding: 10px clamp(16px, 3vw, 28px);
+    color: var(--muted);
+    font: 500 0.95rem var(--font-body);
+    text-decoration: none;
+    transition: color .15s var(--ease), background .15s var(--ease);
+    border-radius: 8px;
+  }
+  .nav__drawer-links a i { font-size: 0.88rem; opacity: 0.75; width: 16px; text-align: center; }
+  .nav__drawer-links a:hover { color: var(--fg); background: var(--surface); }
+
+  /* Breakpoints */
+  @media (max-width: 860px) {
+    .nav__links { gap: 14px; }
+    .nav__links a { font-size: 0.86rem; }
+  }
+  @media (max-width: 680px) {
+    /* Hide desktop nav, show hamburger */
+    .nav__desktop { display: none; }
+    .nav__burger { display: inline-grid; }
+    .nav__name { display: none; }
+  }
+</style>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('.nav__burger');
+  const drawer = document.getElementById('nav-drawer');
+
+  burger?.addEventListener('click', () => {
+    const open = drawer?.classList.toggle('is-open');
+    burger.setAttribute('aria-expanded', String(open));
+    drawer?.setAttribute('aria-hidden', String(!open));
+  });
+
+  // Close drawer when a link inside is clicked
+  drawer?.querySelectorAll('a').forEach(a => {
+    a.addEventListener('click', () => {
+      drawer.classList.remove('is-open');
+      burger?.setAttribute('aria-expanded', 'false');
+      drawer.setAttribute('aria-hidden', 'true');
+    });
+  });
+</script>

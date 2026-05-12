@@ -1,0 +1,76 @@
+---
+import "../styles/global.css";
+import Nav from "../components/Nav.astro";
+import Footer from "../components/Footer.astro";
+
+interface Props {
+  title?: string;
+  description?: string;
+  image?: string;
+  canonical?: string;
+}
+
+const {
+  title = "Alex Frison — Software Engineer · Data Analyst · Builder",
+  description = "Alex Frison: Seattle-based data analyst, software engineer, and product builder. Amazon ICQA analytics, autonomous research agents, OpenVibe streaming products, and a decade of shipping web platforms.",
+  image = "/assets/img/og.png",
+  canonical,
+} = Astro.props;
+
+const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+---
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={pageUrl} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <meta name="theme-color" content="#0a1018" />
+
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:image" content={image} />
+  <meta property="og:url" content={pageUrl} />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css" />
+  <link rel="stylesheet" href="/assets/vendor/splitting/splitting.css" />
+  <link rel="stylesheet" href="/assets/vendor/swiper/swiper-bundle.min.css" />
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <Nav />
+  <main id="main"><slot /></main>
+  <Footer />
+
+  <script>
+    // Reveal-on-scroll
+    const io = new IntersectionObserver((entries) => {
+      for (const e of entries) {
+        if (e.isIntersecting) {
+          e.target.classList.add("in");
+          io.unobserve(e.target);
+        }
+      }
+    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
+    document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+
+    // Theme toggle
+    const KEY = "afnet-theme";
+    const saved = localStorage.getItem(KEY);
+    if (saved) document.documentElement.dataset.theme = saved;
+    document.addEventListener("click", (e) => {
+      const t = e.target as HTMLElement;
+      if (t.closest("[data-theme-toggle]")) {
+        const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+        document.documentElement.dataset.theme = next;
+        localStorage.setItem(KEY, next);
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "company": "Amazon",
+  "role": "Data Analyst — ICQA",
+  "start": "2024",
+  "end": "Present",
+  "location": "PAE2 · Arlington, WA",
+  "bullets": [
+    "Own SOX-compliance IRDR (Inventory Discrepancy Research Report) workflows — hand-researched 1,000+ inventory mismatches and built the data systems that support Sarbanes-Oxley audit requirements.",
+    "Built ICQA SQL and Excel reporting for inventory accuracy, discrepancy review, and defect visibility; surfaced findings in dashboards and recurring leadership reports.",
+    "Authored an Anthropic-powered SQL copilot that contextually references every available data table for analysts.",
+    "Built and shipped an autonomous root-cause-analysis bot that performs full end-to-end inventory research."
+  ],
+  "stack": ["SQL", "Excel", "Python", "Anthropic API", "TamperMonkey", "Power Query", "SOX Compliance"],
+  "featured": true,
+  "order": 1
+}

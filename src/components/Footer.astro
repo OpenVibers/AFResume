@@ -1,0 +1,27 @@
+---
+const year = new Date().getFullYear();
+---
+<footer class="foot">
+  <div class="container foot__row">
+    <small>© {year} Alex Frison · Built in the Pacific Northwest</small>
+    <small>
+      <a href="mailto:alex@alexfrison.net"><i class="fa-solid fa-envelope"></i> Alex@AlexFrison.net</a> ·
+      <a href="tel:+14253673997"><i class="fa-solid fa-phone"></i> (425) 367-3997</a> ·
+      <a href="https://github.com/HoboStreamer" rel="me noopener" target="_blank"><i class="fa-brands fa-github"></i></a> ·
+      <a href="https://www.linkedin.com/in/fris/" rel="me noopener" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
+    </small>
+  </div>
+</footer>
+<style>
+  .foot {
+    border-top: 1px solid var(--border);
+    padding: 28px 0;
+    color: var(--dim);
+  }
+  .foot__row {
+    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  }
+  .foot a { color: var(--muted); transition: color .2s; }
+  .foot a:hover { color: var(--accent); }
+  .foot a i { font-size: 0.9rem; }
+</style>

@@ -1,0 +1,23 @@
+---
+title: "Autonomous IRDR Root-Cause Bot"
+category: "amazon"
+summary: "Fully autonomous inventory root-cause-analysis agent that plans, gathers evidence, and writes a complete IRDR research report end-to-end — supporting SOX-compliant inventory accuracy."
+tech: ["Python", "Anthropic API", "Tool-use Agents", "TamperMonkey", "SQL", "SOX Compliance"]
+role: "Sole builder"
+year: "2025"
+image: "/assets/img/projects/irdr-bot-1.png"
+images: ["/assets/img/projects/irdr-bot-1.png", "/assets/img/projects/irdr-bot-2.png"]
+featured: true
+order: 2
+---
+
+IRDRs (Inventory Discrepancy Research Reports) are Amazon's mechanism for SOX-compliant inventory accuracy — every count mismatch must be investigated, root-caused, and documented to satisfy Sarbanes-Oxley financial controls. Built on top of 1,000+ hand-researched IRDRs in `IRDR_Research_Data.tsv`, this agent reproduces the full investigation loop a human analyst follows:
+
+1. **Plan** — read the cycle-count event and decide which signals to fetch.
+2. **Gather** — pull deviation logs, container history, and stower/scanner
+   records via internal tools.
+3. **Synthesize** — write a synopsis identifying the path, area, and root error
+   (Stow / Pick / Pack / Transship / Multi-scan / etc.).
+4. **Submit** — file the IRDR with the same structure managers expect.
+
+Cuts hours of manual investigation per defect down to seconds — and ensures every submission meets the documentation standard required for SOX audit trails.

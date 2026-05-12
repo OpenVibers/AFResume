@@ -1,0 +1,166 @@
+---
+---
+<section class="contact" id="contact">
+  <div class="container">
+    <div class="section-eyebrow"><i class="fa-solid fa-paper-plane"></i> Contact</div>
+    <h2 class="section-title"><i class="fa-solid fa-paper-plane"></i> Let's build something</h2>
+    <div class="contact__grid">
+      <div class="card contact__card">
+        <p class="contact__lead">
+          Open to data-analyst, software-engineering, and platform-builder roles
+          across the Pacific Northwest and remote. Always happy to chat shop.
+        </p>
+
+        <div class="contact__direct">
+          <a class="contact__btn contact__btn--primary" href="mailto:alex@alexfrison.net">
+            <i class="fa-solid fa-envelope"></i>
+            <span>Alex@AlexFrison.net</span>
+          </a>
+          <a class="contact__btn" href="tel:+14253673997">
+            <i class="fa-solid fa-phone"></i>
+            <span>(425) 367-3997</span>
+          </a>
+        </div>
+
+        <div class="contact__social">
+          <a class="contact__social-btn contact__social-btn--github" href="https://github.com/HoboStreamer" rel="me noopener" target="_blank">
+            <i class="fa-brands fa-github"></i>
+            <span>GitHub</span>
+          </a>
+          <a class="contact__social-btn contact__social-btn--linkedin" href="https://www.linkedin.com/in/fris/" rel="me noopener" target="_blank">
+            <i class="fa-brands fa-linkedin"></i>
+            <span>LinkedIn</span>
+          </a>
+          <a class="contact__social-btn contact__social-btn--steam" href="http://steamcommunity.com/id/HoboStreamer" rel="me noopener" target="_blank">
+            <i class="fa-brands fa-steam"></i>
+            <span>Steam</span>
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact__grid { display: grid; }
+
+  .section-title i {
+    color: var(--accent);
+    margin-right: 0.4rem;
+    font-size: 0.9em;
+  }
+
+  .contact__lead {
+    font-size: 1.1rem;
+    color: var(--fg);
+    margin-bottom: 1.8rem;
+  }
+
+  /* Direct contact buttons */
+  .contact__direct {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 2rem;
+  }
+
+  .contact__btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 24px;
+    border-radius: 12px;
+    font: 600 1rem var(--font-body);
+    text-decoration: none;
+    transition: all .2s var(--ease);
+    border: 2px solid var(--border);
+    color: var(--fg);
+    background: var(--bg-2);
+  }
+  .contact__btn i {
+    font-size: 1.15rem;
+    color: var(--accent);
+  }
+  .contact__btn--primary {
+    background: var(--accent);
+    color: #06221c;
+    border-color: var(--accent);
+  }
+  .contact__btn--primary i { color: #06221c; }
+  .contact__btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(76,201,176,.2);
+    text-decoration: none;
+  }
+  .contact__btn--primary:hover {
+    background: color-mix(in oklab, var(--accent) 85%, white);
+    border-color: color-mix(in oklab, var(--accent) 85%, white);
+  }
+
+  /* Social buttons */
+  .contact__social {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .contact__social-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px 28px;
+    border-radius: 14px;
+    font: 700 1.05rem var(--font-body);
+    text-decoration: none;
+    transition: all .2s var(--ease);
+    border: 2px solid transparent;
+    min-width: 150px;
+    justify-content: center;
+  }
+  .contact__social-btn i {
+    font-size: 1.6rem;
+    line-height: 1;
+  }
+  .contact__social-btn:hover {
+    transform: translateY(-3px);
+    text-decoration: none;
+  }
+
+  /* GitHub */
+  .contact__social-btn--github {
+    background: #24292e;
+    color: #fff;
+    border-color: #444d56;
+  }
+  .contact__social-btn--github:hover {
+    background: #2f363d;
+    box-shadow: 0 8px 24px rgba(0,0,0,.4);
+  }
+
+  /* LinkedIn */
+  .contact__social-btn--linkedin {
+    background: #0a66c2;
+    color: #fff;
+    border-color: #0a66c2;
+  }
+  .contact__social-btn--linkedin:hover {
+    background: #0b74d9;
+    box-shadow: 0 8px 24px rgba(10,102,194,.4);
+  }
+
+  /* Steam */
+  .contact__social-btn--steam {
+    background: linear-gradient(135deg, #1b2838, #2a475e);
+    color: #c7d5e0;
+    border-color: #4c6b84;
+  }
+  .contact__social-btn--steam:hover {
+    background: linear-gradient(135deg, #2a3f5f, #3d6d8e);
+    box-shadow: 0 8px 24px rgba(74,144,196,.3);
+  }
+
+  @media (max-width: 520px) {
+    .contact__social-btn { min-width: 130px; padding: 14px 20px; }
+    .contact__btn { padding: 12px 18px; font-size: .95rem; }
+  }
+</style>

@@ -1,0 +1,75 @@
+---
+import Base from "../layouts/Base.astro";
+import Hero from "../components/Hero.astro";
+import Marquee from "../components/Marquee.astro";
+import ProjectCarousel from "../components/ProjectCarousel.astro";
+import ProjectGrid from "../components/ProjectGrid.astro";
+import ExperienceTimeline from "../components/ExperienceTimeline.astro";
+import SkillsGrid from "../components/SkillsGrid.astro";
+import ContactBlock from "../components/ContactBlock.astro";
+---
+<Base>
+  <Hero />
+  <Marquee />
+
+  <section class="profile" id="about">
+    <div class="container profile__row">
+      <div data-reveal>
+        <div class="section-eyebrow"><i class="fa-solid fa-user"></i> Profile</div>
+        <h2 class="section-title"><i class="fa-solid fa-user"></i> A versatile builder</h2>
+        <p>
+          Versatile data analyst and systems-minded builder with experience
+          across <strong>Amazon ICQA analytics</strong>, <strong>Amazon RME
+          robotics support</strong>, retail sales leadership, and full-stack
+          product development. Strong at turning operational context into
+          clear reporting, stakeholder-ready analysis, practical tools, and
+          process improvements.
+        </p>
+        <p>
+          Tech-geek since 12, building computers and bleeding-edge hardware.
+          A decade running my own LLC, ten years tracking 200,000+ live game
+          servers, and a thousand-plus IRDRs personally researched at Amazon (SOX compliance).
+          <br/><br/>
+          I ship fast and keep what works.
+        </p>
+      </div>
+      <aside class="card profile__facts" data-reveal>
+        <h3><i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:.4rem"></i>Quick facts</h3>
+        <ul>
+          <li><strong><i class="fa-solid fa-location-dot"></i> Based</strong>Seattle / Arlington, WA</li>
+          <li><strong><i class="fa-solid fa-briefcase"></i> Open to</strong>Hybrid · Remote · On-site PNW</li>
+          <li><strong><i class="fa-solid fa-building-columns"></i> Founder</strong>GameServerStats, LLC</li>
+          <li><strong><i class="fa-solid fa-laptop-code"></i> Currently</strong>Amazon Data Analyst (ICQA)</li>
+          <li><strong><i class="fa-solid fa-hammer"></i> Building</strong>Hobo Network creator stack</li>
+        </ul>
+      </aside>
+    </div>
+  </section>
+
+  <ProjectCarousel />
+  <ProjectGrid />
+  <ExperienceTimeline />
+  <SkillsGrid />
+  <ContactBlock />
+</Base>
+
+<style>
+  .profile__row {
+    display: grid;
+    grid-template-columns: 1.6fr 1fr;
+    gap: clamp(20px, 4vw, 48px);
+    align-items: start;
+  }
+  @media (max-width: 880px) { .profile__row { grid-template-columns: 1fr; } }
+  .profile__facts h3 { font-family: var(--font-display); margin-bottom: .8rem; }
+  .profile__facts ul { list-style: none; padding: 0; margin: 0; }
+  .profile__facts li {
+    display: grid; grid-template-columns: 110px 1fr;
+    gap: 12px; padding: 8px 0;
+    border-top: 1px solid var(--border);
+    color: var(--muted);
+    font-size: .92rem;
+  }
+  .profile__facts li:first-child { border-top: 0; }
+  .profile__facts strong { color: var(--accent); font-family: var(--font-mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+</style>

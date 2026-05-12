@@ -1,0 +1,83 @@
+---
+import Base from "../../layouts/Base.astro";
+import { getCollection } from "astro:content";
+import type { GetStaticPaths } from "astro";
+
+export const getStaticPaths: GetStaticPaths = async () => {
+  const all = await getCollection("projects");
+  return all.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+};
+
+const { project } = Astro.props as any;
+const { Content } = await project.render();
+const d = project.data;
+---
+<Base title={`${d.title} — Alex Frison`} description={d.summary}>
+  <article class="proj-page container">
+    <a href="/portfolio" class="back">← All projects</a>
+    <header class="proj-page__head">
+      <span class="chip">{d.category}</span>
+      <h1>{d.title}</h1>
+      <p class="lead">{d.summary}</p>
+      <div class="meta">
+        {d.role && <div><strong>Role</strong>{d.role}</div>}
+        {d.year && <div><strong>Year</strong>{d.year}</div>}
+        {d.tech.length > 0 && <div><strong>Stack</strong>{d.tech.join(" · ")}</div>}
+      </div>
+      {(d.links?.live || d.links?.repo || d.links?.video) && (
+        <div class="links">
+          {d.links.live  && <a class="btn btn--primary" href={d.links.live}  target="_blank" rel="noopener">Live →</a>}
+          {d.links.repo  && <a class="btn"             href={d.links.repo}  target="_blank" rel="noopener">Repo</a>}
+          {d.links.video && <a class="btn"             href={d.links.video} target="_blank" rel="noopener">Video</a>}
+        </div>
+      )}
+    </header>
+
+    {d.image && (
+      <figure class="hero-img">
+        <img src={d.image} alt={d.title} loading="lazy" />
+      </figure>
+    )}
+
+    <div class="prose card">
+      <Content />
+    </div>
+
+    {d.images.length > 1 && (
+      <section class="gallery">
+        {d.images.map((src: string) => (
+          <figure><img src={src} alt={d.title} loading="lazy" /></figure>
+        ))}
+      </section>
+    )}
+  </article>
+</Base>
+
+<style>
+  .proj-page { padding: 60px 0 80px; max-width: 880px; }
+  .back { color: var(--muted); font-family: var(--font-mono); font-size: .85rem; }
+  .proj-page__head { padding: 18px 0 32px; }
+  .proj-page__head h1 { font-size: clamp(2rem, 5vw, 3rem); margin: .4rem 0; }
+  .lead { font-size: 1.15rem; color: var(--fg); max-width: 60ch; }
+  .meta {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px; margin: 1.4rem 0;
+  }
+  .meta div { color: var(--muted); font-size: .92rem; }
+  .meta strong { display: block; color: var(--accent); font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
+  .links { display: flex; gap: 10px; flex-wrap: wrap; }
+  .hero-img { margin: 0 0 32px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+  .hero-img img { width: 100%; height: auto; display: block; }
+  .prose { color: var(--fg); line-height: 1.75; font-size: 1.02rem; }
+  .prose :global(h2) { font-size: 1.3rem; margin-top: 1.4em; }
+  .prose :global(p) { color: var(--muted); }
+  .prose :global(strong) { color: var(--fg); }
+  .prose :global(ul) { color: var(--muted); }
+  .gallery {
+    margin-top: 32px;
+    display: grid; gap: 16px;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  }
+  .gallery figure { margin: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+  .gallery img { width: 100%; height: auto; }
+</style>
