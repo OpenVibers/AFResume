@@ -52,7 +52,7 @@
         <div class="hero__portrait-frame">
           <div class="hero__portrait-placeholder" role="img" aria-label="Portrait of Alex Frison">
             <img src="/assets/img/alex-cut1.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--a" id="portrait-a">
-            <img src="/assets/img/alex-cut2.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--b" id="portrait-b" aria-hidden="true">
+            <img src="/assets/img/alex-cut2.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--b" id="portrait-b" aria-hidden="true" loading="lazy">
           </div>
         </div>
       </div>
@@ -138,7 +138,7 @@
     position: absolute; inset: -10%;
     background: radial-gradient(closest-side, rgba(76,201,176,.35), transparent 70%);
     filter: blur(20px);
-    animation: breathe 5s ease-in-out infinite;
+    animation: breathe 8s ease-in-out infinite;
   }
   .hero__portrait-frame {
     position: relative;
@@ -148,7 +148,7 @@
     border: 1px solid var(--border-strong);
     background: var(--surface);
     box-shadow: var(--shadow-card), var(--shadow-glow);
-    animation: float 6s ease-in-out infinite;
+    animation: float 12s ease-in-out infinite;
   }
   .hero__portrait-placeholder { position: relative; width: 100%; height: 100%; overflow: hidden; }
   .hero__portrait-img {
@@ -180,7 +180,7 @@
   }
   @keyframes float {
     0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-8px); }
+    50%      { transform: translateY(-6px); }
   }
 
   .hero__metrics {

@@ -36,6 +36,43 @@ const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
   <meta property="og:image" content={image} />
   <meta property="og:url" content={pageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="robots" content="index, follow" />
+  <meta name="author" content="Alex Frison" />
+  <meta name="keywords" content="Alex Frison, Data Analyst, Software Engineer, Seattle, Arlington WA, Amazon ICQA, SQL, Python, TypeScript, Node.js, React, Full-Stack Developer, Autonomous Agents, AI Agent Builder, Systems Architect, SOX Compliance, Open Source, Pacific Northwest" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Person",
+    "name": "Alex Frison",
+    "url": "https://alexfrison.net",
+    "email": "alex@alexfrison.net",
+    "telephone": "+14253673997",
+    "image": "https://alexfrison.net/assets/img/alex-cut1.png",
+    "jobTitle": "Data Analyst · Software Engineer",
+    "description": "Seattle-area data analyst and full-stack software engineer with 10+ years shipping web platforms, autonomous analytics agents, and creator infrastructure. Currently open to new roles.",
+    "worksFor": {
+      "@type": "Organization",
+      "name": "Amazon"
+    },
+    "knowsAbout": [
+      "Data Analysis", "SQL", "Python", "TypeScript", "Node.js",
+      "Machine Learning", "Autonomous Agents", "Streaming Platforms",
+      "Systems Architecture", "SOX Compliance", "React", "MongoDB",
+      "Redis", "NGINX", "Linux", "Excel", "Power Query"
+    ],
+    "address": {
+      "@type": "PostalAddress",
+      "addressLocality": "Arlington",
+      "addressRegion": "WA",
+      "addressCountry": "US"
+    },
+    "sameAs": [
+      "https://github.com/HoboStreamer",
+      "https://www.linkedin.com/in/fris/"
+    ]
+  }
+  </script>
 
   <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css" />
   <link rel="stylesheet" href="/assets/vendor/splitting/splitting.css" />
