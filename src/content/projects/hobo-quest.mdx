@@ -1,16 +1,40 @@
 ---
 title: "HoboQuest"
 category: "hobo"
-summary: "Browser MMORPG and real-time collaborative pixel canvas — no downloads, no pay-to-win, just open a tab and play."
-tech: ["TypeScript", "WebSockets", "Canvas API", "Node.js", "PostgreSQL"]
-role: "Founder / Engine & Gameplay"
+summary: "Browser MMORPG with a custom isomorphic game engine, Source Engine-style lag compensation, and 4-instance server architecture — no downloads, open a tab and play."
+tech: ["JavaScript", "Node.js", "WebSockets", "Canvas API", "Express", "isomorphic compiler", "lag compensation", "Canvas 2D physics"]
+role: "Founder / Engine & Gameplay Engineer"
 year: "2023–Present"
 image: "/assets/img/projects/hobo-quest.png"
-links: { "live": "https://hobo.quest" }
+links: { "live": "https://hobo.quest", "github": "https://github.com/HoboStreamer/www.Hobo.Quest" }
 featured: true
 order: 12
 ---
 
-A persistent browser MMORPG and collaborative canvas running at [hobo.quest](https://hobo.quest). The MMORPG is a full open-world survival RPG in the browser: 512×512 tile world, 7 skills (Combat, Mining, Woodcutting, Fishing, Crafting, Building, Cooking), PvP, dungeons, base building, daily quests, and leaderboards — all server-authoritative with client-side prediction.
+A persistent browser MMORPG built on a custom-engineered isomorphic game engine — no Unity, no Godot, no game framework. Everything from the physics and collision system to the multiplayer protocol was written from scratch.
 
-The canvas is a separate 512×512 real-time pixel art board for collaborative art and territory battles. Integrated live on HoboStreamer so viewers can play together during broadcasts.
+**Custom isomorphic compile pipeline.** All game logic lives in a single `shared.js` file containing conditional compilation blocks (`/*IF_SERVER*/.../*IF_END*/`). A custom `compiler.js` transforms it into `server.js` and `public/client.js` — the same physics, entity, and world state logic runs on both sides, preventing desyncs by design. MD5 change detection skips unnecessary recompiles.
+
+**Source Engine-style lag compensation.** Real-time multiplayer uses client-side prediction with server reconciliation — the same methodology used in Counter-Strike and Valve's Source Engine. Movement and combat feel instant for the player while the server remains authoritative over all state.
+
+**Multi-instance server architecture.** A `server-master.js` orchestrator spawns four independent game-server processes (ports 9000–9003), each running a different map with its own ruleset:
+- Default world — PvP enabled, player building enabled
+- Central city — social hub with vendors; PvP disabled
+- Farm island — resource farming; PvP enabled, building disabled
+- Ship minigame — dedicated activity instance
+
+**Canvas 2D rendering engine.** Built a custom Canvas 2D rendering layer (`lib/c2d.js`) with a full 2D separating-axis theorem (SAT) collision detection system, polygon/circle collision, voronoi region edge detection, and frame-accurate hit resolution — no third-party physics library.
+
+**Open-world survival systems.** Tile-based 512×512 open world with:
+- **Building**: place and upgrade walls, doors, beds, tool cupboards, campfires, barbed wire
+- **Combat**: melee knockback, ranged pistol, arrows with ballistic gravity arc, NPC aggro with patrol/attack telegraph/hit flash
+- **Skills**: Woodcutting, Mining, Herbology, Attack, and more — persistent per player
+- **Economy**: inventory, crafting recipes, equipment slots, bank system, bus system for zone travel
+
+**In-game casino.** Scratch card and slot machine minigames with a credit balance system, SoundManager 2 audio integration, and server-validated game state.
+
+**Cross-platform input.** Mobile touch controls overlay (tap/joystick buttons) with runtime touch detection, plus gamepad detection with a controller configuration UI. Desktop WASD + mouse.
+
+**Integrated with HoboStreamer.** The game is embedded live in the streaming platform — viewers watch and play simultaneously, with chat bridged between the game and the stream.
+
+The collaborative pixel canvas is a separate 512×512 real-time art board for territory battles and group art, also accessible from [hobo.quest](https://hobo.quest).
