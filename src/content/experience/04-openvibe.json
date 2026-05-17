@@ -1,14 +1,15 @@
 {
-  "company": "Hobo Network (hobo.tools)",
-  "role": "Founder · Product Engineer · Streaming & Game Builder",
+  "company": "Hobo Network · OpenVibe",
+  "role": "Founder · Systems Architect · Principal Engineer",
   "start": "2022",
   "end": "Present",
   "bullets": [
-    "Built and operate the Hobo Network — 14 live services including HoboStreamer (live streaming + restream), HoboQuest (browser MMORPG + pixel canvas), HoboMaps (survival resource map), and 200+ tools across hobo.tools subdomains.",
-    "Developed HoboStreamer from scratch: WebRTC/HLS ingest, multi-destination RTMP restream, clips, auto-recorded VODs, real-time chat, voice channels, moderation, stream analytics, and paste/file sharing. Fully open source on GitHub.",
-    "Built HoboQuest browser MMORPG: server-authoritative tick loop, 7 skill systems, open-world PvP, dungeons, base building, daily quests, collaborative pixel canvas, and live leaderboards. Integrated directly into HoboStreamer for viewer gameplay during broadcasts."
+    "Sole architect and engineer on OpenVibe — a 15-microservice open-source platform kernel: distributed event bus, OIDC/OAuth2 identity provider, capability contract registry, media object store, live-streaming ingest and restream, real-time chat, billing ledger, AI/search backbone, and realtime infrastructure. Self-hosted alternative to Twitch + YouTube + Patreon + Discord. 16 phases documented; 11+ fully implemented with cutover runbook and migration tooling complete.",
+    "Built and operated HoboStreamer from scratch — a full live-streaming platform with WebRTC SFU, HLS, multi-destination RTMP restream (OBS → Twitch/YouTube/Kick simultaneously), auto-recorded VODs, clip detection, real-time chat with custom emotes, voice channels, stream analytics, comprehensive moderation tools, and an integrated browser game for viewers. Fully open source.",
+    "Built HoboQuest — a persistent server-authoritative browser MMORPG: 512×512 tile open world, 7 skill systems, PvP, dungeons, base building, daily quests, leaderboards, and a collaborative pixel canvas. Integrated live into HoboStreamer so viewers play alongside the broadcast.",
+    "Maintained hobo.tools — central SSO and OAuth2 identity network across 14 interconnected services, including shared auth, service registry, image processing, maps, audio, and cross-domain session management."
   ],
-  "stack": ["TypeScript", "Node.js", "Electron", "React", "Vue", "Lua", "C#", "C++"],
+  "stack": ["TypeScript", "Node.js", "Express", "SQLite", "PostgreSQL", "WebRTC", "WebSockets", "Redis", "OAuth2", "OIDC", "FFmpeg", "Lua", "C#", "React", "Vue"],
   "featured": true,
   "order": 4
 }

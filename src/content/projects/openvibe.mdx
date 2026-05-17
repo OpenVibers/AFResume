@@ -1,0 +1,33 @@
+---
+title: "OpenVibe"
+category: "hobo"
+summary: "Open-source creator platform kernel: 15+ microservices, distributed event bus, OIDC/OAuth2 identity, live streaming, media storage, billing ledger, AI backbone, and real-time infrastructure — sole architect and engineer across 16 documented phases."
+tech: ["Node.js", "TypeScript", "Express", "SQLite", "PostgreSQL", "WebRTC", "WebSockets", "Redis", "OAuth2", "OIDC", "FFmpeg", "REST APIs", "Event-Driven Architecture", "Microservices"]
+role: "Sole Architect & Principal Engineer"
+year: "2024–2026"
+links: { "repo": "https://github.com/HoboStreamer/OpenVibe-Temporary-MonoRepo" }
+featured: true
+order: 5
+---
+
+A fully open-source, self-hosted platform kernel designed to replace the Hobo Network and serve as a production-grade alternative to the entire creator economy stack — Twitch, YouTube, Patreon, Reddit, and Discord in a single deployable monorepo. Built by one person across 16 documented phases, with cutover runbook and migration tooling complete.
+
+**Services shipped (13 microservices):**
+
+- **openvibe-network** — Control plane: OIDC/OAuth2 identity provider, service registry, capability contract registry, user-module namespace API, policy engine, and host-aware routing across `auth.openvibe.network`, `api.openvibe.network`, `admin.openvibe.network`
+- **openre-stream** — RTMP ingest and multi-destination restream (OBS → Twitch / YouTube / Kick / any RTMP endpoint simultaneously)
+- **openvibe-live** — Live streaming frontend: SSR viewer surface, DVR, viewer analytics, stream presence
+- **openvibe-media** — Media object store: VODs, clips, thumbnails, stream snapshots, paste/file storage — with namespace registry, derivative pipeline, quota enforcement, and lifecycle audit log
+- **openvibe-chat** — Real-time chat: moderation, purges, bans, custom emotes, channel threading
+- **openvibe-community** — Forums, reactions, community posts, Discord-style channels, paste versioning
+- **openvibe-billing** — Credits ledger, tips, VIP status tiers, payout engine, SOX-style audit trail
+- **openvibe-ai** — AI/search backbone: autonomous content tagging, SEO generation, analyst copilot, embedding-based search
+- **openvibe-games** — Embedded browser game surface (HoboQuest integration, live viewer participation)
+- **openvibe-events** — Distributed event bus: full audit envelope (`event_id`, `trace_id`, `version`, `actor`), topic + subscription filtering, ack/retry work queue, dead-letter tables
+- **openvibe-realtime** — WebSocket hub, pub/sub presence layer, fan-out infrastructure
+- **openvibe-workers** — Task queue, scheduled jobs, background processors, queue-native pipeline
+- **openvibe-content** — Content workflows: publishing pipelines, moderation queue, product workflow seams
+
+**Shared packages:** `openvibe-contracts` (typed event schemas), `openvibe-sdk` (cross-service clients), `openvibe-persistence` (SQLite + PostgreSQL dual-mode with schema parity enforcement), `openvibe-queue`, `openvibe-runtime`, `openvibe-storage`, `openvibe-redis`, `openvibe-observability`
+
+**Phase completion:** 11+ of 16 phases fully implemented. Remaining phases paused at production-readiness stage — cutover runbook written, migration tooling from HoboStreamer/hobo.tools complete, schema drift checks green. Servers brought offline in May 2026 due to funding constraints during job search. The architecture is sound and the code is all there.
