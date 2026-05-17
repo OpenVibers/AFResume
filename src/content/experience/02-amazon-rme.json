@@ -1,14 +1,15 @@
 {
   "company": "Amazon",
-  "role": "Reliability, Maintenance & Engineering",
+  "role": "Amnesty Floor Monitor (AFM)",
   "start": "2023",
   "end": "2024",
-  "location": "ARS launch site",
+  "location": "Amazon Robotics launch site",
   "bullets": [
-    "Supported launch-stage ARS robotics and conveyance operations, monitoring automation flow, floor conditions, and equipment behavior.",
-    "Assisted troubleshooting across robotics, uptime, safety, and electro-mechanical issues in a high-change launch environment."
+    "Monitored Amazon Robotics (ARS) automation floor during launch-stage operations — enforcing amnesty zones, clearing obstructions, and maintaining safe pod/drive flow.",
+    "Investigated pod, drive unit, and workstation issues on the floor; escalated recurring defects and documented patterns to support process improvement.",
+    "Coordinated amnesty events, ensured safe robot re-entry after floor interventions, and communicated status to ops leadership in real time."
   ],
-  "stack": ["Robotics", "Conveyance", "Electro-mechanical", "PLC awareness"],
+  "stack": ["Amazon Robotics", "AFM protocols", "Floor safety", "Amnesty ops"],
   "featured": true,
   "order": 2
 }
