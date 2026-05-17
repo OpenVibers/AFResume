@@ -161,8 +161,8 @@ section { padding: clamp(60px, 10vw, 120px) 0; position: relative; }
 
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
-    animation-duration: .001ms !important;
-    transition-duration: .001ms !important;
+    animation: none !important;
+    transition-duration: 0.01s !important;
   }
   [data-reveal] { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
