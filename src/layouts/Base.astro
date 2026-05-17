@@ -81,16 +81,25 @@ const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
   <Footer />
 
   <script>
-    // Reveal-on-scroll
+    // Reveal-on-scroll — Web Animations API so OS reduced-motion can't suppress it
     const io = new IntersectionObserver((entries) => {
       for (const e of entries) {
         if (e.isIntersecting) {
-          e.target.classList.add("in");
-          io.unobserve(e.target);
+          const el = e.target as HTMLElement;
+          el.style.opacity = '1';
+          el.style.transform = 'none';
+          el.animate(
+            [
+              { opacity: 0, transform: 'translateY(24px)' },
+              { opacity: 1, transform: 'translateY(0)' }
+            ],
+            { duration: 600, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
+          );
+          io.unobserve(el);
         }
       }
-    }, { rootMargin: "0px 0px -10% 0px", threshold: 0.05 });
-    document.querySelectorAll("[data-reveal]").forEach((el) => io.observe(el));
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 
     // Theme toggle
     const KEY = "afnet-theme";
