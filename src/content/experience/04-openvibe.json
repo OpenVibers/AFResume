@@ -2,7 +2,7 @@
   "company": "Hobo Network · OpenVibe",
   "role": "Founder · Systems Architect · Principal Engineer",
   "start": "2022",
-  "end": "Present",
+  "end": "2025",
   "bullets": [
     "Sole architect and engineer on OpenVibe — a 15-microservice open-source platform kernel: distributed event bus, OIDC/OAuth2 identity provider, capability contract registry, media object store, live-streaming ingest and restream, real-time chat, billing ledger, AI/search backbone, and realtime infrastructure. Self-hosted alternative to Twitch + YouTube + Patreon + Discord. 16 phases documented; 11+ fully implemented with cutover runbook and migration tooling complete.",
     "Built and operated HoboStreamer from scratch — a full live-streaming platform with WebRTC SFU, HLS, multi-destination RTMP restream (OBS → Twitch/YouTube/Kick simultaneously), auto-recorded VODs, clip detection, real-time chat with custom emotes, voice channels, stream analytics, comprehensive moderation tools, and an integrated browser game for viewers. Fully open source.",
