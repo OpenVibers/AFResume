@@ -52,7 +52,7 @@ import ContactBlock from "../components/ContactBlock.astro";
           <li><strong><i class="fa-solid fa-briefcase"></i> Open to</strong>Hybrid · Remote · On-site PNW</li>
           <li><strong><i class="fa-solid fa-building-columns"></i> Founder</strong>GameServerStats, LLC</li>
           <li><strong><i class="fa-solid fa-laptop-code"></i> Last role</strong>Amazon · Data Analyst (ICQA)</li>
-          <li><strong><i class="fa-solid fa-magnifying-glass"></i> Seeking</strong>Analyst · Engineer · Builder roles</li>
+          <li><strong><i class="fa-solid fa-magnifying-glass"></i> Seeking</strong><span class="seek-groups"><span class="seek-group"><i class="fa-solid fa-chart-line"></i> Analyst · Data Engineer · BI</span><span class="seek-group"><i class="fa-solid fa-server"></i> IT · Systems · Robotics · Technician</span><span class="seek-group"><i class="fa-solid fa-people-group"></i> Sales · Leadership · Management</span><span class="seek-group"><i class="fa-solid fa-hammer"></i> Builder · Architect · Maker</span></span></li>
         </ul>
       </aside>
     </div>
@@ -84,6 +84,10 @@ import ContactBlock from "../components/ContactBlock.astro";
   }
   .profile__facts li:first-child { border-top: 0; }
   .profile__facts strong { color: var(--accent); font-family: var(--font-mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+
+  .seek-groups { display: flex; flex-direction: column; gap: 3px; }
+  .seek-group { font-size: .82rem; color: var(--muted); }
+  .seek-group i { color: var(--accent); margin-right: .25rem; font-size: .75rem; }
 
   .profile-para {
     display: flex;
