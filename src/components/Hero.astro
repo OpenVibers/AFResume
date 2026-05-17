@@ -25,9 +25,10 @@
         <span class="hero__rotator" aria-live="polite"><i class="fa-solid fa-chart-line"></i> Data Analyst</span>
       </p>
       <p class="hero__lead">
-        Systems architect and data analyst with a decade of shipping — from
-        SOX-compliance tooling and autonomous AI agents at Amazon to a
-        15-microservice open-source creator platform, engineered solo.
+        Data analyst and systems architect with 10+ years of shipping — from
+        SOX-compliance tooling and autonomous AI agents at Amazon ICQA to a
+        solo-built 15-microservice open-source creator platform.
+        Open to new roles.
       </p>
       <div class="hero__cta">
         <a href="/#work" class="btn btn--primary"><i class="fa-solid fa-eye"></i> View Work</a>
@@ -52,7 +53,6 @@
         <div class="hero__portrait-frame">
           <div class="hero__portrait-placeholder" role="img" aria-label="Portrait of Alex Frison">
             <img src="/assets/img/alex-cut1.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--a" id="portrait-a">
-            <img src="/assets/img/alex-cut2.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--b" id="portrait-b" aria-hidden="true" loading="lazy">
           </div>
         </div>
       </div>
@@ -162,7 +162,6 @@
     transition: opacity 0.8s ease;
   }
   .hero__portrait-img--a { opacity: 1; }
-  .hero__portrait-img--b { opacity: 0; }
   @media (prefers-reduced-motion: reduce) {
     .hero__portrait-img { transition: none; }
   }
@@ -277,19 +276,7 @@
     }, { passive: true });
   }
 
-  // Portrait crossfader — both images already in DOM so no load blink
-  const imgA = document.getElementById("portrait-a") as HTMLImageElement | null;
-  const imgB = document.getElementById("portrait-b") as HTMLImageElement | null;
-  if (imgA && imgB && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-    let aActive = true;
-    setInterval(() => {
-      aActive = !aActive;
-      imgA.style.opacity = aActive ? "1" : "0";
-      imgB.style.opacity = aActive ? "0" : "1";
-      imgA.setAttribute("aria-hidden", aActive ? "false" : "true");
-      imgB.setAttribute("aria-hidden", aActive ? "true" : "false");
-    }, 15000);
-  }
+
 
   // tsparticles light rain/snow
   const ps = document.createElement("script");
