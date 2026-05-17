@@ -164,6 +164,10 @@ section { padding: clamp(60px, 10vw, 120px) 0; position: relative; }
     animation: none !important;
     transition-duration: 0.01s !important;
   }
+  /* Tech marquee is informational, not distracting — keep it scrolling */
+  .marquee__track {
+    animation: scroll 120s linear infinite !important;
+  }
   [data-reveal] { opacity: 1; transform: none; }
   html { scroll-behavior: auto; }
 }
