@@ -17,7 +17,8 @@ import ContactBlock from "../components/ContactBlock.astro";
       <div data-reveal>
         <div class="section-eyebrow"><i class="fa-solid fa-user"></i> Profile</div>
         <h2 class="section-title"><i class="fa-solid fa-user"></i> A versatile builder</h2>
-        <p>
+        <p class="profile-para">
+          <i class="fa-solid fa-microchip profile-para__icon"></i>
           Data analyst and systems architect with 10+ years of shipping — from
           <strong>SOX-compliance tooling at Amazon ICQA</strong> to autonomous
           AI research agents to a <strong>15-microservice open-source platform
@@ -25,10 +26,22 @@ import ContactBlock from "../components/ContactBlock.astro";
           operational context into production-grade tooling, stakeholder-ready
           analysis, and systems that actually scale.
         </p>
-        <p>
-          Tech-geek since 12, building computers and bleeding-edge hardware.
-          A decade running my own LLC, ten years tracking 200,000+ live game
-          servers, and a thousand-plus IRDRs personally researched at Amazon (SOX compliance).
+        <p class="profile-para">
+          <i class="fa-solid fa-store profile-para__icon"></i>
+          Before the tech career, I cut my teeth in retail sales at
+          <strong>Verizon Wireless</strong> — first as a Sales Representative,
+          then promoted to <strong>Assistant Manager</strong>. Quota-driven
+          environment, high customer volume, team coaching, and the kind of
+          communication pressure that either breaks you or makes you sharp.
+          It made me sharp. That foundation — reading people, closing clearly,
+          handling objections — still shows up every time I present data or
+          walk a stakeholder through a decision.
+        </p>
+        <p class="profile-para">
+          <i class="fa-solid fa-screwdriver-wrench profile-para__icon"></i>
+          Tech-geek since 12, building computers and chasing bleeding-edge
+          hardware. A decade running my own LLC, ten years tracking 200,000+
+          live game servers, and 1,000+ IRDRs personally researched at Amazon.
           I ship fast and keep what works.
         </p>
       </div>
@@ -71,4 +84,20 @@ import ContactBlock from "../components/ContactBlock.astro";
   }
   .profile__facts li:first-child { border-top: 0; }
   .profile__facts strong { color: var(--accent); font-family: var(--font-mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
+
+  .profile-para {
+    display: flex;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1.2rem;
+    line-height: 1.75;
+  }
+  .profile-para__icon {
+    flex-shrink: 0;
+    margin-top: .25rem;
+    font-size: 1rem;
+    color: var(--accent);
+    width: 1.2rem;
+    text-align: center;
+  }
 </style>
