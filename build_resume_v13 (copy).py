@@ -78,7 +78,7 @@ PROFILE = (
     "at Amazon ICQA</b>; built an Anthropic SQL copilot and autonomous "
     "root-cause-analysis agent in daily use. Solo architect of a "
     "<b>15-microservice open-source platform kernel</b> (OpenVibe), a "
-    "live-streaming stack (OpenVibe Live), and a 14-service identity network. "
+    "live-streaming stack (HoboStreamer), and a 14-service identity network. "
     "Previously <b>district top performer &rarr; Assistant Manager at Verizon "
     "Wireless</b>, coaching 4&ndash;8 reps."
 )
@@ -96,7 +96,7 @@ TOP_FEATURE_CARDS = [
         'SQL, Power Query, Excel, dashboards',
         'SOX-compliant IRDR research + LLM agents',
     ]),
-    ('\uf085', 'Robotics /<br/>AFM', [
+    ('\uf085', 'Robotics /<br/>RME &amp; AFM', [
         'Amazon Robotics (ARS) floor monitor',
         'Pod / drive / workstation troubleshooting',
     ]),
@@ -106,7 +106,7 @@ TOP_FEATURE_CARDS = [
     ]),
     ('\uf03d', 'Product /<br/>Engineering', [
         'OpenVibe: 15-service platform kernel',
-        'OpenVibe Live, HoboQuest, OpenVibe Network',
+        'HoboStreamer, HoboQuest, Hobo Tools',
     ]),
 ]
 
@@ -129,7 +129,7 @@ EXPERIENCE = [
             'Monitored Amazon Robotics (ARS) automation during launch-stage operations &mdash; enforced amnesty zones, cleared obstructions, kept pod and drive-unit flow safe.',
             'Investigated recurring pod, drive, and workstation defects on the floor; documented patterns and escalated to RME and ops leadership to drive process improvements.',
         ],
-        'stack': 'Amazon Robotics  ·  AFM protocols  ·  Floor safety  ·  Hardware diagnosis',
+        'stack': 'Amazon Robotics  ·  AFM protocols  ·  Floor safety  ·  Defect documentation',
     },
     {
         'title': 'Assistant Manager  /  Sales Representative',
@@ -144,11 +144,11 @@ EXPERIENCE = [
     {
         'title': 'Founder  ·  Systems Architect  ·  Principal Engineer',
         'date': '2022 - Present',
-        'company': 'OpenVibe Network',
+        'company': 'Hobo Network / OpenVibe',
         'bullets': [
             'Sole architect and engineer on <b>OpenVibe</b> &mdash; a 15-microservice open-source platform kernel: distributed event bus, OIDC/OAuth2 identity, media object store, live ingest + restream, real-time chat, billing ledger, AI/search backbone. Self-hosted alternative to Twitch + YouTube + Patreon + Discord. 16 phases documented, 11+ shipped.',
-            '<b>OpenVibe Live</b>: live-streaming platform from scratch &mdash; WebRTC SFU, HLS, multi-destination RTMP restream (OBS &rarr; Twitch / YouTube / Kick), auto-recorded VODs, clip detection, chat, voice channels, analytics, moderation, and an embedded in-stream browser game. Fully open source.',
-            '<b>HoboQuest</b> (browser MMORPG) + <b>OpenVibe Network</b> (SSO + OAuth2 across 14 services): custom isomorphic engine with Source-Engine-style client prediction, 4 live game instances; shared themes, notifications, cross-domain sessions.',
+            '<b>HoboStreamer</b>: live-streaming platform from scratch &mdash; WebRTC SFU, HLS, multi-destination RTMP restream (OBS &rarr; Twitch / YouTube / Kick), auto-recorded VODs, clip detection, chat, voice channels, analytics, moderation, and an embedded in-stream browser game. Fully open source.',
+            '<b>HoboQuest</b> (browser MMORPG) + <b>hobo.tools</b> (SSO + OAuth2 across 14 services): custom isomorphic engine with Source-Engine-style client prediction, 4 live game instances; shared themes, notifications, cross-domain sessions.',
         ],
         'stack': 'TypeScript  ·  Node.js  ·  Express  ·  PostgreSQL / SQLite  ·  Redis  ·  WebRTC  ·  WebSockets  ·  OAuth2 / OIDC  ·  FFmpeg  ·  Lua  ·  C#',
     },
@@ -176,7 +176,7 @@ EXPERIENCE = [
 
 PROJECTS = [
     ('\uf135', 'OpenVibe',
-     'github.com/openvibe',
+     'github.com/HoboStreamer/OpenVibe-Temporary-MonoRepo',
      '15-microservice open-source platform kernel &mdash; identity, event bus, media store, live ingest, billing, AI/search. Sole architect across 16 phases.',
      'https://github.com/HoboStreamer/OpenVibe-Temporary-MonoRepo'),
     ('\uf0eb', 'Autonomous IRDR Root-Cause Bot',
@@ -187,10 +187,10 @@ PROJECTS = [
      'Internal Amazon tool',
      'Anthropic-powered SQL assistant that auto-discovers tables / FKs / semantics and streams runnable, table-aware SQL for ICQA analysts.',
      'https://alexfrison.net/portfolio'),
-    ('\uf11b', 'HoboQuest',
-     'hobo.quest',
-     'Browser MMORPG with custom isomorphic engine &mdash; Source-Engine-style client prediction, pixel canvas, 4 live game instances. 100% open source.',
-     'https://hobo.quest'),
+    ('\uf03d', 'HoboStreamer',
+     'hobostreamer.com',
+     'Live streaming platform from scratch &mdash; WebRTC + HLS, multi-RTMP restream, VODs, clips, chat, voice, analytics. 100% open source.',
+     'https://hobostreamer.com'),
 ]
 
 CORE_STACK = [
@@ -295,7 +295,7 @@ def draw_header(c, x, y, w, h):
     # role chips, two rows
     row1 = [('\uf201', 'Analytics / BI'),
             ('\uf121', 'Full Stack Eng'),
-            ('\uf085', 'Robotics / AFM')]
+            ('\uf085', 'Robotics / RME')]
     row2 = [('\uf07a', 'Sales Leadership'),
             ('\uf0b1', 'Product Builder'),
             ('\uf135', 'Systems Architect')]
@@ -410,19 +410,18 @@ def product_card(c, x, y, w, h, glyph, title, url, desc, link):
     draw_icon_circle(c, x + 10, y + h - 28, 22, glyph, fg=BLUE, bg=CARD_BG,
                      font_size=11)
     tx = x + 38
-    para(c, title, ParagraphStyle('pt', parent=PRODUCT_TITLE, fontSize=10.5,
-                                  leading=11.4),
-         tx, y + h - 8, w - (tx - x) - 10, 16)
+    para(c, title, ParagraphStyle('pt', parent=PRODUCT_TITLE, fontSize=10.0,
+                                  leading=10.8),
+         tx, y + h - 8, w - (tx - x) - 10, 14)
     para(c, f'<u>{url}</u>',
-         ParagraphStyle('pu', parent=URL_STYLE, fontSize=8.0, leading=9.0),
-         tx, y + h - 22, w - (tx - x) - 10, 14)
+         ParagraphStyle('pu', parent=URL_STYLE, fontSize=7.6, leading=8.4),
+         tx, y + h - 22, w - (tx - x) - 10, 12)
     c.setStrokeColor(BLUE_LINE)
     c.setLineWidth(0.5)
     c.line(x + 12, y + h - 34, x + w - 12, y + h - 34)
-    _pd_s = ParagraphStyle('pd', parent=CARD_DESC, fontSize=8.4, leading=9.6)
-    _, _pd_h = Paragraph(desc, _pd_s).wrap(w - 24, h - 42)
-    _pd_vp = max(0.0, (h - 42 - _pd_h) / 2.0)
-    para(c, desc, _pd_s, x + 12, y + h - 38 - _pd_vp, w - 24, _pd_h + 2)
+    para(c, desc,
+         ParagraphStyle('pd', parent=CARD_DESC, fontSize=7.7, leading=8.8),
+         x + 12, y + h - 38, w - 24, h - 42)
     c.linkURL(link, (x, y, x + w, y + h), relative=0, thickness=0)
 
 
@@ -431,15 +430,14 @@ def core_card(c, x, y, w, h, glyph, title, desc):
     draw_icon_circle(c, x + 10, y + h - 28, 22, glyph, fg=BLUE, bg=CARD_BG,
                      font_size=11)
     para(c, title,
-         ParagraphStyle('ct2', parent=CARD_TITLE, fontSize=10.0, leading=11.2),
+         ParagraphStyle('ct2', parent=CARD_TITLE, fontSize=9.4, leading=10.6),
          x + 40, y + h - 8, w - 50, 18)
     c.setStrokeColor(BLUE_LINE)
     c.setLineWidth(0.5)
     c.line(x + 12, y + h - 32, x + w - 12, y + h - 32)
-    _cd_s = ParagraphStyle('cd2', parent=CARD_DESC, fontSize=8.4, leading=9.6)
-    _, _cd_h = Paragraph(desc, _cd_s).wrap(w - 24, h - 40)
-    _cd_vp = max(0.0, (h - 40 - _cd_h) / 2.0)
-    para(c, desc, _cd_s, x + 12, y + h - 36 - _cd_vp, w - 24, _cd_h + 2)
+    para(c, desc,
+         ParagraphStyle('cd2', parent=CARD_DESC, fontSize=7.7, leading=9.0),
+         x + 12, y + h - 36, w - 24, h - 40)
 
 
 def links_strip(c, x, y, w, h, links):
@@ -537,7 +535,7 @@ def build(path):
                    'SELECTED PROJECTS  ·  LIVE EXAMPLES', '\uf0c1', h=24)
     y -= 6
     pw = (PAGE_W - 2 * margin - 10) / 2
-    ph = 72
+    ph = 70
     for idx, prj in enumerate(PROJECTS):
         col = idx % 2
         row = idx // 2
@@ -545,14 +543,14 @@ def build(path):
         py = y - 6 - row * (ph + 6) - ph
         product_card(c, px, py, pw, ph, *prj)
     rows = (len(PROJECTS) + 1) // 2
-    y = y - 6 - rows * (ph + 6) - 22
+    y = y - 6 - rows * (ph + 6) - 18
 
     # core stack
     section_header(c, margin, y - 4, PAGE_W - 2 * margin,
                    'CORE TECHNICAL STACK', '\uf1c0', h=24)
     y -= 6
     cw = (PAGE_W - 2 * margin - 10) / 2
-    ch = 72
+    ch = 70
     for i in range(len(CORE_STACK)):
         col = i % 2
         row = i // 2
@@ -561,12 +559,12 @@ def build(path):
         g, t, d = CORE_STACK[i]
         core_card(c, cx, cy, cw, ch, g, t, d)
     n_rows = (len(CORE_STACK) + 1) // 2
-    y = y - 6 - n_rows * (ch + 6) - 22
+    y = y - 6 - n_rows * (ch + 6) - 18
 
     # education + links
     section_header(c, margin, y - 4, PAGE_W - 2 * margin,
                    'EDUCATION  ·  LEARNING  ·  ELSEWHERE', '\uf19d', h=24)
-    y -= 6
+    y -= 14
     edu_text = ('<b>Snohomish High School, WA</b> &mdash; AP Statistics, '
                 'Calculus, English, Creative Writing, Spanish. Self-taught '
                 'systems builder since age 12 &mdash; analytics, '

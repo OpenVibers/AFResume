@@ -5,3 +5,6 @@ dist/
 .env.*
 *.log
 .DS_Store
+__pycache__/
+Alex_Frison_Resume.pdf
+fontawesome-webfont.ttf
