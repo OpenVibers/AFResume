@@ -33,8 +33,7 @@
       </p>
       <div class="hero__cta">
         <a href="/#work" class="btn btn--primary"><i class="fa-solid fa-eye"></i> View Work</a>
-        <a href="/Alex_Frison_Resume_May2026.pdf" class="btn" aria-label="Download resume as PDF"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-        <a href="/Alex_Frison_Resume_2026.docx" class="btn" aria-label="Download resume as Word document" download><i class="fa-solid fa-file-word"></i> DOCX</a>
+        <a href="/Alex_Frison_Resume_May_2026.pdf" class="btn" aria-label="Download resume as PDF"><i class="fa-solid fa-file-pdf"></i> PDF</a>
         <a href="/#contact" class="btn"><i class="fa-solid fa-envelope"></i> Get in Touch</a>
       </div>
       <div class="hero__chips">
@@ -53,19 +52,15 @@
         <div class="hero__portrait-glow" aria-hidden="true"></div>
         <div class="hero__portrait-frame">
           <div class="hero__portrait-placeholder" role="img" aria-label="Portrait of Alex Frison">
-            <img src="/assets/img/alex-cut1.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--a" id="portrait-a">
+            <img src="/assets/img/me-cut1.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--a" id="portrait-a">
+            <img src="/assets/img/me-cut2.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--b" id="portrait-b">
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <div class="hero__metrics container" aria-label="At a glance">
-    <div><i class="fa-solid fa-server"></i><strong>200k+</strong><span>game servers tracked</span></div>
-    <div><i class="fa-solid fa-magnifying-glass-chart"></i><strong>1000+</strong><span>IRDRs researched (SOX compliance)</span></div>
-    <div><i class="fa-solid fa-calendar-days"></i><strong>10+</strong><span>years shipping</span></div>
-    <div><i class="fa-solid fa-wrench"></i><strong>50+</strong><span>tools built</span></div>
-  </div>
+
 </section>
 
 <style>
@@ -169,6 +164,7 @@
     transition: opacity 0.8s ease;
   }
   .hero__portrait-img--a { opacity: 1; }
+  .hero__portrait-img--b { opacity: 0; }
   .hero__portrait-tag {
     margin-top: 14px; text-align: center;
     color: var(--dim); font-size: .8rem;
@@ -186,35 +182,7 @@
     50%      { transform: translateY(-6px); }
   }
 
-  .hero__metrics {
-    margin-top: clamp(40px, 6vw, 72px);
-    display: grid; grid-template-columns: repeat(4, 1fr);
-    gap: 12px;
-    padding: 18px;
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    backdrop-filter: blur(14px);
-  }
-  .hero__metrics > div {
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-    padding: 8px;
-  }
-  .hero__metrics > div i {
-    font-size: 1.4rem;
-    color: var(--accent);
-    margin-bottom: 6px;
-    opacity: 0.85;
-  }
-  .hero__metrics strong {
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 3vw, 2rem);
-    color: var(--accent);
-  }
-  .hero__metrics span { font-size: .8rem; color: var(--muted); margin-top: 4px; }
-  @media (max-width: 600px) {
-    .hero__metrics { grid-template-columns: repeat(2, 1fr); }
-  }
+
 </style>
 
 <script>
@@ -260,6 +228,18 @@
         );
       };
     }, 2400);
+  }
+
+  // Portrait fade cycle (me-cut1 ↔ me-cut2, every 8s)
+  const imgA = document.getElementById("portrait-a") as HTMLImageElement | null;
+  const imgB = document.getElementById("portrait-b") as HTMLImageElement | null;
+  if (imgA && imgB) {
+    let showingA = true;
+    setInterval(() => {
+      showingA = !showingA;
+      imgA.style.opacity = showingA ? "1" : "0";
+      imgB.style.opacity = showingA ? "0" : "1";
+    }, 8000);
   }
 
   // Mountain parallax
