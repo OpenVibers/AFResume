@@ -113,7 +113,7 @@ TOP_FEATURE_CARDS = [
 EXPERIENCE = [
     {
         'title': 'Data Analyst — ICQA',
-        'date': '2024 - 2025',
+        'date': '2024 - March 2026',
         'company': 'Amazon  ·  PAE2, Arlington WA',
         'bullets': [
             'Own SOX-compliance IRDR workflow &mdash; <b>hand-researched 1,000+ inventory mismatches</b>, authored reporting satisfying Sarbanes-Oxley audit trails.',
