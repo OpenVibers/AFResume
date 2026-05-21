@@ -50,9 +50,17 @@ const links = [
 <style>
   .nav {
     position: sticky; top: 0; z-index: 50;
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    background: color-mix(in oklab, var(--bg) 70%, transparent);
+    background: transparent;
+    border-bottom: 1px solid transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    transition: background .35s ease, border-color .35s ease;
+    will-change: background;
+  }
+  .nav--scrolled {
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    background: color-mix(in oklab, var(--bg) 78%, transparent);
     border-bottom: 1px solid var(--border);
   }
   .nav__row {
@@ -128,6 +136,9 @@ const links = [
     max-height: 0;
     transition: max-height 0.3s var(--ease);
     border-top: 1px solid transparent;
+    background: color-mix(in oklab, var(--bg) 94%, transparent);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
   }
   .nav__drawer.is-open {
     max-height: 360px;
@@ -182,4 +193,13 @@ const links = [
       drawer.setAttribute('aria-hidden', 'true');
     });
   });
+
+  // Scroll-linked transparent → frosted glass
+  const navEl = document.querySelector('.nav') as HTMLElement | null;
+  const updateNav = () => {
+    const hero = document.querySelector('.hero');
+    navEl?.classList.toggle('nav--scrolled', window.scrollY > 40 || !hero);
+  };
+  window.addEventListener('scroll', updateNav, { passive: true });
+  updateNav();
 </script>
