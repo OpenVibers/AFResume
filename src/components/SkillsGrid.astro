@@ -5,7 +5,7 @@ const groups = (await getCollection("skills")).sort((a, b) => a.data.order - b.d
 <section class="skills" id="skills">
   <div class="container">
     <div class="section-eyebrow"><i class="fa-solid fa-code"></i> Stack</div>
-    <h2 class="section-title"><i class="fa-solid fa-code"></i> Skills & tooling</h2>
+    <h2 class="section-title">Skills & stack</h2>
     <div class="skills__grid">
       {groups.map((g) => (
         <article class="card skills__card" data-reveal>
@@ -28,23 +28,32 @@ const groups = (await getCollection("skills")).sort((a, b) => a.data.order - b.d
     display: grid; gap: 18px;
     grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
   }
+  .skills__card {
+    border-top: 2px solid rgba(76,201,176,0.25) !important;
+  }
   .skills__card h3 {
     font-family: var(--font-display);
-    font-size: 1.05rem;
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--accent);
     margin-bottom: 1rem;
+    letter-spacing: 0.01em;
   }
   .skills__card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .skills__item {
-    padding: 6px 12px;
+    padding: 5px 12px;
     border-radius: 8px;
     border: 1px solid var(--border);
-    font: 500 .85rem var(--font-body);
+    font: 500 .83rem var(--font-body);
     color: var(--fg);
     background: rgba(255,255,255,0.02);
-    transition: transform .2s var(--ease), border-color .2s var(--ease);
+    transition: transform .2s var(--ease), border-color .2s var(--ease), background .2s var(--ease);
   }
-  .skills__item:hover { transform: translateY(-2px); border-color: var(--accent); }
-  .skills__item--core { border-color: rgba(76,201,176,.35); color: var(--accent); }
-  .skills__item--familiar { color: var(--dim); }
+  .skills__item:hover { transform: translateY(-2px); border-color: rgba(76,201,176,0.4); background: rgba(76,201,176,0.05); }
+  .skills__item--core {
+    border-color: rgba(76,201,176,.32);
+    color: var(--accent);
+    background: rgba(76,201,176,.06);
+  }
+  .skills__item--familiar { color: var(--dim); border-color: var(--border); }
 </style>

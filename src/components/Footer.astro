@@ -2,26 +2,67 @@
 const year = new Date().getFullYear();
 ---
 <footer class="foot">
-  <div class="container foot__row">
-    <small>© {year} Alex Frison · Built in the Pacific Northwest</small>
-    <small>
-      <a href="mailto:alex@alexfrison.net"><i class="fa-solid fa-envelope"></i> Alex@AlexFrison.net</a> ·
-      <a href="tel:+14253673997"><i class="fa-solid fa-phone"></i> (425) 367-3997</a> ·
-      <a href="https://github.com/HoboStreamer" rel="me noopener" target="_blank"><i class="fa-brands fa-github"></i></a> ·
-      <a href="https://www.linkedin.com/in/fris/" rel="me noopener" target="_blank"><i class="fa-brands fa-linkedin"></i></a>
-    </small>
+  <div class="container foot__inner">
+    <div class="foot__brand">
+      <span class="foot__name">Alex Frison</span>
+      <span class="foot__sub">&copy; {year} &middot; Built in the Pacific Northwest</span>
+    </div>
+    <div class="foot__links">
+      <a href="mailto:alex@alexfrison.net" title="Email"><i class="fa-solid fa-envelope"></i> Alex@AlexFrison.net</a>
+      <a href="tel:+14253673997" title="Phone"><i class="fa-solid fa-phone"></i> (425) 367-3997</a>
+      <a href="https://github.com/HoboStreamer" rel="me noopener" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i> GitHub</a>
+      <a href="https://www.linkedin.com/in/fris/" rel="me noopener" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
+    </div>
   </div>
 </footer>
 <style>
   .foot {
     border-top: 1px solid var(--border);
-    padding: 28px 0;
+    padding: 40px 0;
     color: var(--dim);
+    background: linear-gradient(to top, rgba(76,201,176,0.02), transparent);
   }
-  .foot__row {
-    display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px;
+  .foot__inner {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 20px;
   }
-  .foot a { color: var(--muted); transition: color .2s; }
+  .foot__brand {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+  .foot__name {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1rem;
+    color: var(--fg);
+    letter-spacing: -0.01em;
+  }
+  .foot__sub {
+    font-size: 0.8rem;
+    color: var(--muted);
+  }
+  .foot__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 24px;
+    align-items: center;
+  }
+  .foot a {
+    color: var(--muted);
+    font-size: 0.85rem;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    transition: color .2s;
+    text-decoration: none;
+  }
   .foot a:hover { color: var(--accent); }
-  .foot a i { font-size: 0.9rem; }
+  .foot a i { font-size: 0.9em; }
+  @media (max-width: 540px) {
+    .foot__inner { flex-direction: column; align-items: flex-start; }
+  }
 </style>

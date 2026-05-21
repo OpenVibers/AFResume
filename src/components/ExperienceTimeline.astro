@@ -6,13 +6,13 @@ const items = (await getCollection("experience"))
 <section class="exp" id="experience">
   <div class="container">
     <div class="section-eyebrow"><i class="fa-solid fa-briefcase"></i> Experience</div>
-    <h2 class="section-title"><i class="fa-solid fa-timeline"></i> A decade-plus of building</h2>
+    <h2 class="section-title">A decade-plus of shipping</h2>
     <ol class="exp__list">
       {items.map((it) => (
         <li class="exp__item card" data-reveal>
           <div class="exp__dates">
             <span class="exp__dot" aria-hidden="true"></span>
-            <span><i class="fa-regular fa-calendar-days"></i> {it.data.start} — {it.data.end}</span>
+            <span><i class="fa-regular fa-calendar-days"></i> {it.data.start} — {it.data.end ?? 'Present'}</span>
           </div>
           <div class="exp__body">
             <h3>{it.data.role}</h3>
@@ -33,33 +33,49 @@ const items = (await getCollection("experience"))
 </section>
 
 <style>
-  .exp__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 18px; }
+  .exp__list { list-style: none; padding: 0; margin: 0; display: grid; gap: 16px; }
   .exp__item {
     display: grid;
     grid-template-columns: 200px 1fr;
-    gap: 20px;
+    gap: 24px;
+    align-items: start;
   }
   @media (max-width: 720px) {
-    .exp__item { grid-template-columns: 1fr; }
+    .exp__item { grid-template-columns: 1fr; gap: 10px; }
   }
   .exp__dates {
-    display: flex; align-items: center; gap: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 8px;
     color: var(--muted);
     font-family: var(--font-mono);
-    font-size: .9rem;
+    font-size: .8rem;
+    padding-top: 6px;
+    line-height: 1.6;
   }
   .exp__dot {
-    width: 10px; height: 10px; border-radius: 50%;
-    background: var(--accent); box-shadow: 0 0 14px var(--accent);
+    width: 9px; height: 9px; border-radius: 50%;
+    background: var(--accent);
+    box-shadow: 0 0 10px rgba(76,201,176,0.6), 0 0 24px rgba(76,201,176,0.25);
+    flex-shrink: 0;
+  }
+  .exp__body {
+    border-left: 2px solid rgba(76,201,176,0.15);
+    padding-left: 20px;
+  }
+  @media (max-width: 720px) {
+    .exp__body { border-left: none; padding-left: 0; border-top: 2px solid rgba(76,201,176,0.15); padding-top: 12px; }
   }
   .exp__body h3 {
     font-family: var(--font-display);
-    font-size: 1.25rem; margin: 0 0 .3rem;
+    font-size: 1.2rem; margin: 0 0 .3rem;
   }
-  .exp__company { color: var(--accent); margin-bottom: .8rem; font-weight: 600; }
+  .exp__company { color: var(--accent); margin-bottom: .8rem; font-size: 0.9rem; font-weight: 600; }
   .exp__body ul {
     margin: 0 0 1rem; padding-left: 1.1rem;
-    color: var(--muted); line-height: 1.7;
+    color: var(--muted); line-height: 1.75;
   }
+  .exp__body ul li { margin-bottom: 0.25rem; }
   .exp__stack { display: flex; flex-wrap: wrap; gap: 6px; }
 </style>

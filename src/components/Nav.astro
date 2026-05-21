@@ -54,14 +54,31 @@ const links = [
     border-bottom: 1px solid transparent;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
-    transition: background .35s ease, border-color .35s ease;
+    transition: background .4s ease, border-color .4s ease, box-shadow .4s ease;
     will-change: background;
   }
+  /* Frosted ice-glass on scroll */
   .nav--scrolled {
-    backdrop-filter: blur(14px);
-    -webkit-backdrop-filter: blur(14px);
-    background: color-mix(in oklab, var(--bg) 78%, transparent);
-    border-bottom: 1px solid var(--border);
+    backdrop-filter: blur(24px) saturate(180%);
+    -webkit-backdrop-filter: blur(24px) saturate(180%);
+    background: color-mix(in oklab, var(--bg) 68%, transparent);
+    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04), 0 8px 40px rgba(0, 0, 0, 0.38);
+  }
+  /* Brighter links when floating over hero (transparent state) */
+  .nav:not(.nav--scrolled) .nav__links a {
+    color: rgba(230, 237, 243, 0.88);
+  }
+  .nav:not(.nav--scrolled) .nav__links a:hover {
+    color: #fff;
+  }
+  .nav:not(.nav--scrolled) .nav__brand {
+    color: var(--fg);
+  }
+  .nav:not(.nav--scrolled) .nav__toggle,
+  .nav:not(.nav--scrolled) .nav__burger {
+    border-color: rgba(255, 255, 255, 0.15);
+    color: rgba(230, 237, 243, 0.8);
   }
   .nav__row {
     display: flex; align-items: center; gap: 16px;
