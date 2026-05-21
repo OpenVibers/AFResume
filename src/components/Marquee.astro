@@ -19,15 +19,20 @@ const tech = [
     backdrop-filter: blur(8px);
   }
   .marquee__track {
-    display: flex; gap: 56px; padding: 18px 0;
+    display: flex; gap: 0; padding: 16px 0;
     width: max-content;
     animation: scroll 80s linear infinite;
     font-family: var(--font-mono);
     color: var(--muted);
-    font-size: .95rem;
+    font-size: .88rem;
     letter-spacing: 0.04em;
   }
-  .marquee__track span { white-space: nowrap; }
+  .marquee__track span {
+    white-space: nowrap;
+    padding: 0 28px;
+    border-right: 1px solid var(--border);
+  }
+  .marquee__track span:last-child { border-right: none; }
   @media (hover: hover) {
     .marquee:hover .marquee__track { animation-play-state: paused; }
   }
