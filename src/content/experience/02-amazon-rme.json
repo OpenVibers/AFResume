@@ -5,9 +5,9 @@
   "end": "2024",
   "location": "Amazon Robotics launch site",
   "bullets": [
-    "Monitored Amazon Robotics (ARS) automation floor during launch-stage operations — enforcing amnesty zones, clearing obstructions, and maintaining safe pod/drive flow.",
-    "Investigated pod, drive unit, and workstation issues on the floor; escalated recurring defects and documented patterns to support process improvement.",
-    "Coordinated amnesty events, ensured safe robot re-entry after floor interventions, and communicated status to ops leadership in real time."
+    "Monitored the Amazon Robotics floor during launch operations — enforced amnesty zones, cleared obstructions, and kept pod/drive flow safe.",
+    "Investigated pod, drive unit, and workstation issues; documented recurring defects to drive process improvement.",
+    "Coordinated amnesty events and communicated floor status to ops leadership in real time."
   ],
   "stack": ["Amazon Robotics", "AFM protocols", "Floor safety", "Amnesty ops"],
   "featured": true,

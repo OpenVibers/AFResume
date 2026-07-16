@@ -25,10 +25,9 @@
         <span class="hero__rotator" aria-live="polite"><i class="fa-solid fa-chart-line"></i> Data Analyst</span>
       </p>
       <p class="hero__lead">
-        Data analyst, systems architect, and sales leader with 10+ years of shipping across industries — from
-        SOX-compliance tooling and autonomous AI agents at Amazon ICQA to a
-        solo-built 15-microservice open-source creator platform, with roots in
-        retail sales management at Verizon Wireless (Sales Rep → Assistant Manager).
+        Data analyst and full-stack builder with 10+ years of shipping —
+        SOX-compliance tooling and autonomous AI agents at Amazon, a solo-built
+        15-microservice creator platform, and sales leadership at Verizon.
         Open to new roles.
       </p>
       <div class="hero__cta">
@@ -39,11 +38,9 @@
       <div class="hero__chips">
         <span class="chip"><i class="fa-solid fa-chart-line"></i> Analytics / BI</span>
         <span class="chip"><i class="fa-solid fa-code"></i> Full-Stack Eng</span>
-        <span class="chip"><i class="fa-solid fa-robot"></i> Autonomous Agents</span>
-        <span class="chip"><i class="fa-solid fa-gear"></i> Robotics / AFM</span>
-        <span class="chip"><i class="fa-solid fa-hammer"></i> Product Builder</span>
-        <span class="chip"><i class="fa-solid fa-comment-dollar"></i> Sales</span>
-        <span class="chip"><i class="fa-solid fa-users"></i> Management / Leadership</span>
+        <span class="chip"><i class="fa-solid fa-robot"></i> AI Agents</span>
+        <span class="chip"><i class="fa-solid fa-gear"></i> Robotics</span>
+        <span class="chip"><i class="fa-solid fa-users"></i> Sales & Leadership</span>
       </div>
     </div>
 
@@ -113,11 +110,15 @@
     .hero__portrait { width: min(220px, 55vw); margin-bottom: 8px; }
   }
 
+  /* Solid color on purpose — background-clip:text + color:transparent breaks
+     when Splitting.js wraps chars in inline-block spans (text renders invisible
+     on some GPUs/viewports, e.g. Steam Deck at 1280×800). Same bug class as the
+     earlier ImpactMetrics "invisible numbers" fix. */
   .hero__title {
-    font-size: clamp(3rem, 9vw, 6.5rem);
-    background: linear-gradient(180deg, #fff 30%, #8aa0b6 100%);
-    -webkit-background-clip: text; background-clip: text;
-    color: transparent;
+    font-size: clamp(2.6rem, 7vw, 5.5rem);
+    color: var(--fg);
+    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
+    overflow-wrap: break-word;
     margin-bottom: 0.4em;
   }
   .hero__role {
@@ -217,13 +218,10 @@
   const roles = [
     `<i class="fa-solid fa-chart-line"></i> Data Analyst`,
     `<i class="fa-solid fa-code"></i> Software Engineer`,
-    `<i class="fa-solid fa-robot"></i> Autonomous Agent Builder`,
+    `<i class="fa-solid fa-robot"></i> AI Agent Builder`,
     `<i class="fa-solid fa-server"></i> Systems Admin`,
-    `<i class="fa-solid fa-cube"></i> Product Engineer`,
-    `<i class="fa-brands fa-twitch"></i> Streaming Platform Builder`,
-    `<i class="fa-solid fa-tree"></i> Pacific Northwest Native`,
-    `<i class="fa-solid fa-comment-dollar"></i> Sales`,
-    `<i class="fa-solid fa-users"></i> Management / Leadership`
+    `<i class="fa-solid fa-users"></i> Sales Leader`,
+    `<i class="fa-solid fa-tree"></i> Pacific Northwest Native`
   ];
   const rot = document.querySelector(".hero__rotator");
   if (rot) {
