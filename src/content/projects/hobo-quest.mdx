@@ -1,7 +1,7 @@
 ---
 title: "HoboQuest"
 category: "hobo"
-summary: "Browser MMORPG with a custom isomorphic game engine, Source Engine-style lag compensation, and 4-instance server architecture — no downloads, open a tab and play."
+summary: "Browser MMORPG on a custom-built engine with Source-style lag compensation — no downloads, open a tab and play."
 tech: ["JavaScript", "Node.js", "WebSockets", "Canvas API", "Express", "isomorphic compiler", "lag compensation", "Canvas 2D physics"]
 role: "Founder / Engine & Gameplay Engineer"
 year: "2023–Present"
@@ -11,30 +11,16 @@ featured: true
 order: 12
 ---
 
-A persistent browser MMORPG built on a custom-engineered isomorphic game engine — no Unity, no Godot, no game framework. Everything from the physics and collision system to the multiplayer protocol was written from scratch.
+A persistent browser MMORPG built on a custom engine — no Unity, no Godot. Physics, collision, and the multiplayer protocol were all written from scratch.
 
-**Custom isomorphic compile pipeline.** All game logic lives in a single `shared.js` file containing conditional compilation blocks (`/*IF_SERVER*/.../*IF_END*/`). A custom `compiler.js` transforms it into `server.js` and `public/client.js` — the same physics, entity, and world state logic runs on both sides, preventing desyncs by design. MD5 change detection skips unnecessary recompiles.
+**Isomorphic engine.** All game logic lives in one shared file; a custom compiler emits both the server and client builds, so the exact same physics and world-state code runs on both sides — desyncs are prevented by design.
 
-**Source Engine-style lag compensation.** Real-time multiplayer uses client-side prediction with server reconciliation — the same methodology used in Counter-Strike and Valve's Source Engine. Movement and combat feel instant for the player while the server remains authoritative over all state.
+**Source Engine-style netcode.** Client-side prediction with server reconciliation (the Counter-Strike approach): movement and combat feel instant while the server stays authoritative.
 
-**Multi-instance server architecture.** A `server-master.js` orchestrator spawns four independent game-server processes (ports 9000–9003), each running a different map with its own ruleset:
-- Default world — PvP enabled, player building enabled
-- Central city — social hub with vendors; PvP disabled
-- Farm island — resource farming; PvP enabled, building disabled
-- Ship minigame — dedicated activity instance
+**Four live worlds.** An orchestrator runs four game instances with distinct rulesets — a PvP building world, a safe social hub, a farming island, and a ship minigame.
 
-**Canvas 2D rendering engine.** Built a custom Canvas 2D rendering layer (`lib/c2d.js`) with a full 2D separating-axis theorem (SAT) collision detection system, polygon/circle collision, voronoi region edge detection, and frame-accurate hit resolution — no third-party physics library.
+**Custom rendering & physics.** Canvas 2D renderer with full SAT collision detection (polygon/circle, frame-accurate hits) — no third-party physics library.
 
-**Open-world survival systems.** Tile-based 512×512 open world with:
-- **Building**: place and upgrade walls, doors, beds, tool cupboards, campfires, barbed wire
-- **Combat**: melee knockback, ranged pistol, arrows with ballistic gravity arc, NPC aggro with patrol/attack telegraph/hit flash
-- **Skills**: Woodcutting, Mining, Herbology, Attack, and more — persistent per player
-- **Economy**: inventory, crafting recipes, equipment slots, bank system, bus system for zone travel
+**Full survival loop.** Building, combat (melee, ranged, NPC AI), persistent skills, crafting, banking, fast travel — plus an in-game scratch-card and slots casino with server-validated state.
 
-**In-game casino.** Scratch card and slot machine minigames with a credit balance system, SoundManager 2 audio integration, and server-validated game state.
-
-**Cross-platform input.** Mobile touch controls overlay (tap/joystick buttons) with runtime touch detection, plus gamepad detection with a controller configuration UI. Desktop WASD + mouse.
-
-**Integrated with HoboStreamer.** The game is embedded live in the streaming platform — viewers watch and play simultaneously, with chat bridged between the game and the stream.
-
-The collaborative pixel canvas is a separate 512×512 real-time art board for territory battles and group art, also accessible from [hobo.quest](https://hobo.quest).
+**Play anywhere.** Desktop WASD + mouse, mobile touch overlay, and gamepad support. Embedded live in HoboStreamer, so viewers watch and play in the same session.

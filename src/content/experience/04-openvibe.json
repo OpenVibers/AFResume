@@ -4,12 +4,12 @@
   "start": "2022",
   "end": "2025",
   "bullets": [
-    "Sole architect and engineer on OpenVibe — a 15-microservice open-source platform kernel: distributed event bus, OIDC/OAuth2 identity provider, capability contract registry, media object store, live-streaming ingest and restream, real-time chat, billing ledger, AI/search backbone, and realtime infrastructure. Self-hosted alternative to Twitch + YouTube + Patreon + Discord. 16 phases documented; 11+ fully implemented with cutover runbook and migration tooling complete.",
-    "Built and operated HoboStreamer from scratch — a full live-streaming platform with WebRTC SFU, HLS, multi-destination RTMP restream (OBS → Twitch/YouTube/Kick simultaneously), auto-recorded VODs, clip detection, real-time chat with custom emotes, voice channels, stream analytics, comprehensive moderation tools, and an integrated browser game for viewers. Fully open source.",
-    "Built HoboQuest — a browser MMORPG with a custom isomorphic game engine: wrote all game logic once in shared.js, compiled to both server and client via a custom MD5-diffing compiler. Source Engine-style lag compensation (client-side prediction + server reconciliation) drives the real-time multiplayer. Server-master.js orchestrates 4 independent game instances with distinct rulesets (PvP world, social hub, farm island, ship minigame). Custom Canvas 2D rendering engine with SAT collision detection. Open-world survival: building, combat, NPC AI, 7+ skills, inventory/crafting/bank, bus fast travel. In-game scratch card and slot casino; mobile touch and gamepad input. Integrated live into HoboStreamer — viewers watch and play in the same session.",
-    "Maintained hobo.tools — central SSO and OAuth2 identity network across 14 interconnected services, including shared auth, service registry, image processing, maps, audio, and cross-domain session management."
+    "Sole architect of OpenVibe — a 15-microservice open-source platform kernel: event bus, OIDC/OAuth2 identity, media storage, live-streaming ingest/restream, real-time chat, billing ledger, and AI/search backbone. A self-hosted alternative to Twitch + YouTube + Patreon + Discord.",
+    "Built and operated HoboStreamer — a full live-streaming platform with WebRTC, HLS, multi-destination RTMP restream, auto-recorded VODs, clips, real-time chat, voice channels, and moderation tools. Fully open source.",
+    "Built HoboQuest — a browser MMORPG on a custom isomorphic engine: shared game logic compiled to both server and client, Source Engine-style lag compensation, and four live game worlds. Playable in a tab, streamed live inside HoboStreamer.",
+    "Ran hobo.tools — shared SSO/OAuth2 identity and service registry connecting 14 services."
   ],
-  "stack": ["TypeScript", "Node.js", "Express", "SQLite", "PostgreSQL", "WebRTC", "WebSockets", "Redis", "OAuth2", "OIDC", "FFmpeg", "Lua", "C#", "React", "Vue"],
+  "stack": ["TypeScript", "Node.js", "Express", "SQLite", "PostgreSQL", "WebRTC", "WebSockets", "Redis", "OAuth2", "OIDC", "FFmpeg", "React", "Vue"],
   "featured": true,
   "order": 4
 }

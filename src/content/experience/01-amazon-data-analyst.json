@@ -5,10 +5,10 @@
   "end": "2025",
   "location": "PAE2 · Arlington, WA",
   "bullets": [
-    "Own SOX-compliance IRDR (Inventory Discrepancy Research Report) workflows — hand-researched 1,000+ inventory mismatches and built the data systems that support Sarbanes-Oxley audit requirements.",
-    "Built ICQA SQL and Excel reporting for inventory accuracy, discrepancy review, and defect visibility; surfaced findings in dashboards and recurring leadership reports.",
-    "Authored an Anthropic-powered SQL copilot that contextually references every available data table for analysts.",
-    "Built and shipped an autonomous root-cause-analysis bot that performs full end-to-end inventory research."
+    "Owned SOX-compliance IRDR workflows — researched 1,000+ inventory discrepancies and built the data systems behind Sarbanes-Oxley audit requirements.",
+    "Built SQL and Excel reporting for inventory accuracy and defect visibility; delivered dashboards and recurring leadership reports.",
+    "Created an Anthropic-powered SQL copilot that references every available data table for analysts.",
+    "Shipped an autonomous root-cause bot that performs end-to-end inventory research."
   ],
   "stack": ["SQL", "Excel", "Python", "Anthropic API", "TamperMonkey", "Power Query", "SOX Compliance"],
   "featured": true,

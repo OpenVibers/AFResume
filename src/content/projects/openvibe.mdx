@@ -1,7 +1,7 @@
 ---
 title: "OpenVibe"
 category: "hobo"
-summary: "Open-source creator platform kernel: 15+ microservices, distributed event bus, OIDC/OAuth2 identity, live streaming, media storage, billing ledger, AI backbone, and real-time infrastructure — sole architect and engineer across 16 documented phases."
+summary: "Open-source creator platform kernel — 15+ microservices spanning identity, live streaming, media, billing, and AI, designed and built by one person."
 tech: ["Node.js", "TypeScript", "Express", "SQLite", "PostgreSQL", "WebRTC", "WebSockets", "Redis", "OAuth2", "OIDC", "FFmpeg", "REST APIs", "Event-Driven Architecture", "Microservices"]
 role: "Sole Architect & Principal Engineer"
 year: "2024–2026"
@@ -10,24 +10,16 @@ featured: true
 order: 5
 ---
 
-A fully open-source, self-hosted platform kernel designed to replace the Hobo Network and serve as a production-grade alternative to the entire creator economy stack — Twitch, YouTube, Patreon, Reddit, and Discord in a single deployable monorepo. Built by one person across 16 documented phases, with cutover runbook and migration tooling complete.
+A fully open-source, self-hosted platform kernel — Twitch, YouTube, Patreon, and Discord in one deployable monorepo. Designed and built by one person across 16 documented phases.
 
-**Services shipped (13 microservices):**
+**What's in it:**
 
-- **openvibe-network** — Control plane: OIDC/OAuth2 identity provider, service registry, capability contract registry, user-module namespace API, policy engine, and host-aware routing across `auth.openvibe.network`, `api.openvibe.network`, `admin.openvibe.network`
-- **openre-stream** — RTMP ingest and multi-destination restream (OBS → Twitch / YouTube / Kick / any RTMP endpoint simultaneously)
-- **openvibe-live** — Live streaming frontend: SSR viewer surface, DVR, viewer analytics, stream presence
-- **openvibe-media** — Media object store: VODs, clips, thumbnails, stream snapshots, paste/file storage — with namespace registry, derivative pipeline, quota enforcement, and lifecycle audit log
-- **openvibe-chat** — Real-time chat: moderation, purges, bans, custom emotes, channel threading
-- **openvibe-community** — Forums, reactions, community posts, Discord-style channels, paste versioning
-- **openvibe-billing** — Credits ledger, tips, VIP status tiers, payout engine, SOX-style audit trail
-- **openvibe-ai** — AI/search backbone: autonomous content tagging, SEO generation, analyst copilot, embedding-based search
-- **openvibe-games** — Embedded browser game surface (HoboQuest integration, live viewer participation)
-- **openvibe-events** — Distributed event bus: full audit envelope (`event_id`, `trace_id`, `version`, `actor`), topic + subscription filtering, ack/retry work queue, dead-letter tables
-- **openvibe-realtime** — WebSocket hub, pub/sub presence layer, fan-out infrastructure
-- **openvibe-workers** — Task queue, scheduled jobs, background processors, queue-native pipeline
-- **openvibe-content** — Content workflows: publishing pipelines, moderation queue, product workflow seams
+- **Identity & control plane** — OIDC/OAuth2 provider, service registry, capability contracts, policy engine
+- **Live streaming** — RTMP ingest, multi-destination restream (OBS → Twitch / YouTube / Kick simultaneously), DVR, viewer analytics
+- **Media** — object store for VODs, clips, and thumbnails with derivative pipeline, quotas, and audit log
+- **Community** — real-time chat with moderation and custom emotes, forums, Discord-style channels
+- **Billing** — credits ledger, tips, VIP tiers, payout engine with SOX-style audit trail
+- **AI & search** — autonomous content tagging, SEO generation, embedding-based search
+- **Infrastructure** — distributed event bus with full audit envelope, WebSocket/pub-sub realtime layer, task queues, and shared typed-contract packages (SQLite + PostgreSQL dual-mode persistence)
 
-**Shared packages:** `openvibe-contracts` (typed event schemas), `openvibe-sdk` (cross-service clients), `openvibe-persistence` (SQLite + PostgreSQL dual-mode with schema parity enforcement), `openvibe-queue`, `openvibe-runtime`, `openvibe-storage`, `openvibe-redis`, `openvibe-observability`
-
-**Phase completion:** 11+ of 16 phases fully implemented. Remaining phases paused at production-readiness stage — cutover runbook written, migration tooling from HoboStreamer/hobo.tools complete, schema drift checks green. Servers brought offline in May 2026 due to funding constraints during job search. The architecture is sound and the code is all there.
+**Status:** 11+ of 16 phases fully implemented; cutover runbook and migration tooling complete. Servers offline since May 2026 during job search — the architecture is sound and the code is all there.
