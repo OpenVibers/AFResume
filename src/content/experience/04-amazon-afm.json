@@ -1,0 +1,19 @@
+{
+  "company": "Amazon",
+  "role": "Amnesty Floor Monitor — Amazon Robotics",
+  "start": "2023",
+  "end": "2024",
+  "location": "Robotics launch site",
+  "kind": "operations",
+  "order": 4,
+  "bullets": [
+    "Monitored the Amazon Robotics floor during launch operations: enforced amnesty zones, cleared obstructions and kept pod and drive-unit flow safe.",
+    "Investigated recurring pod, drive and workstation defects, documented patterns and escalated to RME and operations leadership to drive process fixes."
+  ],
+  "stack": [
+    "Amazon Robotics",
+    "Floor safety",
+    "Electro-mechanical troubleshooting",
+    "Incident documentation"
+  ]
+}

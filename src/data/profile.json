@@ -1,0 +1,51 @@
+{
+  "name": "Alex Frison",
+  "tagline": "Software engineer, platform architect and founder of the OpenVibe network.",
+  "headline": "I build the whole stack, then run it.",
+  "roles": ["Software Engineer", "Platform Architect", "Founder of OpenVibe", "Streaming Infrastructure Builder", "AI Tooling Engineer", "Data Analyst"],
+  "location": "Arlington · Seattle · Pacific Northwest",
+  "locationShort": "Seattle / Arlington, WA",
+  "email": "alex@alexfrison.net",
+  "emailDisplay": "Alex@AlexFrison.net",
+  "phone": "+14253673997",
+  "phoneDisplay": "(425) 367-3997",
+  "site": "https://alexfrison.net",
+  "siteDisplay": "alexfrison.net",
+  "github": "https://github.com/OpenVibers",
+  "githubDisplay": "github.com/OpenVibers",
+  "linkedin": "https://www.linkedin.com/in/fris/",
+  "linkedinDisplay": "linkedin.com/in/fris",
+  "resumePdf": "/Alex_Frison_Resume_Sep_2026.pdf",
+  "availability": "Open to senior engineering, platform and founding-engineer roles · remote or Pacific Northwest",
+  "status": {
+    "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
+    "also": "Founder and sole engineer of OpenVibe: seven services, 20+ domains, one operator."
+  },
+  "pitch": "Full-stack engineer with 10+ years shipping production systems and a habit of owning them end to end. I designed and run OpenVibe, an open live-streaming and tools network of seven Node services behind one identity provider. At PowerChat I turned the product into an OAuth2 platform and rebuilt its payments across five processors. Before that I ran SOX-compliance analytics at Amazon and shipped autonomous research agents that analysts used daily.",
+  "seeking": [
+    { "label": "Senior / staff engineer", "detail": "Full-stack, platform, streaming or realtime systems" },
+    { "label": "Founding engineer", "detail": "Small teams that need someone to own the stack" },
+    { "label": "AI tooling & agents", "detail": "LLM products with budgets, guardrails and real users" },
+    { "label": "Data & analytics", "detail": "SQL, reporting and compliance tooling that people act on" }
+  ],
+  "metrics": [
+    { "num": 7, "suffix": "", "label": "OpenVibe services designed, built and operated solo", "icon": "fa-solid fa-cubes-stacked" },
+    { "num": 900, "suffix": "+", "label": "HTTP routes across the OpenVibe network", "icon": "fa-solid fa-route" },
+    { "num": 363, "suffix": "k", "label": "Lines of code in the OpenVibe repos", "icon": "fa-solid fa-code" },
+    { "num": 169, "suffix": "", "label": "Tools catalogued on OpenVibe.Tools", "icon": "fa-solid fa-toolbox" },
+    { "num": 5, "suffix": "", "label": "Payment processors unified at PowerChat", "icon": "fa-solid fa-credit-card" },
+    { "num": 1000, "suffix": "+", "label": "SOX-compliance IRDRs researched at Amazon", "icon": "fa-solid fa-magnifying-glass-chart" },
+    { "num": 200, "suffix": "k+", "label": "Live game servers tracked by GameServerStats", "icon": "fa-solid fa-tower-broadcast" },
+    { "num": 10, "suffix": "+", "label": "Years running my own company", "icon": "fa-solid fa-building-flag" }
+  ],
+  "network": [
+    { "key": "live", "name": "OpenVibe.Live", "url": "https://openvibe.live", "role": "Live streaming", "blurb": "RTMP, WHIP and WebRTC ingest, multi-destination restream, VODs, clips, chat, live captions and translation.", "stat": "529 routes · 179k LOC", "image": "/assets/img/sites/live.webp" },
+    { "key": "network", "name": "OpenVibe.Network", "url": "https://openvibe.network", "role": "Identity & spine", "blurb": "OIDC/OAuth2 provider, OpenCoins wallet, notifications, themes and the shared chrome every site renders.", "stat": "176 routes · RS256", "image": "/assets/img/sites/network.webp" },
+    { "key": "media", "name": "OpenVibe.Media", "url": "https://openvibe.media", "role": "Media backend", "blurb": "Multi-tenant media API: recording, uploads, clip cutting, thumbnails, pastes and local → B2 → R2 storage tiering.", "stat": "86 routes · 3 tiers", "image": "/assets/img/sites/media.webp" },
+    { "key": "tools", "name": "OpenVibe.Tools", "url": "https://openvibe.tools", "role": "Tools suite", "blurb": "169 server-rendered tools across 8 families, a host registry with custom-domain mirrors, and full SEO plumbing.", "stat": "169 tools · 8 families", "image": "/assets/img/sites/tools.webp" },
+    { "key": "games", "name": "OpenVibe.Games", "url": "https://openvibe.games", "role": "Scraplandia", "blurb": "Browser multiplayer survival game: authoritative server, client prediction, Havok physics, physgun building.", "stat": "56k LOC TypeScript", "image": "/assets/img/sites/games.webp" },
+    { "key": "community", "name": "OpenVibe.Community", "url": "https://openvibe.community", "role": "Pastes & posts", "blurb": "Server-rendered paste hub with forks, search, feeds and silent SSO, proxied to Live so identity stays consistent.", "stat": "No DB of its own", "image": "/assets/img/sites/community.webp" },
+    { "key": "sites", "name": "OpenVibe.Sites", "url": "https://openvibe.chat", "role": "13 front doors", "blurb": "One catalog and one template generate the pages and nginx configs for openvibe.chat, .codes, .wiki, .news and more.", "stat": "13 domains · 1 build", "image": null }
+  ],
+  "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs."
+}

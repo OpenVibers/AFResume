@@ -1,0 +1,171 @@
+---
+import profile from "../data/profile.json";
+const sites = profile.network;
+const big = sites[0];
+const rest = sites.slice(1);
+const icons: Record<string, string> = {
+  live: "fa-solid fa-tower-broadcast", network: "fa-solid fa-id-badge", media: "fa-solid fa-photo-film",
+  tools: "fa-solid fa-toolbox", games: "fa-solid fa-gamepad", community: "fa-solid fa-comments", sites: "fa-solid fa-globe",
+};
+// Architecture diagram geometry (viewBox 800 x 420)
+const hub = { x: 400, y: 210 };
+const nodes = [
+  { key: "live", label: "Live", x: 130, y: 90 },
+  { key: "media", label: "Media", x: 130, y: 330 },
+  { key: "tools", label: "Tools", x: 400, y: 50 },
+  { key: "games", label: "Games", x: 400, y: 372 },
+  { key: "community", label: "Community", x: 670, y: 90 },
+  { key: "sites", label: "13 Sites", x: 670, y: 330 },
+];
+const edges = [
+  ["live", "media"],
+];
+---
+<section class="section network" id="network" aria-labelledby="network-title">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num" aria-hidden="true">02</span>
+      <div>
+        <div class="sec-index">The OpenVibe network</div>
+        <h2 class="sec-title" id="network-title">Seven services. One sign-in. <em>One engineer.</em></h2>
+      </div>
+      <p class="sec-lead">An open, community-run streaming and tools network I started in 2022 and re-architected in 2026. Every service below is designed, built, deployed and operated by me, and every one is live.</p>
+    </div>
+
+    <div class="bento">
+      <a class="tile tile--big spot" href={big.url} target="_blank" rel="noopener" data-reveal data-tilt style={`--img:url(${big.image})`}>
+        <div class="tile__shot" aria-hidden="true"><img src={big.image} alt="" loading="lazy" width="1120" height="700" /></div>
+        <div class="tile__body">
+          <div class="tile__top">
+            <span class="tile__icon"><i class={icons[big.key]}></i></span>
+            <span class="tile__role">{big.role}</span>
+          </div>
+          <h3 class="tile__name">{big.name}</h3>
+          <p class="tile__blurb">{big.blurb}</p>
+          <div class="tile__foot"><span class="tile__stat mono">{big.stat}</span><span class="tile__go">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div>
+        </div>
+      </a>
+
+      {rest.map((s, i) => (
+        <a class={`tile spot tile--${s.key}`} href={s.url} target="_blank" rel="noopener" data-reveal data-delay={String(60 * (i + 1))} data-tilt>
+          {s.image && <div class="tile__shot" aria-hidden="true"><img src={s.image} alt="" loading="lazy" width="1120" height="700" /></div>}
+          <div class="tile__body">
+            <div class="tile__top">
+              <span class="tile__icon"><i class={icons[s.key]}></i></span>
+              <span class="tile__role">{s.role}</span>
+            </div>
+            <h3 class="tile__name">{s.name}</h3>
+            <p class="tile__blurb">{s.blurb}</p>
+            <div class="tile__foot"><span class="tile__stat mono">{s.stat}</span><span class="tile__go">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div>
+          </div>
+        </a>
+      ))}
+    </div>
+
+    <div class="arch card" data-reveal>
+      <div class="arch__copy">
+        <div class="eyebrow">How it fits together</div>
+        <h3>Identity in the middle, contracts between everything.</h3>
+        <p>OpenVibe.Network is the OIDC provider and wallet. Every other service verifies RS256 tokens offline against its cached key set, calls Media over a signed multi-tenant API, and renders the same shared navbar, themes and notifications. Contracts are written down before code moves, and legacy domains 301 into the new network so no link ever died.</p>
+        <ul class="arch__facts">
+          <li><i class="fa-solid fa-check"></i> Zero-downtime deploys via systemd socket activation</li>
+          <li><i class="fa-solid fa-check"></i> Local → B2 → R2 media tiering with presigned playback</li>
+          <li><i class="fa-solid fa-check"></i> Budget-metered, provider-agnostic AI jobs</li>
+          <li><i class="fa-solid fa-check"></i> Dry-run-first migrations, three-window cutover runbook</li>
+        </ul>
+      </div>
+      <svg class="arch__svg" viewBox="0 0 800 420" role="img" aria-label="Diagram: OpenVibe.Network at the center connected to Live, Media, Tools, Games, Community and 13 static sites; Live also talks to Media.">
+        <defs>
+          <linearGradient id="agrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
+          <filter id="aglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+        </defs>
+        {nodes.map((n) => (
+          <g class="arch__edge">
+            <line x1={hub.x} y1={hub.y} x2={n.x} y2={n.y} class="arch__line" />
+            <line x1={hub.x} y1={hub.y} x2={n.x} y2={n.y} class="arch__pulse" />
+          </g>
+        ))}
+        {edges.map(([a, b]) => { const A = nodes.find(n => n.key === a)!, B = nodes.find(n => n.key === b)!; return (
+          <g class="arch__edge arch__edge--side"><line x1={A.x} y1={A.y} x2={B.x} y2={B.y} class="arch__line" /><line x1={A.x} y1={A.y} x2={B.x} y2={B.y} class="arch__pulse arch__pulse--slow" /></g>
+        ); })}
+        <g class="arch__hub" transform={`translate(${hub.x} ${hub.y})`}>
+          <circle r="58" class="arch__hub-glow" filter="url(#aglow)" />
+          <circle r="46" class="arch__hub-ring" />
+          <circle r="40" class="arch__hub-fill" />
+          <text y="-4" text-anchor="middle" class="arch__hub-t1">OpenVibe</text>
+          <text y="14" text-anchor="middle" class="arch__hub-t2">.Network</text>
+          <text y="30" text-anchor="middle" class="arch__hub-t3">OIDC · wallet · chrome</text>
+        </g>
+        {nodes.map((n) => (
+          <g class="arch__node" transform={`translate(${n.x} ${n.y})`}>
+            <rect x="-62" y="-22" width="124" height="44" rx="12" class="arch__node-box" />
+            <text y="5" text-anchor="middle" class="arch__node-t">{n.label}</text>
+          </g>
+        ))}
+      </svg>
+    </div>
+  </div>
+</section>
+
+<style>
+  .bento { display: grid; grid-template-columns: repeat(4, 1fr); grid-auto-rows: minmax(210px, auto); gap: 14px; margin-bottom: 18px; }
+  .tile {
+    position: relative; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end;
+    min-height: 210px; border-radius: var(--radius-lg); text-decoration: none; color: var(--fg);
+    background: var(--surface); border: 1px solid var(--border);
+    transition: transform .5s var(--ease), border-color .35s var(--ease), box-shadow .5s var(--ease);
+    will-change: transform;
+  }
+  .tile:hover { text-decoration: none; border-color: rgba(var(--accent-rgb), .45); box-shadow: var(--shadow-card), var(--shadow-glow); }
+  .tile--big { grid-column: span 2; grid-row: span 2; min-height: 440px; }
+  .tile__shot { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+  .tile__shot img { width: 100%; height: 100%; object-fit: cover; object-position: top; opacity: .28; transform: scale(1.04); transition: transform 1.2s var(--ease), opacity .6s var(--ease), filter .6s; filter: saturate(.8); }
+  .tile:hover .tile__shot img { opacity: .55; transform: scale(1) translateY(-2%); filter: saturate(1.05); }
+  .tile__shot::after { content: ""; position: absolute; inset: 0; background: linear-gradient(180deg, rgba(7,9,15,.1) 0%, rgba(7,9,15,.55) 45%, rgba(7,9,15,.96) 100%); }
+  :root[data-theme="light"] .tile__shot::after { background: linear-gradient(180deg, rgba(244,246,251,.2) 0%, rgba(244,246,251,.7) 45%, rgba(244,246,251,.98) 100%); }
+  .tile__body { position: relative; z-index: 1; padding: clamp(18px, 2.4vw, 26px); display: flex; flex-direction: column; gap: 8px; }
+  .tile__top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .tile__icon { width: 34px; height: 34px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .14); color: var(--accent); font-size: .9rem; border: 1px solid rgba(var(--accent-rgb), .2); }
+  .tile__role { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
+  .tile__stat { font-size: .7rem; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tile__name { margin: 0; font-size: clamp(1.1rem, 1.6vw, 1.45rem); letter-spacing: -.02em; overflow-wrap: anywhere; }
+  .tile--big .tile__name { font-size: clamp(1.8rem, 3vw, 2.6rem); }
+  .tile__blurb { margin: 0; font-size: .92rem; color: var(--muted); line-height: 1.55; max-width: 52ch; }
+  .tile__go { display: inline-flex; align-items: center; gap: 8px; flex: none; font: 600 .8rem var(--font-mono); color: var(--accent); opacity: 0; transform: translateY(6px); transition: opacity .35s var(--ease), transform .35s var(--ease); }
+  .tile:hover .tile__go { opacity: 1; transform: none; }
+  .tile--community, .tile--sites { grid-column: span 2; }
+  .tile--sites { background: var(--grad-soft); }
+  .tile--sites::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 60% at 80% 20%, rgba(var(--accent-2-rgb), .25), transparent 70%); }
+  @media (max-width: 1024px) { .bento { grid-template-columns: repeat(2, 1fr); } .tile--big { grid-column: span 2; grid-row: span 1; min-height: 360px; } .tile--community, .tile--sites { grid-column: span 1; } }
+  @media (max-width: 560px) { .bento { grid-template-columns: 1fr; } .tile--big, .tile--community, .tile--sites { grid-column: span 1; } .tile--big { min-height: 320px; } }
+
+  /* Architecture */
+  .arch { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(20px, 4vw, 48px); align-items: center; padding: clamp(22px, 3.5vw, 40px); }
+  .arch__copy h3 { font-size: clamp(1.3rem, 2.2vw, 1.8rem); margin-bottom: .6em; }
+  .arch__facts { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
+  .arch__facts li { display: flex; gap: 10px; align-items: flex-start; color: var(--muted); font-size: .9rem; }
+  .arch__facts i { color: var(--accent-3); margin-top: 4px; font-size: .75rem; }
+  .arch__svg { width: 100%; height: auto; overflow: visible; }
+  .arch__line { stroke: var(--border-strong); stroke-width: 1.2; }
+  .arch__pulse { stroke: url(#agrad); stroke-width: 2; stroke-linecap: round; stroke-dasharray: 14 200; animation: pulse 3.2s linear infinite; opacity: .9; }
+  .arch__pulse--slow { animation-duration: 4.4s; animation-delay: -1s; }
+  .arch__edge:nth-child(2) .arch__pulse { animation-delay: -.6s; }
+  .arch__edge:nth-child(3) .arch__pulse { animation-delay: -1.2s; }
+  .arch__edge:nth-child(4) .arch__pulse { animation-delay: -1.8s; }
+  .arch__edge:nth-child(5) .arch__pulse { animation-delay: -2.4s; }
+  .arch__edge:nth-child(6) .arch__pulse { animation-delay: -3s; }
+  @keyframes pulse { from { stroke-dashoffset: 214; } to { stroke-dashoffset: -214; } }
+  .arch__hub-glow { fill: rgba(var(--accent-rgb), .16); animation: hubGlow 3s ease-in-out infinite; }
+  @keyframes hubGlow { 50% { fill: rgba(var(--accent-rgb), .3); } }
+  .arch__hub-ring { fill: none; stroke: url(#agrad); stroke-width: 1.5; stroke-dasharray: 6 8; animation: ringSpin 30s linear infinite; transform-origin: center; transform-box: fill-box; }
+  @keyframes ringSpin { to { transform: rotate(360deg); } }
+  .arch__hub-fill { fill: var(--surface-solid); stroke: var(--border-strong); }
+  .arch__hub-t1 { font: 700 15px var(--font-display); fill: var(--fg); }
+  .arch__hub-t2 { font: 700 13px var(--font-display); fill: var(--accent); }
+  .arch__hub-t3 { font: 500 8px var(--font-mono); fill: var(--dim); letter-spacing: .06em; }
+  .arch__node-box { fill: var(--surface-solid); stroke: var(--border-strong); transition: stroke .3s, fill .3s; }
+  .arch__node:hover .arch__node-box { stroke: var(--accent); }
+  .arch__node-t { font: 600 13px var(--font-body); fill: var(--fg); }
+  @media (max-width: 900px) { .arch { grid-template-columns: 1fr; } }
+</style>

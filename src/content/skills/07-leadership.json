@@ -1,0 +1,32 @@
+{
+  "group": "Leadership & communication",
+  "icon": "fa-solid fa-people-group",
+  "order": 7,
+  "blurb": "Ten years of running a company and a few of running a sales floor.",
+  "items": [
+    {
+      "name": "Founding & operating an LLC",
+      "level": "core"
+    },
+    {
+      "name": "Technical writing & runbooks",
+      "level": "core"
+    },
+    {
+      "name": "Coaching & team leadership",
+      "level": "strong"
+    },
+    {
+      "name": "Consultative sales",
+      "level": "strong"
+    },
+    {
+      "name": "Stakeholder reporting",
+      "level": "core"
+    },
+    {
+      "name": "Community moderation at scale",
+      "level": "strong"
+    }
+  ]
+}

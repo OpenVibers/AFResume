@@ -1,0 +1,40 @@
+{
+  "group": "Streaming & realtime",
+  "icon": "fa-solid fa-tower-broadcast",
+  "order": 2,
+  "blurb": "Getting video from an encoder to a viewer without dropping frames.",
+  "items": [
+    {
+      "name": "RTMP / SRT / WHIP",
+      "level": "core"
+    },
+    {
+      "name": "WebRTC (mediasoup, werift)",
+      "level": "core"
+    },
+    {
+      "name": "ffmpeg pipelines",
+      "level": "core"
+    },
+    {
+      "name": "HLS / DASH",
+      "level": "strong"
+    },
+    {
+      "name": "WebSockets",
+      "level": "core"
+    },
+    {
+      "name": "TURN / coturn",
+      "level": "strong"
+    },
+    {
+      "name": "Restream & VOD systems",
+      "level": "core"
+    },
+    {
+      "name": "Live captions (whisper.cpp)",
+      "level": "strong"
+    }
+  ]
+}

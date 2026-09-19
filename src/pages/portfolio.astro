@@ -2,20 +2,21 @@
 import Base from "../layouts/Base.astro";
 import ProjectGrid from "../components/ProjectGrid.astro";
 ---
-<Base title="Portfolio — Alex Frison">
+<Base title="Portfolio — Alex Frison" description="Every project: the OpenVibe services, PowerChat platform programs, Amazon analytics and AI tooling, infrastructure work, games and side projects by Alex Frison.">
   <section class="container portfolio-head">
-    <div class="section-eyebrow">Portfolio</div>
-    <h1>Selected work</h1>
+    <div class="sec-index">Portfolio</div>
+    <h1>Everything I've <span class="grad-text">shipped</span>.</h1>
     <p class="portfolio-lead">
-      Tools, products, agents, and platforms — across Amazon analytics, the
-      Hobo Network (HoboStreamer, HoboQuest, HoboMaps, hobo.tools), Python utilities, game dev, and hardware.
+      The OpenVibe services, the PowerChat platform programs, the analytics and AI tooling from Amazon,
+      the infrastructure work behind all of it, and the side projects that keep the tools sharp.
+      Filter by area or open any card for the case notes.
     </p>
   </section>
-  <ProjectGrid />
+  <ProjectGrid showHead={false} id="all-work" />
 </Base>
-
 <style>
-  .portfolio-head { padding: 80px 0 0; max-width: 800px; }
-  .portfolio-head h1 { font-size: clamp(2.2rem, 5vw, 3.4rem); }
-  .portfolio-lead { color: var(--muted); font-size: 1.08rem; }
+  .portfolio-head { padding: calc(var(--nav-h) + 60px) var(--gutter) 0; max-width: 860px; }
+  .portfolio-head h1 { font-size: clamp(2.6rem, 6.5vw, 4.6rem); margin: .2em 0 .3em; }
+  .portfolio-lead { color: var(--muted); font-size: 1.1rem; max-width: 60ch; }
+  :global(#all-work) { padding-top: 40px; }
 </style>

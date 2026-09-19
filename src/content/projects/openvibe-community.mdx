@@ -1,0 +1,17 @@
+---
+title: "OpenVibe.Community"
+category: "openvibe"
+summary: "Server-rendered paste and post hub with search, forks, feeds and silent SSO. It keeps no database of its own and proxies to Live so identity stays consistent."
+tech: ["Node.js", "Express", "SSR", "highlight.js", "OAuth2 client", "JSON-LD", "RSS"]
+role: "Founder · Sole Engineer"
+year: "2026"
+image: "/assets/img/sites/community.webp"
+icon: "fa-solid fa-comments"
+links: { "live": "https://openvibe.community" }
+featured: false
+order: 6
+---
+
+Share code, logs or a screenshot and get a short link that works anywhere. Every page is rendered on the server with progressive JavaScript on top, so pastes read fine with scripts off and index cleanly with canonical, Open Graph and Article structured data.
+
+The service owns no data: paste requests stream through to Live, the only service that can resolve the visitor's identity, and sign-in uses a silent `prompt=none` flow so a Live session simply appears here.

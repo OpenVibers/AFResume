@@ -1,222 +1,184 @@
 ---
+import profile from "../data/profile.json";
 const links = [
-  { href: "/#work",       label: "Work",       icon: "fa-solid fa-briefcase" },
-  { href: "/#experience", label: "Experience",  icon: "fa-solid fa-clock-rotate-left" },
-  { href: "/#skills",     label: "Skills",      icon: "fa-solid fa-code" },
-  { href: "/portfolio",   label: "Portfolio",   icon: "fa-solid fa-folder-open" },
-  { href: "/resume",      label: "Resume",      icon: "fa-solid fa-file-lines" },
-  { href: "/#contact",    label: "Contact",     icon: "fa-solid fa-envelope" },
+  { href: "/#network",    label: "OpenVibe",   id: "network" },
+  { href: "/#work",       label: "Work",       id: "work" },
+  { href: "/#experience", label: "Experience", id: "experience" },
+  { href: "/#skills",     label: "Skills",     id: "skills" },
+  { href: "/resume",      label: "Resume",     id: "resume" },
+  { href: "/#contact",    label: "Contact",    id: "contact" },
 ];
+const path = Astro.url.pathname;
 ---
-<header class="nav">
-  <div class="container nav__row">
-    <a href="/" class="nav__brand">
-      <span class="nav__mark">AF</span>
+<header class="nav" id="nav">
+  <div class="nav__inner">
+    <a href="/" class="nav__brand" aria-label="Alex Frison, home">
+      <span class="nav__mark" aria-hidden="true">
+        <svg viewBox="0 0 40 40" width="34" height="34">
+          <defs><linearGradient id="nmg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="var(--accent)"/><stop offset=".55" stop-color="var(--violet)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient></defs>
+          <rect x="1" y="1" width="38" height="38" rx="11" fill="none" stroke="url(#nmg)" stroke-width="1.5"/>
+          <path d="M8 28 L14 12 L20 28 M10.4 22 h7.2" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M24.5 28 V12 H32.5 M24.5 20 H31" fill="none" stroke="url(#nmg)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </span>
       <span class="nav__name">Alex Frison</span>
     </a>
 
-    <!-- Desktop nav links (hidden on mobile) -->
-    <nav class="nav__desktop" aria-label="Primary">
-      <ul class="nav__links">
+    <nav class="nav__links" aria-label="Primary">
+      <ul>
         {links.map((l) => (
-          <li><a href={l.href}><i class={l.icon}></i> {l.label}</a></li>
+          <li><a href={l.href} data-nav={l.id} aria-current={path.startsWith(`/${l.id}`) ? "page" : undefined}>{l.label}</a></li>
         ))}
+        <li class="nav__pill" aria-hidden="true"></li>
       </ul>
     </nav>
 
-    <!-- Right-side controls: theme toggle + hamburger -->
     <div class="nav__end">
-      <button class="nav__toggle" data-theme-toggle aria-label="Toggle theme">
-        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      <a class="nav__cta" href={profile.resumePdf} aria-label="Download resume PDF"><i class="fa-solid fa-arrow-down"></i><span>PDF</span></a>
+      <button class="nav__icon" data-theme-toggle aria-label="Toggle light and dark theme">
+        <i class="fa-solid fa-sun nav__sun"></i><i class="fa-solid fa-moon nav__moon"></i>
       </button>
-      <button class="nav__burger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-drawer">
-        <i class="fa-solid fa-bars"></i>
+      <button class="nav__icon nav__burger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-drawer">
+        <span></span><span></span>
       </button>
     </div>
   </div>
 
-  <!-- Mobile drawer (all links) -->
   <div class="nav__drawer" id="nav-drawer" aria-hidden="true">
-    <nav aria-label="Mobile primary">
-      <ul class="nav__drawer-links">
-        {links.map((l) => (
-          <li><a href={l.href}><i class={l.icon}></i> {l.label}</a></li>
-        ))}
-      </ul>
-    </nav>
+    <ul>
+      {links.map((l, i) => (<li style={`--i:${i}`}><a href={l.href}>{l.label}</a></li>))}
+      <li style={`--i:${links.length}`}><a href={profile.resumePdf}>Download PDF</a></li>
+    </ul>
   </div>
 </header>
 
 <style>
-  .nav {
-    position: sticky; top: 0; z-index: 50;
-    background: transparent;
-    border-bottom: 1px solid transparent;
-    backdrop-filter: none;
-    -webkit-backdrop-filter: none;
-    transition: background .4s ease, border-color .4s ease, box-shadow .4s ease;
-    will-change: background;
+  .nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; padding: 12px var(--gutter) 0; pointer-events: none; }
+  .nav__inner {
+    pointer-events: auto;
+    max-width: var(--container); margin: 0 auto;
+    display: flex; align-items: center; gap: 14px;
+    height: 58px; padding: 0 10px 0 12px;
+    border-radius: 999px;
+    border: 1px solid transparent;
+    transition: background .45s var(--ease), border-color .45s var(--ease), box-shadow .45s var(--ease), backdrop-filter .45s;
   }
-  /* Frosted ice-glass on scroll */
-  .nav--scrolled {
-    backdrop-filter: blur(24px) saturate(180%);
-    -webkit-backdrop-filter: blur(24px) saturate(180%);
-    background: color-mix(in oklab, var(--bg) 68%, transparent);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.04), 0 8px 40px rgba(0, 0, 0, 0.38);
+  .nav.is-scrolled .nav__inner {
+    background: color-mix(in oklab, var(--bg) 62%, transparent);
+    border-color: var(--border);
+    backdrop-filter: blur(22px) saturate(160%);
+    -webkit-backdrop-filter: blur(22px) saturate(160%);
+    box-shadow: 0 10px 40px -18px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.05);
   }
-  /* Brighter links when floating over hero (transparent state) */
-  .nav:not(.nav--scrolled) .nav__links a {
-    color: rgba(230, 237, 243, 0.88);
-  }
-  .nav:not(.nav--scrolled) .nav__links a:hover {
-    color: #fff;
-  }
-  .nav:not(.nav--scrolled) .nav__brand {
-    color: var(--fg);
-  }
-  .nav:not(.nav--scrolled) .nav__toggle,
-  .nav:not(.nav--scrolled) .nav__burger {
-    border-color: rgba(255, 255, 255, 0.15);
-    color: rgba(230, 237, 243, 0.8);
-  }
-  .nav__row {
-    display: flex; align-items: center; gap: 16px;
-    padding: 14px 0;
-  }
-
-  /* Brand */
-  .nav__brand {
-    display: flex; align-items: center; gap: 10px;
-    color: var(--fg); text-decoration: none;
-    font-family: var(--font-display); font-weight: 700;
-    flex-shrink: 0;
-    margin-left:16px;
-  }
+  .nav__brand { display: inline-flex; align-items: center; gap: 10px; color: var(--fg); font-family: var(--font-display); font-weight: 700; letter-spacing: -.01em; text-decoration: none; flex: none; }
   .nav__brand:hover { text-decoration: none; }
-  .nav__mark {
-    display: inline-grid; place-items: center;
-    width: 34px; height: 34px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, var(--accent), var(--accent-3));
-    color: #06221c; font-size: 1.05rem; font-weight: 800; letter-spacing: -0.04em;
-  }
+  .nav__mark { display: inline-grid; place-items: center; color: var(--fg); transition: transform .5s var(--ease); }
+  .nav__brand:hover .nav__mark { transform: rotate(-8deg) scale(1.05); }
+  .nav__name { font-size: .98rem; }
 
-  /* Desktop nav — fills middle, centered */
-  .nav__desktop {
-    flex: 1;
-    display: flex;
-    justify-content: center;
-  }
-  .nav__links {
-    list-style: none; display: flex; gap: 22px;
-    margin: 0; padding: 0;
-  }
+  .nav__links { flex: 1; display: flex; justify-content: center; }
+  .nav__links ul { position: relative; list-style: none; margin: 0; padding: 4px; display: flex; gap: 2px; border-radius: 999px; }
   .nav__links a {
-    color: var(--muted);
-    font: 500 0.92rem var(--font-body);
-    text-decoration: none;
-    transition: color .2s var(--ease);
-    display: inline-flex; align-items: center; gap: 5px;
-    white-space: nowrap;
+    position: relative; z-index: 1; display: inline-block; padding: 8px 14px; border-radius: 999px;
+    color: var(--muted); font: 500 .88rem var(--font-body); text-decoration: none; white-space: nowrap;
+    transition: color .25s var(--ease);
   }
-  .nav__links a i { font-size: 0.82rem; opacity: 0.75; }
-  .nav__links a:hover { color: var(--fg); text-decoration: none; }
-
-  /* Right-side controls group — always floats right */
-  .nav__end {
-    display: flex; align-items: center; gap: 8px;
-    margin-left: auto;
-    flex-shrink: 0;
-    margin-right:20px;
+  .nav__links a:hover, .nav__links a.is-active, .nav__links a[aria-current="page"] { color: var(--fg); }
+  .nav__pill {
+    position: absolute; top: 4px; left: var(--px, 0); width: var(--pw, 0); height: calc(100% - 8px);
+    border-radius: 999px; background: var(--surface-2); border: 1px solid var(--border);
+    opacity: var(--po, 0);
+    transition: left .45s var(--ease), width .45s var(--ease), opacity .3s var(--ease);
   }
 
-  /* Icon buttons (theme toggle + burger) */
-  .nav__toggle,
-  .nav__burger {
-    background: transparent; border: 1px solid var(--border);
-    color: var(--muted); padding: 8px; border-radius: 10px;
-    cursor: pointer; transition: all .2s var(--ease);
-    display: inline-grid; place-items: center;
-    width: 38px; height: 38px;
+  .nav__end { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  .nav__cta {
+    display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px;
+    background: var(--accent); color: #fff; font: 600 .82rem var(--font-body); text-decoration: none;
+    box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), .9);
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease), filter .3s;
   }
-  .nav__toggle:hover,
-  .nav__burger:hover { color: var(--fg); border-color: var(--border-strong); }
-  .nav__burger { font-size: 1rem; }
+  .nav__cta:hover { text-decoration: none; transform: translateY(-1px); filter: brightness(1.08); }
+  .nav__icon {
+    position: relative; width: 40px; height: 40px; border-radius: 50%; display: inline-grid; place-items: center;
+    background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer;
+    transition: color .25s, border-color .25s, background .25s;
+  }
+  .nav__icon:hover { color: var(--fg); border-color: var(--border-strong); background: var(--surface); }
+  .nav__sun, .nav__moon { grid-area: 1 / 1; transition: transform .5s var(--ease), opacity .3s; }
+  .nav__moon { opacity: 0; transform: rotate(-90deg) scale(.6); }
+  :root[data-theme="light"] .nav__sun { opacity: 0; transform: rotate(90deg) scale(.6); }
+  :root[data-theme="light"] .nav__moon { opacity: 1; transform: none; }
 
-  /* Hamburger hidden on desktop */
-  .nav__burger { display: none; }
+  .nav__burger { display: none; flex-direction: column; gap: 5px; }
+  .nav__burger span { display: block; width: 16px; height: 1.6px; background: currentColor; border-radius: 2px; transition: transform .35s var(--ease), opacity .3s; }
+  .nav__burger[aria-expanded="true"] span:first-child { transform: translateY(3.3px) rotate(45deg); }
+  .nav__burger[aria-expanded="true"] span:last-child { transform: translateY(-3.3px) rotate(-45deg); }
 
-  /* Mobile drawer */
   .nav__drawer {
-    overflow: hidden;
-    max-height: 0;
-    transition: max-height 0.3s var(--ease);
-    border-top: 1px solid transparent;
-    background: color-mix(in oklab, var(--bg) 94%, transparent);
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    pointer-events: auto;
+    max-width: var(--container); margin: 8px auto 0;
+    border-radius: var(--radius-lg); overflow: hidden;
+    background: color-mix(in oklab, var(--bg) 84%, transparent);
+    border: 1px solid transparent;
+    backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
+    max-height: 0; transition: max-height .45s var(--ease), border-color .3s;
   }
-  .nav__drawer.is-open {
-    max-height: 360px;
-    border-top-color: var(--border);
-  }
-  .nav__drawer-links {
-    list-style: none;
-    display: flex; flex-direction: column;
-    margin: 0; padding: 10px 0 14px;
-    gap: 2px;
-  }
-  .nav__drawer-links a {
-    display: flex; align-items: center; gap: 10px;
-    padding: 10px clamp(16px, 3vw, 28px);
-    color: var(--muted);
-    font: 500 0.95rem var(--font-body);
-    text-decoration: none;
-    transition: color .15s var(--ease), background .15s var(--ease);
-    border-radius: 8px;
-  }
-  .nav__drawer-links a i { font-size: 0.88rem; opacity: 0.75; width: 16px; text-align: center; }
-  .nav__drawer-links a:hover { color: var(--fg); background: var(--surface); }
+  .nav__drawer.is-open { max-height: 420px; border-color: var(--border); }
+  .nav__drawer ul { list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; }
+  .nav__drawer li { opacity: 0; transform: translateY(8px); transition: opacity .4s var(--ease), transform .4s var(--ease); transition-delay: calc(var(--i) * 40ms); }
+  .nav__drawer.is-open li { opacity: 1; transform: none; }
+  .nav__drawer a { display: block; padding: 12px 14px; border-radius: 12px; color: var(--fg); font: 600 1.05rem var(--font-display); text-decoration: none; }
+  .nav__drawer a:hover { background: var(--surface-2); }
 
-  /* Breakpoints */
-  @media (max-width: 860px) {
-    .nav__links { gap: 14px; }
-    .nav__links a { font-size: 0.86rem; }
-  }
-  @media (max-width: 680px) {
-    /* Hide desktop nav, show hamburger */
-    .nav__desktop { display: none; }
-    .nav__burger { display: inline-grid; }
+  @media (max-width: 900px) { .nav__links a { padding: 8px 10px; font-size: .84rem; } }
+  @media (max-width: 760px) {
+    .nav__links { display: none; }
+    .nav__burger { display: inline-flex; }
     .nav__name { display: none; }
   }
 </style>
 
 <script>
-  const burger = document.querySelector<HTMLButtonElement>('.nav__burger');
-  const drawer = document.getElementById('nav-drawer');
-
-  burger?.addEventListener('click', () => {
-    const open = drawer?.classList.toggle('is-open');
+  const nav = document.getElementById('nav')!;
+  const burger = nav.querySelector<HTMLButtonElement>('.nav__burger')!;
+  const drawer = document.getElementById('nav-drawer')!;
+  const setOpen = (open: boolean) => {
+    drawer.classList.toggle('is-open', open);
     burger.setAttribute('aria-expanded', String(open));
-    drawer?.setAttribute('aria-hidden', String(!open));
-  });
-
-  // Close drawer when a link inside is clicked
-  drawer?.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      drawer.classList.remove('is-open');
-      burger?.setAttribute('aria-expanded', 'false');
-      drawer.setAttribute('aria-hidden', 'true');
-    });
-  });
-
-  // Scroll-linked transparent → frosted glass
-  const navEl = document.querySelector('.nav') as HTMLElement | null;
-  const updateNav = () => {
-    const hero = document.querySelector('.hero');
-    navEl?.classList.toggle('nav--scrolled', window.scrollY > 40 || !hero);
+    drawer.setAttribute('aria-hidden', String(!open));
   };
-  window.addEventListener('scroll', updateNav, { passive: true });
-  updateNav();
+  burger.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
+  drawer.querySelectorAll('a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+
+  const onScroll = () => nav.classList.toggle('is-scrolled', scrollY > 24);
+  addEventListener('scroll', onScroll, { passive: true }); onScroll();
+
+  // Sliding pill follows the active section
+  const list = nav.querySelector<HTMLUListElement>('.nav__links ul');
+  const anchors = Array.from(nav.querySelectorAll<HTMLAnchorElement>('.nav__links a[data-nav]'));
+  const movePill = (a: HTMLAnchorElement | null) => {
+    if (!list) return;
+    if (!a) { list.style.setProperty('--po', '0'); return; }
+    const lr = list.getBoundingClientRect(), ar = a.getBoundingClientRect();
+    list.style.setProperty('--px', `${ar.left - lr.left}px`);
+    list.style.setProperty('--pw', `${ar.width}px`);
+    list.style.setProperty('--po', '1');
+  };
+  anchors.forEach((a) => a.addEventListener('mouseenter', () => movePill(a)));
+  list?.addEventListener('mouseleave', () => movePill(anchors.find((a) => a.classList.contains('is-active')) || null));
+
+  const sections = ['top', ...anchors.map((a) => a.dataset.nav!)].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+  if (sections.length) {
+    const spy = new IntersectionObserver((entries) => {
+      const vis = entries.filter((e) => e.isIntersecting).sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+      if (!vis) return;
+      const id = vis.target.id === 'top' ? '' : vis.target.id;
+      anchors.forEach((a) => a.classList.toggle('is-active', a.dataset.nav === id));
+      movePill(anchors.find((a) => a.dataset.nav === id) || null);
+    }, { rootMargin: '-35% 0px -55% 0px', threshold: [0, 0.2, 0.5] });
+    sections.forEach((s) => spy.observe(s));
+  } else {
+    movePill(anchors.find((a) => a.getAttribute('aria-current') === 'page') || null);
+  }
 </script>

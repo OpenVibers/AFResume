@@ -2,25 +2,30 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import profile from "../data/profile.json";
 
 interface Props {
   title?: string;
   description?: string;
   image?: string;
   canonical?: string;
+  type?: string;
 }
 
 const {
-  title = "Alex Frison — Software Engineer · Data Analyst · Builder",
-  description = "Alex Frison: Seattle-based data analyst, software engineer, and product builder. Amazon ICQA analytics, autonomous research agents, OpenVibe streaming products, and a decade of shipping web platforms.",
+  title = "Alex Frison — Software Engineer · Platform Architect · Founder of OpenVibe",
+  description = "Alex Frison: Pacific Northwest software engineer and founder of the OpenVibe network (live streaming, identity, media, 169 tools, games). Contract engineer at PowerChat building its developer platform and payments. Formerly Amazon ICQA analytics.",
   image = "/assets/img/og.png",
   canonical,
+  type = "website",
 } = Astro.props;
 
-const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
+const site = Astro.site ?? new URL("https://alexfrison.net");
+const pageUrl = canonical ?? new URL(Astro.url.pathname, site).toString();
+const imageUrl = new URL(image, site).toString();
 ---
 <!doctype html>
-<html lang="en" data-theme="dark">
+<html lang="en" data-theme="dark" class="no-js">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -28,90 +33,203 @@ const pageUrl = canonical ?? new URL(Astro.url.pathname, Astro.site).toString();
   <meta name="description" content={description} />
   <link rel="canonical" href={pageUrl} />
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-  <meta name="theme-color" content="#0a1018" />
+  <link rel="sitemap" href="/sitemap-index.xml" />
+  <meta name="theme-color" content="#07090f" />
+  <meta name="color-scheme" content="dark light" />
 
-  <meta property="og:type" content="website" />
+  <meta property="og:type" content={type} />
+  <meta property="og:site_name" content="Alex Frison" />
   <meta property="og:title" content={title} />
   <meta property="og:description" content={description} />
-  <meta property="og:image" content={image} />
+  <meta property="og:image" content={imageUrl} />
   <meta property="og:url" content={pageUrl} />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content={title} />
+  <meta name="twitter:description" content={description} />
+  <meta name="twitter:image" content={imageUrl} />
   <meta name="robots" content="index, follow" />
   <meta name="author" content="Alex Frison" />
-  <meta name="keywords" content="Alex Frison, Data Analyst, Software Engineer, Seattle, Arlington WA, Amazon ICQA, SQL, Python, TypeScript, Node.js, React, Full-Stack Developer, Autonomous Agents, AI Agent Builder, Systems Architect, SOX Compliance, Open Source, Pacific Northwest" />
+  <meta name="keywords" content="Alex Frison, Software Engineer, Platform Architect, OpenVibe, Live Streaming, WebRTC, RTMP, OAuth2, OIDC, Payments, Stripe, Node.js, TypeScript, Seattle, Arlington WA, Pacific Northwest, Founding Engineer, AI Agents, Data Analyst, Amazon ICQA, SOX" />
 
-  <script type="application/ld+json">
-  {
+  <script type="application/ld+json" set:html={JSON.stringify({
     "@context": "https://schema.org",
     "@type": "Person",
-    "name": "Alex Frison",
-    "url": "https://alexfrison.net",
-    "email": "alex@alexfrison.net",
-    "telephone": "+14253673997",
-    "image": "https://alexfrison.net/assets/img/alex-cut1.png",
-    "jobTitle": "Data Analyst · Software Engineer",
-    "description": "Seattle-area data analyst and full-stack software engineer with 10+ years shipping web platforms, autonomous analytics agents, and creator infrastructure. Open to new roles.",
-    "knowsAbout": [
-      "Data Analysis", "SQL", "Python", "TypeScript", "Node.js",
-      "Machine Learning", "Autonomous Agents", "Streaming Platforms",
-      "Systems Architecture", "SOX Compliance", "React", "MongoDB",
-      "Redis", "NGINX", "Linux", "Excel", "Power Query"
+    name: profile.name,
+    url: profile.site,
+    email: profile.email,
+    telephone: profile.phone,
+    image: `${profile.site}/assets/img/me-cut1.png`,
+    jobTitle: "Software Engineer · Platform Architect · Founder of OpenVibe",
+    description: profile.pitch,
+    worksFor: [
+      { "@type": "Organization", name: "PowerChat", url: "https://powerchat.gg" },
+      { "@type": "Organization", name: "OpenVibe", url: "https://openvibe.live" },
     ],
-    "address": {
-      "@type": "PostalAddress",
-      "addressLocality": "Arlington",
-      "addressRegion": "WA",
-      "addressCountry": "US"
-    },
-    "sameAs": [
-      "https://github.com/OpenVibers",
-      "https://www.linkedin.com/in/fris/"
-    ]
-  }
-  </script>
+    knowsAbout: ["Live streaming infrastructure", "WebRTC", "RTMP", "OAuth2", "OIDC", "Payments systems", "Node.js", "TypeScript", "PostgreSQL", "SQLite", "Redis", "ffmpeg", "LLM tooling", "SQL analytics", "Linux", "nginx", "systemd"],
+    address: { "@type": "PostalAddress", addressLocality: "Arlington", addressRegion: "WA", addressCountry: "US" },
+    sameAs: [profile.github, profile.linkedin],
+  })} />
 
+  <link rel="preload" href="/assets/vendor/fonts/space-grotesk-700.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="preload" href="/assets/vendor/fonts/inter-400.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css" />
-  <link rel="stylesheet" href="/assets/vendor/splitting/splitting.css" />
-  <link rel="stylesheet" href="/assets/vendor/swiper/swiper-bundle.min.css" />
+  <link rel="stylesheet" href="/assets/vendor/lenis/lenis.css" />
+
+  <script is:inline>
+    // Theme before paint (no flash) and JS marker for reveal fallbacks
+    (function () {
+      var d = document.documentElement;
+      d.classList.remove('no-js');
+      try {
+        var t = localStorage.getItem('afnet-theme');
+        if (t === 'light' || t === 'dark') d.dataset.theme = t;
+      } catch (e) {}
+    })();
+  </script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
+  <div class="progress" aria-hidden="true"></div>
+  <div class="cursor" aria-hidden="true"></div>
   <Nav />
   <main id="main"><slot /></main>
   <Footer />
 
   <script>
-    // Reveal-on-scroll — Web Animations API so OS reduced-motion can't suppress it
+    // ---- Smooth scroll (Lenis) --------------------------------------------
+    const lenisScript = document.createElement('script');
+    lenisScript.src = '/assets/vendor/lenis/lenis.min.js';
+    lenisScript.onload = () => {
+      // @ts-ignore
+      const L = window.Lenis;
+      if (!L || matchMedia('(pointer: coarse)').matches) return;
+      const lenis = new L({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true });
+      // @ts-ignore
+      window.__lenis = lenis;
+      const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
+      requestAnimationFrame(raf);
+      document.addEventListener('click', (e) => {
+        const a = (e.target as HTMLElement).closest('a[href^="#"], a[href^="/#"]') as HTMLAnchorElement | null;
+        if (!a) return;
+        const hash = a.getAttribute('href')!.replace(/^\//, '');
+        if (hash === '#' || location.pathname !== '/' && a.getAttribute('href')!.startsWith('/#')) return;
+        const target = document.querySelector(hash);
+        if (!target) return;
+        e.preventDefault();
+        lenis.scrollTo(target as HTMLElement, { offset: -80, duration: 1.1 });
+        history.pushState(null, '', hash);
+      });
+    };
+    document.head.appendChild(lenisScript);
+
+    // ---- Reveal on scroll (WAAPI so OS reduced-motion cannot leave it hidden)
     const io = new IntersectionObserver((entries) => {
-      for (const e of entries) {
-        if (e.isIntersecting) {
-          const el = e.target as HTMLElement;
-          el.style.opacity = '1';
-          el.style.transform = 'none';
-          el.animate(
-            [
-              { opacity: 0, transform: 'translateY(24px)' },
-              { opacity: 1, transform: 'translateY(0)' }
-            ],
-            { duration: 600, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'forwards' }
-          );
-          io.unobserve(el);
-        }
+      for (const en of entries) {
+        if (!en.isIntersecting) continue;
+        const el = en.target as HTMLElement;
+        const kind = el.dataset.reveal || 'up';
+        const delay = Number(el.dataset.delay || 0);
+        const from: Keyframe = kind === 'left' ? { opacity: 0, transform: 'translateX(-30px)' }
+          : kind === 'right' ? { opacity: 0, transform: 'translateX(30px)' }
+          : kind === 'scale' ? { opacity: 0, transform: 'scale(.94)' }
+          : { opacity: 0, transform: 'translateY(26px)' };
+        el.style.opacity = '1'; el.style.transform = 'none';
+        el.animate([from, { opacity: 1, transform: 'none' }], { duration: 750, delay, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+        io.unobserve(el);
       }
-    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+    }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
     document.querySelectorAll('[data-reveal]').forEach((el) => io.observe(el));
 
-    // Theme toggle
-    const KEY = "afnet-theme";
-    const saved = localStorage.getItem(KEY);
-    if (saved) document.documentElement.dataset.theme = saved;
-    document.addEventListener("click", (e) => {
-      const t = e.target as HTMLElement;
-      if (t.closest("[data-theme-toggle]")) {
-        const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
-        document.documentElement.dataset.theme = next;
-        localStorage.setItem(KEY, next);
+    // Staggered children: <ul data-stagger> reveals each child in sequence
+    const sio = new IntersectionObserver((entries) => {
+      for (const en of entries) {
+        if (!en.isIntersecting) continue;
+        const kids = Array.from((en.target as HTMLElement).children) as HTMLElement[];
+        kids.forEach((k, i) => {
+          k.style.opacity = '1';
+          k.animate([{ opacity: 0, transform: 'translateY(22px)' }, { opacity: 1, transform: 'none' }],
+            { duration: 650, delay: i * 70, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+        });
+        sio.unobserve(en.target);
       }
+    }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
+    document.querySelectorAll('[data-stagger]').forEach((el) => {
+      Array.from(el.children).forEach((k) => ((k as HTMLElement).style.opacity = '0'));
+      sio.observe(el);
+    });
+
+    // ---- Scroll progress ---------------------------------------------------
+    const bar = document.querySelector('.progress') as HTMLElement | null;
+    let ticking = false;
+    const onScroll = () => {
+      if (!bar) return;
+      const max = document.documentElement.scrollHeight - innerHeight;
+      bar.style.transform = `scaleX(${max > 0 ? Math.min(1, scrollY / max) : 0})`;
+      ticking = false;
+    };
+    addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(onScroll); } }, { passive: true });
+    onScroll();
+
+    // ---- Custom cursor (fine pointers only) --------------------------------
+    const cur = document.querySelector('.cursor') as HTMLElement | null;
+    if (cur && matchMedia('(pointer: fine)').matches) {
+      let cx = 0, cy = 0, tx = 0, ty = 0, shown = false;
+      addEventListener('pointermove', (e) => {
+        tx = e.clientX; ty = e.clientY;
+        if (!shown) { shown = true; cx = tx; cy = ty; cur.classList.add('is-on'); }
+        const hot = (e.target as HTMLElement).closest('a, button, [data-tilt], .chip');
+        cur.classList.toggle('is-link', !!hot);
+      }, { passive: true });
+      addEventListener('pointerdown', () => cur.classList.add('is-down'));
+      addEventListener('pointerup', () => cur.classList.remove('is-down'));
+      document.addEventListener('mouseleave', () => cur.classList.remove('is-on'));
+      const loop = () => {
+        cx += (tx - cx) * 0.22; cy += (ty - cy) * 0.22;
+        cur.style.translate = `${cx}px ${cy}px`;
+        requestAnimationFrame(loop);
+      };
+      loop();
+    }
+
+    // ---- Pointer spotlight + tilt cards -----------------------------------
+    document.querySelectorAll<HTMLElement>('.spot, [data-tilt]').forEach((el) => {
+      const tilt = el.hasAttribute('data-tilt');
+      el.addEventListener('pointermove', (e) => {
+        const r = el.getBoundingClientRect();
+        const x = e.clientX - r.left, y = e.clientY - r.top;
+        el.style.setProperty('--mx', `${x}px`);
+        el.style.setProperty('--my', `${y}px`);
+        if (tilt && matchMedia('(pointer: fine)').matches) {
+          const rx = ((y / r.height) - 0.5) * -6;
+          const ry = ((x / r.width) - 0.5) * 8;
+          el.style.transform = `perspective(900px) rotateX(${rx}deg) rotateY(${ry}deg) translateY(-4px)`;
+        }
+      });
+      el.addEventListener('pointerleave', () => { if (tilt) el.style.transform = ''; });
+    });
+
+    // ---- Magnetic buttons ----------------------------------------------------
+    if (matchMedia('(pointer: fine)').matches) {
+      document.querySelectorAll<HTMLElement>('[data-magnetic]').forEach((el) => {
+        el.addEventListener('pointermove', (e) => {
+          const r = el.getBoundingClientRect();
+          const dx = e.clientX - (r.left + r.width / 2);
+          const dy = e.clientY - (r.top + r.height / 2);
+          el.style.transform = `translate(${dx * 0.18}px, ${dy * 0.22}px)`;
+        });
+        el.addEventListener('pointerleave', () => { el.style.transform = ''; });
+      });
+    }
+
+    // ---- Theme toggle --------------------------------------------------------
+    document.addEventListener('click', (e) => {
+      const t = (e.target as HTMLElement).closest('[data-theme-toggle]');
+      if (!t) return;
+      const root = document.documentElement;
+      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
+      root.dataset.theme = next;
+      try { localStorage.setItem('afnet-theme', next); } catch {}
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f4f6fb' : '#07090f');
     });
   </script>
 </body>

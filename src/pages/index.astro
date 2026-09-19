@@ -1,105 +1,23 @@
 ---
 import Base from "../layouts/Base.astro";
 import Hero from "../components/Hero.astro";
-import ImpactMetrics from "../components/ImpactMetrics.astro";
+import Metrics from "../components/Metrics.astro";
 import Marquee from "../components/Marquee.astro";
-import ProjectCarousel from "../components/ProjectCarousel.astro";
+import Now from "../components/Now.astro";
+import Network from "../components/Network.astro";
 import ProjectGrid from "../components/ProjectGrid.astro";
-import ExperienceTimeline from "../components/ExperienceTimeline.astro";
-import SkillsGrid from "../components/SkillsGrid.astro";
-import ContactBlock from "../components/ContactBlock.astro";
+import Timeline from "../components/Timeline.astro";
+import Skills from "../components/Skills.astro";
+import Contact from "../components/Contact.astro";
 ---
 <Base>
   <Hero />
-  <ImpactMetrics />
+  <Metrics />
   <Marquee />
-
-  <section class="profile" id="about">
-    <div class="container profile__row">
-      <div data-reveal>
-        <div class="section-eyebrow"><i class="fa-solid fa-user"></i> Profile</div>
-        <h2 class="section-title">A versatile builder</h2>
-        <p class="profile-para">
-          <i class="fa-solid fa-microchip profile-para__icon"></i>
-          <span>Data analyst and systems architect with 10+ years of shipping —
-          from <strong>SOX-compliance tooling at Amazon ICQA</strong> to
-          autonomous AI agents to a <strong>15-microservice open-source
-          platform</strong>, built and operated solo. I turn operational
-          context into tools and analysis stakeholders can act on.</span>
-        </p>
-        <p class="profile-para">
-          <i class="fa-solid fa-store profile-para__icon"></i>
-          <span>Before tech, I sold at <strong>Verizon Wireless</strong> —
-          promoted from Sales Rep to <strong>Assistant Manager</strong> in a
-          quota-driven store. Reading people, handling objections, and closing
-          clearly still shape how I present data and decisions.</span>
-        </p>
-        <p class="profile-para">
-          <i class="fa-solid fa-screwdriver-wrench profile-para__icon"></i>
-          <span>Building computers since age 12. A decade running my own LLC,
-          ten years tracking 200,000+ live game servers, 1,000+ IRDRs
-          researched at Amazon. I ship fast and keep what works.</span>
-        </p>
-      </div>
-      <aside class="card profile__facts" data-reveal>
-        <h3><i class="fa-solid fa-circle-info" style="color:var(--accent);margin-right:.4rem"></i>Quick facts</h3>
-        <ul>
-          <li><strong><i class="fa-solid fa-location-dot"></i> Based</strong>Seattle / Arlington, WA</li>
-          <li><strong><i class="fa-solid fa-briefcase"></i> Open to</strong>Hybrid · Remote · On-site PNW</li>
-          <li><strong><i class="fa-solid fa-building-columns"></i> Founder</strong>GameServerStats, LLC</li>
-          <li><strong><i class="fa-solid fa-laptop-code"></i> Last role</strong>Amazon · Data Analyst (ICQA)</li>
-          <li class="profile__facts-seeking"><strong><i class="fa-solid fa-magnifying-glass"></i> Seeking</strong><span class="seek-groups"><span class="seek-group"><i class="fa-solid fa-chart-line"></i> Analyst · Data Engineer · BI</span><span class="seek-group"><i class="fa-solid fa-server"></i> IT · Systems · Robotics</span><span class="seek-group"><i class="fa-solid fa-people-group"></i> Sales · Leadership · Management</span></span></li>
-        </ul>
-      </aside>
-    </div>
-  </section>
-
-  <ProjectCarousel />
-  <ProjectGrid />
-  <ExperienceTimeline />
-  <SkillsGrid />
-  <ContactBlock />
+  <Now />
+  <Network />
+  <ProjectGrid limit={9} />
+  <Timeline />
+  <Skills />
+  <Contact />
 </Base>
-
-<style>
-  .profile__row {
-    display: grid;
-    grid-template-columns: 1.6fr 1fr;
-    gap: clamp(20px, 4vw, 48px);
-    align-items: start;
-  }
-  @media (max-width: 880px) { .profile__row { grid-template-columns: 1fr; } }
-  .profile__facts h3 { font-family: var(--font-display); margin-bottom: .8rem; }
-  .profile__facts ul { list-style: none; padding: 0; margin: 0; }
-  .profile__facts li {
-    display: grid; grid-template-columns: 110px 1fr;
-    gap: 12px; padding: 8px 0;
-    border-top: 1px solid var(--border);
-    color: var(--muted);
-    font-size: .92rem;
-  }
-  .profile__facts li:first-child { border-top: 0; }
-  .profile__facts strong { color: var(--accent); font-family: var(--font-mono); font-size: .8rem; text-transform: uppercase; letter-spacing: .08em; }
-
-  .seek-groups { display: flex; flex-direction: column; gap: 3px; }
-  .seek-group { font-size: .82rem; color: var(--muted); }
-  .seek-group i { color: var(--accent); margin-right: .25rem; font-size: .75rem; }
-  .profile__facts-seeking { display: block !important; }
-  .profile__facts-seeking strong { display: block; margin-bottom: 5px; }
-
-  .profile-para {
-    display: flex;
-    gap: 1rem;
-    align-items: flex-start;
-    margin-bottom: 1.2rem;
-    line-height: 1.75;
-  }
-  .profile-para__icon {
-    flex-shrink: 0;
-    margin-top: .25rem;
-    font-size: 1rem;
-    color: var(--accent);
-    width: 1.2rem;
-    text-align: center;
-  }
-</style>

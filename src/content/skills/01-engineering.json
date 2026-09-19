@@ -1,0 +1,48 @@
+{
+  "group": "Engineering & platform",
+  "icon": "fa-solid fa-code",
+  "order": 1,
+  "blurb": "Backends, APIs and the front ends that sit on them.",
+  "items": [
+    {
+      "name": "TypeScript / JavaScript",
+      "level": "core"
+    },
+    {
+      "name": "Node.js / Express",
+      "level": "core"
+    },
+    {
+      "name": "React",
+      "level": "strong"
+    },
+    {
+      "name": "Python",
+      "level": "core"
+    },
+    {
+      "name": "PostgreSQL / Prisma",
+      "level": "strong"
+    },
+    {
+      "name": "SQLite (WAL) / MySQL",
+      "level": "core"
+    },
+    {
+      "name": "Redis / BullMQ",
+      "level": "strong"
+    },
+    {
+      "name": "REST & event-driven design",
+      "level": "core"
+    },
+    {
+      "name": "PHP",
+      "level": "strong"
+    },
+    {
+      "name": "HTML / CSS / SSR",
+      "level": "core"
+    }
+  ]
+}

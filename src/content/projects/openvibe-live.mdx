@@ -1,0 +1,25 @@
+---
+title: "OpenVibe.Live"
+category: "openvibe"
+summary: "Open live-streaming platform: RTMP, WHIP and WebRTC ingest, multi-destination restream, VODs, clips, chat, live captions and translation. 529 routes, one engineer."
+tech: ["Node.js", "Express", "SQLite", "mediasoup", "werift", "node-media-server", "ffmpeg", "whisper.cpp", "WebSockets", "OAuth2"]
+role: "Founder · Architect · Sole Engineer"
+year: "2022–Present"
+image: "/assets/img/sites/live.webp"
+icon: "fa-solid fa-tower-broadcast"
+links: { "live": "https://openvibe.live", "docs": "https://openvibe.live/docs/whip" }
+featured: true
+order: 1
+---
+
+The flagship of the network and the reason the rest exists. Streamers connect OBS, an SRT encoder, a browser tab or a phone; viewers get a player, chat, clips and VODs that keep working while the server is being redeployed.
+
+**Ingest and delivery.** RTMP, WHIP (open-CORS, so a backend-less web page can publish), a WebRTC SFU built on mediasoup, and a JSMPEG fallback. Restreams fan out through ffmpeg to Twitch, YouTube, Kick, custom RTMP and SRT destinations, and end with their source instead of lingering.
+
+**Media.** Recording, clip cutting and thumbnails are delegated to OpenVibe.Media over a signed, multi-tenant API. VODs tier from local disk to Backblaze B2 and Cloudflare R2 and stream back through presigned URLs.
+
+**Community layer.** Chat with moderation cascades, IP bans and redaction; a three-currency economy (OpenCoins earned site-wide, per-channel points, and Vibes for real-money support); voice rooms; watch-party song requests; PowerChat and RobotStreamer integrations with reconcile-and-retry webhooks.
+
+**AI, on a budget.** A provider-agnostic LLM client (OpenAI, OpenRouter, Groq, Together, Ollama, llama.cpp) metered by a daily budget powers auto-clips, stream memories, timelines and site copy. Speech is transcribed locally with whisper.cpp and translated into about 21 languages, which is how a Japanese-speaking streamer became the site's star.
+
+**Operations.** systemd socket activation gives zero-downtime restarts (90 of 90 requests served through a full restart in testing). A deploy script classifies each change as static, server, dependency, schema or unit-level and takes the least disruptive path, with `--wait-idle` and `--rollback`. A CDP performance harness with interleaved A/B runs took the home page from CLS 0.83 to 0.03.

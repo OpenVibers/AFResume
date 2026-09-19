@@ -1,0 +1,17 @@
+---
+title: "Network cutover & migration suite"
+category: "infra"
+summary: "Zero-downtime migration from a monolith to seven services: dry-run-first migration scripts, a three-window runbook with smoke tests, and legacy-domain redirects that kept every old link alive."
+tech: ["Node.js", "SQLite", "SQL", "Bash", "nginx", "systemd", "Runbooks"]
+role: "Architect · Operator"
+year: "2026"
+icon: "fa-solid fa-diagram-project"
+order: 8
+---
+
+The old network was one database and one process. The new one is seven services with contracts between them. Getting from one to the other without losing a user, a coin balance or a live player took a written plan.
+
+- **Contracts first.** A formal inter-service document fixes domains, ports, OAuth clients, the wallet API, the Media API and notification semantics before any code moved.
+- **Dry-run everything.** Each migration script (identity, live/media split, coins, game world tokens) runs read-only by default and only writes with `--apply`, validated against production snapshots first. Unmappable legacy balances were deliberately left in place for a future claim flow rather than guessed.
+- **Three windows.** Network and Tools, then Live and Media, then Games, each with timed steps, smoke tests and a rollback path, followed by a two-week soak before decommission.
+- **Nothing 404s.** hobostreamer.com, hobo.tools and hobo.quest permanently redirect into the new network.

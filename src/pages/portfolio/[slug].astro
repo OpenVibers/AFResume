@@ -4,80 +4,105 @@ import { getCollection } from "astro:content";
 import type { GetStaticPaths } from "astro";
 
 export const getStaticPaths: GetStaticPaths = async () => {
-  const all = await getCollection("projects");
-  return all.map((p) => ({ params: { slug: p.slug }, props: { project: p } }));
+  const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+  return all.map((p, i) => ({
+    params: { slug: p.slug },
+    props: { project: p, prev: all[i - 1] ?? null, next: all[i + 1] ?? null },
+  }));
 };
 
-const { project } = Astro.props as any;
+const { project, prev, next } = Astro.props as any;
 const { Content } = await project.render();
 const d = project.data;
+const catLabel: Record<string, string> = {
+  openvibe: "OpenVibe", powerchat: "PowerChat", amazon: "Amazon", ai: "AI", infra: "Infra & ops",
+  game: "Games", tools: "Tools", python: "Python", hardware: "Hardware", web: "Web",
+};
 ---
-<Base title={`${d.title} — Alex Frison`} description={d.summary}>
-  <article class="proj-page container">
-    <a href="/portfolio" class="back">← All projects</a>
-    <header class="proj-page__head">
-      <span class="chip">{d.category}</span>
-      <h1>{d.title}</h1>
-      <p class="lead">{d.summary}</p>
-      <div class="meta">
-        {d.role && <div><strong>Role</strong>{d.role}</div>}
-        {d.year && <div><strong>Year</strong>{d.year}</div>}
-        {d.tech.length > 0 && <div><strong>Stack</strong>{d.tech.join(" · ")}</div>}
+<Base title={`${d.title} — Alex Frison`} description={d.summary} image={d.image ?? "/assets/img/og.png"} type="article">
+  <article class="pp container">
+    <a href="/portfolio" class="pp__back"><i class="fa-solid fa-arrow-left"></i> All projects</a>
+
+    <header class="pp__head" data-reveal>
+      <div class="pp__meta-top">
+        <span class="chip">{catLabel[d.category] ?? d.category}</span>
+        {d.year && <span class="mono pp__year">{d.year}</span>}
       </div>
-      {(d.links?.live || d.links?.repo || d.links?.video) && (
-        <div class="links">
-          {d.links.live  && <a class="btn btn--primary" href={d.links.live}  target="_blank" rel="noopener">Live →</a>}
-          {d.links.repo  && <a class="btn"             href={d.links.repo}  target="_blank" rel="noopener">Repo</a>}
-          {d.links.video && <a class="btn"             href={d.links.video} target="_blank" rel="noopener">Video</a>}
+      <h1 class="pp__title">{d.title}</h1>
+      <p class="pp__lead">{d.summary}</p>
+      <div class="pp__meta">
+        {d.role && <div><strong>Role</strong><span>{d.role}</span></div>}
+        {d.tech.length > 0 && <div class="pp__meta-wide"><strong>Stack</strong><span class="pp__tech">{d.tech.map((t: string) => <em>{t}</em>)}</span></div>}
+      </div>
+      {(d.links?.live || d.links?.repo || d.links?.docs || d.links?.video) && (
+        <div class="pp__links">
+          {d.links.live  && <a class="btn btn--primary" href={d.links.live}  target="_blank" rel="noopener" data-magnetic><i class="fa-solid fa-arrow-up-right-from-square"></i> Open live</a>}
+          {d.links.docs  && <a class="btn" href={d.links.docs}  target="_blank" rel="noopener" data-magnetic><i class="fa-solid fa-book"></i> Docs</a>}
+          {d.links.repo  && <a class="btn" href={d.links.repo}  target="_blank" rel="noopener" data-magnetic><i class="fa-brands fa-github"></i> Repo</a>}
+          {d.links.video && <a class="btn" href={d.links.video} target="_blank" rel="noopener" data-magnetic><i class="fa-solid fa-play"></i> Video</a>}
         </div>
       )}
     </header>
 
     {d.image && (
-      <figure class="hero-img">
-        <img src={d.image} alt={d.title} loading="lazy" />
+      <figure class="pp__hero" data-reveal="scale">
+        <img src={d.image} alt={`${d.title} screenshot`} loading="eager" />
       </figure>
     )}
 
-    <div class="prose card">
-      <Content />
+    <div class="pp__body">
+      <div class="prose card pp__prose" data-reveal>
+        <Content />
+      </div>
+      <aside class="pp__side" data-reveal data-delay="120">
+        <div class="card pp__cta">
+          <div class="eyebrow">Want the details?</div>
+          <p>I'm happy to walk through the architecture, the trade-offs and what I would do differently.</p>
+          <a href="/#contact" class="btn btn--primary">Get in touch <span class="btn__arrow">→</span></a>
+        </div>
+      </aside>
     </div>
 
     {d.images.length > 1 && (
-      <section class="gallery">
-        {d.images.map((src: string) => (
-          <figure><img src={src} alt={d.title} loading="lazy" /></figure>
-        ))}
+      <section class="pp__gallery" data-stagger>
+        {d.images.map((src: string) => (<figure><img src={src} alt={d.title} loading="lazy" /></figure>))}
       </section>
     )}
+
+    <nav class="pp__nav" aria-label="More projects">
+      {prev ? <a href={`/portfolio/${prev.slug}`} class="pp__nav-link"><span class="mono">← Previous</span><strong>{prev.data.title}</strong></a> : <span></span>}
+      {next ? <a href={`/portfolio/${next.slug}`} class="pp__nav-link pp__nav-link--next"><span class="mono">Next →</span><strong>{next.data.title}</strong></a> : <span></span>}
+    </nav>
   </article>
 </Base>
 
 <style>
-  .proj-page { padding: 60px 0 80px; max-width: 880px; }
-  .back { color: var(--muted); font-family: var(--font-mono); font-size: .85rem; }
-  .proj-page__head { padding: 18px 0 32px; }
-  .proj-page__head h1 { font-size: clamp(2rem, 5vw, 3rem); margin: .4rem 0; }
-  .lead { font-size: 1.15rem; color: var(--fg); max-width: 60ch; }
-  .meta {
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-    gap: 12px; margin: 1.4rem 0;
-  }
-  .meta div { color: var(--muted); font-size: .92rem; }
-  .meta strong { display: block; color: var(--accent); font-family: var(--font-mono); font-size: .75rem; text-transform: uppercase; letter-spacing: .1em; margin-bottom: 4px; }
-  .links { display: flex; gap: 10px; flex-wrap: wrap; }
-  .hero-img { margin: 0 0 32px; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
-  .hero-img img { width: 100%; height: auto; display: block; }
-  .prose { color: var(--fg); line-height: 1.75; font-size: 1.02rem; }
-  .prose :global(h2) { font-size: 1.3rem; margin-top: 1.4em; }
-  .prose :global(p) { color: var(--muted); }
-  .prose :global(strong) { color: var(--fg); }
-  .prose :global(ul) { color: var(--muted); }
-  .gallery {
-    margin-top: 32px;
-    display: grid; gap: 16px;
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  }
-  .gallery figure { margin: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
-  .gallery img { width: 100%; height: auto; }
+  .pp { padding: calc(var(--nav-h) + 40px) var(--gutter) 90px; max-width: 980px; }
+  .pp__back { display: inline-flex; align-items: center; gap: 8px; color: var(--muted); font: 500 .84rem var(--font-mono); margin-bottom: 26px; }
+  .pp__back:hover { color: var(--fg); text-decoration: none; }
+  .pp__meta-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+  .pp__year { color: var(--dim); font-size: .8rem; }
+  .pp__title { font-size: clamp(2.2rem, 5.5vw, 4rem); margin: 0 0 .3em; }
+  .pp__lead { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--fg); max-width: 62ch; line-height: 1.6; }
+  .pp__meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 1.4rem 0; }
+  .pp__meta-wide { grid-column: 1 / -1; }
+  .pp__meta strong { display: block; color: var(--accent); font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 6px; }
+  .pp__meta span { color: var(--muted); font-size: .94rem; }
+  .pp__tech { display: flex; flex-wrap: wrap; gap: 6px; }
+  .pp__tech em { font: 500 .72rem var(--font-mono); font-style: normal; padding: 4px 9px; border-radius: 7px; background: var(--surface-2); border: 1px solid var(--border); color: var(--muted); }
+  .pp__links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 6px; }
+  .pp__hero { margin: 30px 0; border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); box-shadow: var(--shadow-card); }
+  .pp__hero img { width: 100%; height: auto; }
+  .pp__body { display: grid; grid-template-columns: 1fr 280px; gap: 18px; align-items: start; margin-top: 24px; }
+  .pp__prose { padding: clamp(22px, 3.5vw, 40px); }
+  .pp__side { position: sticky; top: calc(var(--nav-h) + 20px); }
+  .pp__cta p { font-size: .92rem; margin: 8px 0 16px; }
+  .pp__gallery { margin-top: 32px; display: grid; gap: 16px; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); }
+  .pp__gallery figure { margin: 0; border-radius: 14px; overflow: hidden; border: 1px solid var(--border); }
+  .pp__nav { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 44px; }
+  .pp__nav-link { display: grid; gap: 6px; padding: 18px 20px; border-radius: 16px; border: 1px solid var(--border); background: var(--surface); color: var(--fg); text-decoration: none; transition: all .35s var(--ease); }
+  .pp__nav-link .mono { font-size: .72rem; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
+  .pp__nav-link:hover { border-color: rgba(var(--accent-rgb), .5); transform: translateY(-3px); text-decoration: none; }
+  .pp__nav-link--next { text-align: right; }
+  @media (max-width: 820px) { .pp__body { grid-template-columns: 1fr; } .pp__side { position: static; } .pp__nav { grid-template-columns: 1fr; } .pp__nav-link--next { text-align: left; } }
 </style>

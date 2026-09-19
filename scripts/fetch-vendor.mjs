@@ -10,23 +10,6 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..', 'public', 'assets', 'vendor');
 
 const FILES = [
-  // GSAP 3.12.5 + ScrollTrigger (MIT-equivalent free for non-Club uses)
-  ['https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js', 'gsap/gsap.min.js'],
-  ['https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js', 'gsap/ScrollTrigger.min.js'],
-  // Lenis 1.1.13 (MIT)
-  ['https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.min.js', 'lenis/lenis.min.js'],
-  ['https://cdn.jsdelivr.net/npm/lenis@1.1.13/dist/lenis.css', 'lenis/lenis.css'],
-  // Splitting 1.0.6 (MIT)
-  ['https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.min.js', 'splitting/splitting.min.js'],
-  ['https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting.css', 'splitting/splitting.css'],
-  ['https://cdn.jsdelivr.net/npm/splitting@1.0.6/dist/splitting-cells.css', 'splitting/splitting-cells.css'],
-  // tsparticles slim 3.5.0 (MIT)
-  ['https://cdn.jsdelivr.net/npm/@tsparticles/slim@3.5.0/tsparticles.slim.bundle.min.js', 'tsparticles/tsparticles.slim.bundle.min.js'],
-  // Swiper 11.1.14 (MIT)
-  ['https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.js', 'swiper/swiper-bundle.min.js'],
-  ['https://cdn.jsdelivr.net/npm/swiper@11.1.14/swiper-bundle.min.css', 'swiper/swiper-bundle.min.css'],
-  // Lottie-web 5.12.2 (MIT)
-  ['https://cdn.jsdelivr.net/npm/lottie-web@5.12.2/build/player/lottie_light.min.js', 'lottie/lottie_light.min.js'],
   // Inter font (OFL)
   ['https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.0/files/inter-latin-400-normal.woff2', 'fonts/inter-400.woff2'],
   ['https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.0/files/inter-latin-600-normal.woff2', 'fonts/inter-600.woff2'],
@@ -68,12 +51,8 @@ dependencies**. Re-fetch with \`npm run vendor:fetch\`.
 
 | Library | Version | License |
 |---|---|---|
-| GSAP + ScrollTrigger | 3.12.5 | GreenSock Standard "No Charge" License (free for non-commercial; see https://gsap.com/standard-license/) |
 | Lenis | 1.1.13 | MIT |
-| Splitting.js | 1.0.6 | MIT |
-| tsparticles (slim) | 3.5.0 | MIT |
-| Swiper | 11.1.14 | MIT |
-| Lottie-web (light) | 5.12.2 | MIT |
+| Font Awesome Free (CSS + webfonts) | 6.x | CC BY 4.0 / SIL OFL 1.1 / MIT |
 | Inter | 5.1.0 | SIL OFL 1.1 |
 | Space Grotesk | 5.1.0 | SIL OFL 1.1 |
 `);

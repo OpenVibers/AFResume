@@ -1,0 +1,13 @@
+---
+title: "OpenVibe.Sites"
+category: "openvibe"
+summary: "Thirteen network domains served from one catalog and one template that generate both the pages and the nginx configs, with a CI check that fails when the build is stale."
+tech: ["Node.js", "Static build", "nginx", "Let's Encrypt wildcard", "JSON-LD"]
+role: "Founder · Sole Engineer"
+year: "2026"
+icon: "fa-solid fa-globe"
+links: { "live": "https://openvibe.chat" }
+order: 7
+---
+
+openvibe.chat, .codes, .blog, .wiki, .news, .reviews, .tips, .vip, .trade, .host, .deals, .coupons and openre.stream all needed a real front door before they became apps. `sites.json` plus `build.js` emit a directory per domain and a matching nginx vhost; each page carries the shared navbar, footer and theme loader, so the whole network reads as one brand with many rooms.

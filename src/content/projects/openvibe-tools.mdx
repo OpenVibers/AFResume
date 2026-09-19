@@ -1,0 +1,21 @@
+---
+title: "OpenVibe.Tools"
+category: "openvibe"
+summary: "169 server-rendered tools across 8 families with a host registry, custom-domain mirrors and full SEO plumbing: converters, PDF, images, audio, DNS, YouTube, maps and food finders."
+tech: ["Node.js", "Express", "Multi-app gateway", "OAuth2 client", "SSR", "yt-dlp", "sharp", "ffmpeg", "Leaflet"]
+role: "Founder · Architect · Sole Engineer"
+year: "2023–Present"
+image: "/assets/img/sites/tools.webp"
+icon: "fa-solid fa-toolbox"
+links: { "live": "https://openvibe.tools" }
+featured: true
+order: 4
+---
+
+A gateway plus seven satellite apps serving 169 tools from one catalog: developer utilities, network lookups, image and audio converters, PDF and document tools, text and logo generators, a YouTube downloader, a North America survival map and a food-bank finder.
+
+**One catalog, many addresses.** A host registry gives every tool a canonical host, a short memorable host and 301 aliases, merged every minute with owner overrides from the Network's domain admin. Purchased domains attach to a tool from the admin UI; people are redirected to the short address while crawlers keep the descriptive one. Unknown subdomains redirect to the index so wildcard DNS never renders an invented brand.
+
+**Built for search.** Every tool is server-rendered with no required JavaScript, carries its own title, description, FAQ structured data and sitemap entry, and the index and `llms.txt` are generated from the catalog.
+
+**Operating notes.** YouTube blocks the datacenter address on every player client; the app probes every 30 minutes and shows an honest banner rather than a broken download button.

@@ -1,0 +1,112 @@
+---
+import { getCollection } from "astro:content";
+const exp = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
+const kindIcon: Record<string, string> = {
+  engineering: "fa-solid fa-code", founder: "fa-solid fa-rocket", analytics: "fa-solid fa-chart-line",
+  operations: "fa-solid fa-gears", sales: "fa-solid fa-handshake",
+};
+---
+<section class="section xp" id="experience" aria-labelledby="xp-title">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num" aria-hidden="true">04</span>
+      <div>
+        <div class="sec-index">Experience</div>
+        <h2 class="sec-title" id="xp-title">A decade of <em>owning the outcome</em>.</h2>
+      </div>
+      <p class="sec-lead">Founder, contractor, analyst, floor monitor, sales lead. Different rooms, same job: understand the system, fix it, make it measurable.</p>
+    </div>
+
+    <ol class="tl" id="tl">
+      <div class="tl__rail" aria-hidden="true"><div class="tl__fill" id="tl-fill"></div></div>
+      {exp.map((e, i) => (
+        <li class={`tl__item ${e.data.featured ? "is-featured" : ""} ${e.data.current ? "is-current" : ""}`} data-reveal="up">
+          <div class="tl__node" aria-hidden="true"><i class={kindIcon[e.data.kind]}></i></div>
+          <aside class="tl__aside" aria-hidden="true">
+            <span class="tl__aside-when">{e.data.current && <span class="live-dot"></span>}{e.data.start} — {e.data.end}</span>
+            <span class="tl__aside-co">{e.data.company}</span>
+            <span class="tl__aside-kind">{e.data.kind}</span>
+          </aside>
+          <article class="tl__card card spot">
+            <header class="tl__head">
+              <div class="tl__when mono">
+                {e.data.current && <span class="live-dot"></span>}
+                <span>{e.data.start} — {e.data.end}</span>
+              </div>
+              <h3 class="tl__role">{e.data.role}</h3>
+              <div class="tl__co">
+                {e.data.link ? <a href={e.data.link} target="_blank" rel="noopener">{e.data.company}</a> : <span>{e.data.company}</span>}
+                {e.data.location && <span class="tl__loc"><i class="fa-solid fa-location-dot"></i> {e.data.location}</span>}
+              </div>
+            </header>
+            {e.data.summary && <p class="tl__sum">{e.data.summary}</p>}
+            <ul class="tl__bullets">
+              {e.data.bullets.map((b) => <li>{b}</li>)}
+            </ul>
+            {e.data.stack.length > 0 && (
+              <ul class="tl__stack" aria-label="Stack">
+                {e.data.stack.map((s) => <li>{s}</li>)}
+              </ul>
+            )}
+          </article>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .tl { position: relative; list-style: none; margin: 0; padding: 0; display: grid; gap: 28px; }
+  .tl__rail { position: absolute; left: 22px; top: 0; bottom: 0; width: 2px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .tl__fill { width: 100%; height: 0%; background: var(--grad); box-shadow: 0 0 16px rgba(var(--accent-rgb), .6); transition: height .15s linear; }
+  .tl__item { position: relative; padding-left: 64px; }
+  .tl__node {
+    position: absolute; left: 4px; top: 22px; width: 38px; height: 38px; border-radius: 50%;
+    display: grid; place-items: center; font-size: .82rem;
+    background: var(--surface-solid); border: 1px solid var(--border-strong); color: var(--muted);
+    transition: color .3s, border-color .3s, box-shadow .3s, transform .3s var(--ease);
+  }
+  .tl__item:hover .tl__node, .tl__item.is-current .tl__node { color: var(--accent); border-color: var(--accent); box-shadow: 0 0 0 6px rgba(var(--accent-rgb), .12); }
+  .tl__item.is-current .tl__node { color: #fff; background: var(--accent); }
+  .tl__card { padding: clamp(20px, 3vw, 30px); }
+  .tl__head { display: grid; gap: 6px; margin-bottom: 12px; }
+  .tl__when { display: inline-flex; align-items: center; gap: 10px; font-size: .76rem; letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+  .tl__role { margin: 0; font-size: clamp(1.25rem, 2.2vw, 1.65rem); }
+  .tl__co { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: .95rem; }
+  .tl__co a { color: var(--fg); font-weight: 600; }
+  .tl__loc { color: var(--dim); font-size: .85rem; display: inline-flex; align-items: center; gap: 6px; }
+  .tl__sum { font-size: .95rem; color: var(--muted); font-style: italic; border-left: 2px solid rgba(var(--accent-rgb), .4); padding-left: 12px; }
+  .tl__bullets { margin: 0; padding: 0 0 0 1.1rem; display: grid; gap: 8px; color: var(--muted); line-height: 1.65; font-size: .95rem; }
+  .tl__bullets li::marker { color: var(--accent-2); }
+  .tl__stack { list-style: none; margin: 16px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--border); display: flex; flex-wrap: wrap; gap: 6px; }
+  .tl__stack li { font: 500 .68rem var(--font-mono); padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+  @media (min-width: 900px) {
+    .tl__rail { left: 239px; }
+    .tl__item { display: grid; grid-template-columns: 200px 1fr; gap: 0 80px; padding-left: 0; }
+    .tl__node { left: 221px; }
+    .tl__aside { position: sticky; top: calc(var(--nav-h) + 24px); align-self: start; padding-top: 22px; display: grid; gap: 8px; }
+    .tl__head .tl__when { display: none; }
+    .tl__item.is-featured .tl__card { padding: clamp(24px, 3vw, 34px); }
+  }
+  .tl__aside { display: none; }
+  @media (min-width: 900px) { .tl__aside { display: grid; } }
+  .tl__aside-when { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }
+  .tl__aside-co { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--fg); }
+  .tl__aside-kind { font-size: .78rem; color: var(--dim); text-transform: capitalize; }
+</style>
+
+<script>
+  const tl = document.getElementById('tl'), fill = document.getElementById('tl-fill');
+  if (tl && fill) {
+    let raf = 0;
+    const update = () => {
+      raf = 0;
+      const r = tl.getBoundingClientRect();
+      const start = innerHeight * 0.7;
+      const p = Math.min(1, Math.max(0, (start - r.top) / r.height));
+      fill.style.height = `${p * 100}%`;
+    };
+    addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
+    update();
+  }
+</script>

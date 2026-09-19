@@ -1,0 +1,61 @@
+---
+import { getCollection } from "astro:content";
+const groups = (await getCollection("skills")).sort((a, b) => a.data.order - b.data.order);
+const lvl = { core: 3, strong: 2, familiar: 1 } as const;
+---
+<section class="section skills" id="skills" aria-labelledby="skills-title">
+  <div class="container">
+    <div class="sec-head">
+      <span class="sec-num" aria-hidden="true">05</span>
+      <div>
+        <div class="sec-index">Skills</div>
+        <h2 class="sec-title" id="skills-title">The <em>toolbox</em>, honestly labelled.</h2>
+      </div>
+      <p class="sec-lead">Three bars means I have shipped and operated it in production more than once. One bar means I can read it, fix it and learn the rest quickly.</p>
+    </div>
+
+    <div class="sk-grid" data-stagger>
+      {groups.map((g) => (
+        <article class="sk card spot">
+          <header class="sk__head">
+            <span class="sk__icon"><i class={g.data.icon ?? "fa-solid fa-star"}></i></span>
+            <div>
+              <h3 class="sk__title">{g.data.group}</h3>
+              {g.data.blurb && <p class="sk__blurb">{g.data.blurb}</p>}
+            </div>
+          </header>
+          <ul class="sk__list">
+            {g.data.items.map((it) => (
+              <li class="sk__item" title={it.level ?? "strong"}>
+                <span class="sk__name">{it.name}</span>
+                <span class="sk__bars" aria-label={`${it.level ?? "strong"} proficiency`}>
+                  {[1, 2, 3].map((n) => <i class={n <= lvl[it.level ?? "strong"] ? "on" : ""}></i>)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </article>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .sk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .sk { padding: 22px; }
+  .sk__head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
+  .sk__icon { width: 40px; height: 40px; flex: none; border-radius: 12px; display: inline-grid; place-items: center; background: var(--grad-soft); color: var(--fg); border: 1px solid var(--border); font-size: .95rem; }
+  .sk__title { margin: 0 0 3px; font-size: 1.05rem; }
+  .sk__blurb { margin: 0; font-size: .82rem; color: var(--dim); line-height: 1.45; }
+  .sk__list { list-style: none; margin: 0; padding: 0; display: grid; }
+  .sk__item { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 7px 0; border-top: 1px solid var(--border); font-size: .88rem; color: var(--muted); transition: color .2s; }
+  .sk__item:first-child { border-top: 0; }
+  .sk__item:hover { color: var(--fg); }
+  .sk__bars { display: inline-flex; gap: 3px; }
+  .sk__bars i { width: 12px; height: 5px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); transition: background .3s, box-shadow .3s; }
+  .sk__bars i.on { background: var(--accent); border-color: transparent; box-shadow: 0 0 8px rgba(var(--accent-rgb), .5); }
+  .sk__item:hover .sk__bars i.on { background: var(--accent-2); box-shadow: 0 0 8px rgba(var(--accent-2-rgb), .5); }
+  @media (min-width: 1001px) { .sk:last-child { grid-column: 1 / -1; } .sk:last-child .sk__list { grid-template-columns: repeat(3, 1fr); column-gap: 28px; } .sk:last-child .sk__item:nth-child(-n+3) { border-top: 0; } }
+  @media (max-width: 1000px) { .sk-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 620px) { .sk-grid { grid-template-columns: 1fr; } }
+</style>

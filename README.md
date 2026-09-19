@@ -1,71 +1,55 @@
 # alexfrison.net
 
-Personal site & portfolio for Alex Frison. Built with [Astro](https://astro.build/),
-fully static, **zero CDN dependencies** in production (every JS/CSS/font is
-vendored under `public/assets/vendor/`).
+Personal site, portfolio and resume for Alex Frison. Built with [Astro](https://astro.build/),
+fully static, **zero CDN dependencies** in production (fonts, icons and the one JS library are
+vendored under `public/assets/vendor/`). Deployed to GitHub Pages on every push to `main`
+(`.github/workflows/deploy.yml`), served at https://alexfrison.net via the `public/CNAME` file.
 
 ## Quick start
 
 ```bash
 npm install
-npm run vendor:fetch    # downloads pinned libraries into public/assets/vendor/
 npm run dev             # http://localhost:4321
 npm run build           # outputs dist/
 npm run preview         # preview the built site
+npm run vendor:fetch    # re-download pinned vendor libraries (only needed after editing the list)
+npm run resume:pdf      # regenerate public/Alex_Frison_Resume_Sep_2026.pdf (needs python3 + reportlab)
 ```
 
-## Customizing
+## Where the content lives
 
-- **Portrait:** drop a transparent PNG at `public/assets/img/alex-cutout.png`
-  (~700×900). The hero will use it automatically; until then a styled
-  placeholder is shown.
-- **Resume PDF:** place at `public/Alex_Frison_Resume.pdf`.
-- **Content:** all resume entries, projects, and skills are content
-  collections under `src/content/`. Edit JSON / MDX, rebuild.
-- **OG image:** `public/assets/img/og.png` (1200×630 recommended).
+Everything the site and the PDF say comes from one set of files, so they never drift:
 
-## Deploy (self-hosted Nginx)
+| What | Where |
+|---|---|
+| Name, pitch, contact, metrics, network tiles, "open to" | `src/data/profile.json` |
+| Roles / experience | `src/content/experience/*.json` (sorted by `order`) |
+| Skill groups | `src/content/skills/*.json` |
+| Projects and case notes | `src/content/projects/*.mdx` (frontmatter + body) |
+| Site screenshots for the network section | `public/assets/img/sites/*.webp` |
+| Portrait | `public/assets/img/me-cut1.png`, `me-cut2.png` |
 
-```nginx
-server {
-  listen 443 ssl http2;
-  server_name alexfrison.net www.alexfrison.net;
+Edit JSON or MDX, run `npm run build`, and push. To refresh the PDF after a content change run
+`npm run resume:pdf` and commit the regenerated file (the filename is read from
+`profile.resumePdf`, so bump it there when you want a new dated version).
 
-  root /var/www/alexfrison.net/dist;
-  index index.html;
+## Structure
 
-  # gzip + brotli
-  gzip on;
-  gzip_types text/plain text/css application/javascript application/json image/svg+xml;
-  brotli on;
-  brotli_types text/plain text/css application/javascript application/json image/svg+xml;
+- `src/layouts/Base.astro`: head, SEO and JSON-LD, theme boot, smooth scroll (Lenis), reveal
+  animations, custom cursor, spotlight and tilt cards, magnetic buttons.
+- `src/components/`: `Hero` (aurora canvas, kinetic name, scramble rotator), `Metrics` (count-up),
+  `Marquee`, `Now`, `Network` (bento + architecture diagram), `ProjectGrid` (filterable),
+  `Timeline`, `Skills`, `Contact`, `Nav`, `Footer`.
+- `src/pages/`: `index`, `resume`, `portfolio`, `portfolio/[slug]`, `404`.
+- `resume/build_resume.py`: reportlab PDF builder driven by the same content files.
+- `scripts/fetch-vendor.mjs`: downloads the pinned vendor files.
 
-  # immutable cache for vendored assets
-  location /assets/vendor/ {
-    add_header Cache-Control "public, max-age=31536000, immutable";
-    try_files $uri =404;
-  }
-  location /_astro/ {
-    add_header Cache-Control "public, max-age=31536000, immutable";
-    try_files $uri =404;
-  }
+## Deploy
 
-  # HTML: no cache
-  location / {
-    add_header Cache-Control "no-cache";
-    try_files $uri $uri/ $uri.html /404.html;
-  }
-}
-```
-
-Build, then sync `dist/` to the server:
-
-```bash
-npm run build
-rsync -avz --delete dist/ user@host:/var/www/alexfrison.net/dist/
-```
+Push to `main`. The workflow builds with Node 20 and publishes `dist/` to GitHub Pages. The custom
+domain is configured in the repository's Pages settings and pinned by `public/CNAME`.
 
 ## License
 
-Code: MIT. Vendored libraries retain their own licenses — see
-`public/assets/vendor/README.md`.
+Code: MIT. Vendored libraries retain their own licenses, see `public/assets/vendor/README.md`.
+Content, copy and images are © Alex Frison.

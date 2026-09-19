@@ -1,0 +1,14 @@
+---
+title: "Performance harness & route loading"
+category: "infra"
+summary: "Headless-Chrome DevTools harness with interleaved A/B runs and layout-shift attribution. Home page CLS 0.83 → 0.03, warm FCP 1066 → 550 ms, first-2s JS parse cut by half a megabyte."
+tech: ["Chrome DevTools Protocol", "Node.js", "Performance budgets", "Coverage analysis"]
+role: "Sole Engineer"
+year: "2026"
+icon: "fa-solid fa-gauge-high"
+order: 10
+---
+
+Asked for provable before-and-after numbers rather than assertions, I built the measurement first. `measure-page.js` reports median TTFB, FCP, LCP, CLS, long-task time, bytes and request counts under desktop and throttled-phone profiles; `ab.js` interleaves two variants so machine noise cancels; `trace-page.js` attributes forced layout to the script that caused it; `check-budgets.js` runs in `npm test`.
+
+Precise coverage showed 14 percent of shipped JavaScript executing on the home page, so heavy routes moved behind an inline loader with idle prefetch. Layout-shift attribution found one hero stat board responsible for 72 percent of CLS. Idle-page animation gating cut running animations from 72 to 27 and idle main-thread time by about 41 percent.

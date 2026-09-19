@@ -1,0 +1,20 @@
+---
+title: "PowerChat payments program"
+category: "powerchat"
+summary: "Every payment, payout and billing capability of the product rebuilt as one system: a provider-agnostic charge rail with five adapters, append-only ledgers, Tipalti payouts, recurring billing and admin reconciliation."
+tech: ["TypeScript", "Stripe Connect", "Square", "PayPal", "NMI", "NowPayments", "Tipalti", "Prisma", "PostgreSQL 17", "BullMQ"]
+role: "Designer · Sole Engineer on the program"
+year: "2026"
+icon: "fa-solid fa-credit-card"
+links: { "live": "https://powerchat.gg" }
+featured: true
+order: 12
+---
+
+One payment-first ledger and one idempotent `confirmCharge`, fed by three racing triggers (provider webhook, the tipper's return poll and a nightly sweep), behind a registry of providers: Stripe Connect Express, Square, PayPal partner referrals, PowerChat Pay on an NMI tokenized vault, and NowPayments crypto invoices. The tipper picks the method explicitly; an unavailable pick is a 400, never a silent fallback onto a different processor.
+
+**Ledgers.** Streamer and crypto balances are append-only with a schema-unique external identity per entry, so double-crediting is structurally impossible. Payout submission is gated on an independent sum recompute; mismatches park as held with a reason, and failures reverse through explicit entries rather than deletes.
+
+**Recurring billing.** Pro plans and viewer-to-streamer subscriptions charge the vault on our schedule with a 1, 3 and 7-day retry ladder and drift-free period math; entitlements change only from confirmed billing state or an audited admin correction.
+
+**Verification.** Each provider webhook sits behind its own verifier (HMAC-SHA256, PayPal's verify-signature API, HMAC-SHA512 over key-sorted JSON) and a delivery dedupe table. Card data lives in provider-hosted iframes and never touches PowerChat. Validated by a governed integration suite that drives all six rails through the production HTTP composition, plus an empty-PostgreSQL migration proof in CI.

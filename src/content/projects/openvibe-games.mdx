@@ -1,0 +1,21 @@
+---
+title: "Scraplandia on OpenVibe.Games"
+category: "game"
+summary: "Browser multiplayer survival building game: authoritative dedicated server, client-side prediction, Havok physics, GMod-style physgun building and an in-browser collaborative editor."
+tech: ["TypeScript", "Babylon.js (WebGPU / WebGL)", "Havok", "WebSockets", "zod", "SQLite", "pnpm monorepo", "vitest", "Playwright"]
+role: "Founder · Engine & Gameplay Engineer"
+year: "2023–Present"
+image: "/assets/img/sites/games.webp"
+icon: "fa-solid fa-gamepad"
+links: { "live": "https://openvibe.games" }
+featured: true
+order: 5
+---
+
+A persistent multiplayer world that starts in a tab. The current engine is a seven-package TypeScript monorepo: Babylon.js rendering with WebGPU and a WebGL fallback, Havok physics on both client and a headless NullEngine server, and a zod-validated WebSocket protocol.
+
+**Netcode.** The server is authoritative; clients predict movement (Source-style, bunnyhop included) and reconcile. Props carry trust-based protection so a griefer cannot freeze your base.
+
+**Building.** A physgun lets players grab, freeze, rotate and grid-lock props, backed by gathering, crafting, skills, zones and extraction risk. An in-browser editor supports collaboration.
+
+**Durability.** The world survives SIGTERM with a 20-second flush. The 2026 migration carried 22 live players across from the previous engine, which I had written from scratch with a custom isomorphic compiler emitting both client and server builds.

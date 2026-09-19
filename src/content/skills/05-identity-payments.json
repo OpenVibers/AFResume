@@ -1,0 +1,40 @@
+{
+  "group": "Identity, payments & security",
+  "icon": "fa-solid fa-shield-halved",
+  "order": 5,
+  "blurb": "The parts that must not be wrong.",
+  "items": [
+    {
+      "name": "OAuth2 / OIDC providers",
+      "level": "core"
+    },
+    {
+      "name": "JWT (RS256), JWKS, SSO, FedCM",
+      "level": "core"
+    },
+    {
+      "name": "Stripe Connect / Square / PayPal",
+      "level": "strong"
+    },
+    {
+      "name": "NMI vault / Tipalti payouts",
+      "level": "strong"
+    },
+    {
+      "name": "Ledger design & idempotency",
+      "level": "core"
+    },
+    {
+      "name": "Webhook signing & verification",
+      "level": "core"
+    },
+    {
+      "name": "SSRF / egress hardening",
+      "level": "strong"
+    },
+    {
+      "name": "SOX-style audit trails",
+      "level": "core"
+    }
+  ]
+}

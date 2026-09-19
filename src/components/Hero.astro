@@ -1,307 +1,276 @@
 ---
-// Pacific Northwest hero — layered SVG mountains, particles, animated title,
-// portrait slot, metrics ribbon.
+import profile from "../data/profile.json";
+const name = "Alex Frison";
+const words = name.split(" ");
+const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 : 0));
 ---
-<section class="hero" id="top">
-  <!-- Parallax mountain layers -->
-  <div class="hero__sky" aria-hidden="true"></div>
-  <div id="hero-particles" class="hero__particles" aria-hidden="true"></div>
-
-  <svg class="hero__mtn hero__mtn--3" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,520 L120,360 L260,440 L420,300 L580,420 L740,280 L900,400 L1060,320 L1220,420 L1440,340 L1440,600 L0,600 Z" fill="#0c1a2c"/>
-  </svg>
-  <svg class="hero__mtn hero__mtn--2" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,560 L160,440 L320,500 L500,380 L660,480 L820,360 L980,460 L1160,380 L1320,500 L1440,420 L1440,600 L0,600 Z" fill="#10243b"/>
-  </svg>
-  <svg class="hero__mtn hero__mtn--1" viewBox="0 0 1440 600" preserveAspectRatio="none" aria-hidden="true">
-    <path d="M0,580 L200,500 L380,540 L560,460 L760,520 L940,440 L1120,520 L1300,460 L1440,500 L1440,600 L0,600 Z" fill="#16314f"/>
-  </svg>
+<section class="hero" id="top" aria-labelledby="hero-title">
+  <canvas class="hero__aurora" id="aurora" aria-hidden="true"></canvas>
+  <div class="hero__veil" aria-hidden="true"></div>
 
   <div class="container hero__grid">
-    <div class="hero__left">
-      <div class="section-eyebrow"><i class="fa-solid fa-location-dot"></i> Seattle · Arlington · Pacific Northwest</div>
-      <h1 class="hero__title" data-splitting>Alex Frison.</h1>
-      <p class="hero__role">
-        <span class="hero__rotator" aria-live="polite"><i class="fa-solid fa-chart-line"></i> Data Analyst</span>
+    <div class="hero__copy">
+      <p class="hero__status hero__in" style="--d:0ms">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span>Now: contract engineer at <a href="https://powerchat.gg" target="_blank" rel="noopener">PowerChat</a> · building <a href="#network">OpenVibe</a></span>
       </p>
-      <p class="hero__lead">
-        Data analyst and full-stack builder with 10+ years of shipping —
-        SOX-compliance tooling and autonomous AI agents at Amazon, a solo-built
-        15-microservice creator platform, and sales leadership at Verizon.
-        Open to new roles.
+
+      <h1 class="hero__title" id="hero-title" aria-label={name}>
+        {words.map((w, wi) => (
+          <span class="hero__word" aria-hidden="true">
+            {Array.from(w).map((c, ci) => {
+              const i = offsets[wi] + ci;
+              const last = wi === words.length - 1 && ci === w.length - 1;
+              return <span class={`hero__ch ${last ? "hero__ch--last" : ""}`} style={`--i:${i}`}>{c}</span>;
+            })}
+          </span>
+        ))}
+      </h1>
+
+      <p class="hero__role" aria-live="polite">
+        <span class="hero__role-static">I'm a</span>
+        <span class="hero__rotator" id="rotator" data-roles={JSON.stringify(profile.roles)}>{profile.roles[0]}</span>
       </p>
-      <div class="hero__cta">
-        <a href="/#work" class="btn btn--primary"><i class="fa-solid fa-eye"></i> View Work</a>
-        <a href="/Alex_Frison_Resume_May_2026_v2.pdf" class="btn" aria-label="Download resume as PDF"><i class="fa-solid fa-file-pdf"></i> PDF</a>
-        <a href="/#contact" class="btn"><i class="fa-solid fa-envelope"></i> Get in Touch</a>
+
+      <p class="hero__lead hero__in" style="--d:650ms">
+        {profile.headline} Founder and sole engineer of the <strong>OpenVibe</strong> network: seven services, 20+ domains, live video, identity, media, 169 tools and a game, all designed, shipped and operated by me. Currently rebuilding <strong>PowerChat</strong>'s developer platform and payments.
+      </p>
+
+      <div class="hero__cta hero__in" style="--d:800ms">
+        <a href="#network" class="btn btn--primary" data-magnetic><i class="fa-solid fa-satellite-dish"></i> See the network <span class="btn__arrow">→</span></a>
+        <a href={profile.resumePdf} class="btn" data-magnetic><i class="fa-solid fa-file-pdf"></i> Resume PDF</a>
+        <a href="#contact" class="btn btn--ghost" data-magnetic><i class="fa-solid fa-paper-plane"></i> Get in touch</a>
       </div>
-      <div class="hero__chips">
-        <span class="chip"><i class="fa-solid fa-chart-line"></i> Analytics / BI</span>
-        <span class="chip"><i class="fa-solid fa-code"></i> Full-Stack Eng</span>
-        <span class="chip"><i class="fa-solid fa-robot"></i> AI Agents</span>
-        <span class="chip"><i class="fa-solid fa-gear"></i> Robotics</span>
-        <span class="chip"><i class="fa-solid fa-users"></i> Sales & Leadership</span>
-      </div>
+
+      <ul class="hero__tags hero__in" style="--d:950ms">
+        <li class="chip"><i class="fa-solid fa-tower-broadcast"></i> Streaming infra</li>
+        <li class="chip"><i class="fa-solid fa-id-badge"></i> OAuth2 / OIDC</li>
+        <li class="chip chip--ember"><i class="fa-solid fa-credit-card"></i> Payments</li>
+        <li class="chip"><i class="fa-solid fa-robot"></i> AI tooling</li>
+        <li class="chip chip--mint"><i class="fa-solid fa-server"></i> Ops & deploys</li>
+        <li class="chip"><i class="fa-solid fa-chart-line"></i> Analytics</li>
+      </ul>
     </div>
 
-    <div class="hero__right">
-      <div class="hero__portrait">
-        <div class="hero__portrait-glow" aria-hidden="true"></div>
-        <div class="hero__portrait-frame">
-          <div class="hero__portrait-placeholder" role="img" aria-label="Portrait of Alex Frison">
-            <img src="/assets/img/me-cut1.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--a" id="portrait-a">
-            <img src="/assets/img/me-cut2.png" alt="Alex Frison" class="hero__portrait-img hero__portrait-img--b" id="portrait-b">
-          </div>
+    <div class="hero__visual hero__in hero__in--scale" style="--d:300ms">
+      <div class="portrait" data-tilt>
+        <div class="portrait__ring portrait__ring--a" aria-hidden="true"></div>
+        <div class="portrait__ring portrait__ring--b" aria-hidden="true"></div>
+        <div class="portrait__orbit" aria-hidden="true"><span></span></div>
+        <div class="portrait__frame">
+          <img src="/assets/img/me-cut1.png" alt="Portrait of Alex Frison" class="portrait__img is-on" id="portrait-a" width="889" height="1177" fetchpriority="high" />
+          <img src="/assets/img/me-cut2.png" alt="" class="portrait__img" id="portrait-b" width="829" height="1074" loading="lazy" />
+          <div class="portrait__scan" aria-hidden="true"></div>
         </div>
+        <div class="portrait__tag portrait__tag--tl" aria-hidden="true"><i class="fa-solid fa-location-dot"></i> {profile.locationShort}</div>
+        <div class="portrait__tag portrait__tag--br" aria-hidden="true"><span class="live-dot"></span> Open to senior & founding roles</div>
       </div>
     </div>
   </div>
 
-
+  <a href="#metrics" class="hero__scroll" aria-label="Scroll to content">
+    <span class="hero__mouse"><span></span></span>
+    <span class="hero__scroll-txt">scroll</span>
+  </a>
 </section>
 
 <style>
   .hero {
-    position: relative;
-    min-height: 100vh;
+    position: relative; isolation: isolate; overflow: clip;
     min-height: 100svh;
-    padding: clamp(80px, 12vh, 120px) 0 clamp(20px, 4vh, 60px);
-    overflow: hidden;
-    isolation: isolate;
+    padding: calc(var(--nav-h) + clamp(40px, 8vh, 90px)) 0 clamp(60px, 8vh, 100px);
+    display: flex; align-items: center;
   }
-  .hero__sky {
-    position: absolute; inset: 0;
-    background:
-      radial-gradient(1200px 600px at 70% 10%, rgba(76,201,176,.18), transparent 60%),
-      radial-gradient(900px 500px at 20% 30%, rgba(244,162,97,.12), transparent 60%);
-    z-index: -3;
-  }
-  .hero__particles { position: absolute; inset: 0; z-index: -2; }
-  .hero__mtn {
-    position: absolute; left: 0; right: 0;
-    width: 100%; height: 60%;
-    bottom: 0;
-    z-index: -1;
-    will-change: transform;
-  }
-  .hero__mtn--3 { bottom: 12%; opacity: .6; }
-  .hero__mtn--2 { bottom: 6%;  opacity: .8; }
-  .hero__mtn--1 { bottom: 0;   opacity: 1; }
+  .hero__aurora { position: absolute; inset: 0; width: 100%; height: 100%; z-index: -2; filter: blur(52px) saturate(115%); opacity: .62; transform: scale(1.15); }
+  :root[data-theme="light"] .hero__aurora { opacity: .45; }
+  .hero__veil { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(7,9,15,.35) 0%, transparent 30%, transparent 55%, var(--bg) 100%), radial-gradient(60% 50% at 30% 45%, rgba(7,9,15,.35), transparent 70%); }
+  :root[data-theme="light"] .hero__veil { background: linear-gradient(180deg, transparent 55%, var(--bg) 100%); }
 
-  .hero__grid {
-    display: grid;
-    grid-template-columns: 1.4fr 1fr;
-    gap: clamp(24px, 4vw, 64px);
-    align-items: center;
-    min-height: 70svh;
-  }
-  /* min-width:0 prevents grid cells overflowing their track.
-     overflow:hidden ONLY on left — right needs visible overflow so portrait glow shows */
-  .hero__left { min-width: 0; overflow: hidden; }
-  .hero__right { display: grid; place-items: center; min-width: 0; }
-  @media (max-width: 880px) {
-    .hero__grid {
-      grid-template-columns: 1fr;
-      min-height: auto;
-      padding-bottom: 32px;
-    }
-    .hero__right { order: -1; }
-    .hero__portrait-frame { animation: none; }
-    .hero__portrait { width: min(220px, 55vw); margin-bottom: 8px; }
-  }
+  .hero__in { opacity: 0; animation: heroIn .9s var(--ease) forwards; animation-delay: var(--d, 0ms); }
+  .hero__in--scale { animation-name: heroInScale; }
+  @keyframes heroIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
+  @keyframes heroInScale { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
+  .hero__grid { display: grid; grid-template-columns: 1.25fr .9fr; gap: clamp(28px, 5vw, 72px); align-items: center; width: 100%; }
+  .hero__copy { min-width: 0; }
 
-  /* Solid color on purpose — background-clip:text + color:transparent breaks
-     when Splitting.js wraps chars in inline-block spans (text renders invisible
-     on some GPUs/viewports, e.g. Steam Deck at 1280×800). Same bug class as the
-     earlier ImpactMetrics "invisible numbers" fix. */
+  .hero__status {
+    display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px;
+    padding: 8px 14px 8px 12px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border);
+    font-family: var(--font-mono); font-size: .78rem; color: var(--muted); letter-spacing: .01em;
+    backdrop-filter: blur(10px);
+  }
+  .hero__status a { color: var(--fg); }
+
   .hero__title {
-    font-size: clamp(2.6rem, 7vw, 5.5rem);
-    color: var(--fg);
-    text-shadow: 0 2px 24px rgba(0, 0, 0, 0.35);
-    overflow-wrap: break-word;
-    margin-bottom: 0.4em;
+    margin: 0 0 .2em; font-size: clamp(3rem, 8.6vw, 6.9rem); line-height: .95; letter-spacing: -.04em;
+    display: flex; flex-wrap: wrap; column-gap: .22em;
   }
+  .hero__word { display: inline-flex; white-space: nowrap; }
+  .hero__ch {
+    display: inline-block; opacity: 0;
+    transform: translateY(.6em) rotate(6deg) scale(.9);
+    filter: blur(6px);
+    animation: chIn .9s var(--ease) forwards;
+    animation-delay: calc(var(--i) * 45ms + 120ms);
+    transition: color .3s;
+  }
+  .hero__ch:hover { color: var(--accent); }
+  .hero__ch--last::after { content: "."; display: inline-block; color: transparent; background: var(--grad); -webkit-background-clip: text; background-clip: text; opacity: 0; animation: dotIn .8s var(--ease) forwards 1s; }
+  @keyframes chIn { to { opacity: 1; transform: none; filter: blur(0); } }
+  @keyframes dotIn { 0% { opacity: 0; transform: scale(0) translateY(.2em); } 60% { transform: scale(1.3); } 100% { opacity: 1; transform: none; } }
+
   .hero__role {
-    font-family: var(--font-display);
-    font-size: clamp(1.4rem, 5.5vw, 2.5rem);
-    color: var(--accent);
-    margin: 0 0 1rem;
-    height: 1.6em;
-    overflow: hidden;
-    contain: layout style;
+    display: flex; align-items: baseline; gap: .45em; flex-wrap: wrap;
+    margin: 0 0 1.2rem; font-family: var(--font-display); font-weight: 700;
+    font-size: clamp(1.35rem, 3.4vw, 2.2rem); letter-spacing: -.02em; color: var(--fg);
   }
-  .hero__rotator {
-    display: block;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    width: 100%;
-  }
-  .hero__lead {
-    max-width: 56ch;
-    color: var(--muted);
-    font-size: 1.06rem;
-  }
-  .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.5rem 0; }
-  .hero__chips { display: flex; gap: 8px; flex-wrap: wrap; }
+  .hero__role-static { color: var(--dim); font-weight: 500; }
+  .hero__rotator { color: var(--accent); min-height: 1.2em; }
+  .hero__rotator::after { content: "_"; margin-left: 2px; color: var(--accent-2); animation: caret 1s steps(2) infinite; }
+  @keyframes caret { 50% { opacity: 0; } }
 
-  .hero__right { display: grid; place-items: center; min-width: 0; }
-  .hero__portrait {
-    position: relative;
-    width: min(400px, 44vw);
-    aspect-ratio: 5 / 6;
-  }
-  .hero__portrait-glow {
-    position: absolute; inset: -22%;
-    background: radial-gradient(closest-side, rgba(76,201,176,.42), transparent 70%);
-    filter: blur(32px);
-    animation: breathe 8s ease-in-out infinite;
-    pointer-events: none;
-  }
-  .hero__portrait-frame {
-    position: relative;
-    width: 100%; height: 100%;
-    border-radius: 28px;
-    overflow: hidden;
-    border: 1px solid var(--border-strong);
-    background: var(--surface);
-    box-shadow: var(--shadow-card), var(--shadow-glow);
-    animation: float 12s ease-in-out infinite;
-  }
-  .hero__portrait-placeholder { position: relative; width: 100%; height: 100%; overflow: hidden; }
-  .hero__portrait-img {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    object-position: top center;
-    display: block;
-    transition: opacity 0.8s ease;
-  }
-  .hero__portrait-img--a { opacity: 1; }
-  .hero__portrait-img--b { opacity: 0; }
-  .hero__portrait-tag {
-    margin-top: 14px; text-align: center;
-    color: var(--dim); font-size: .8rem;
-  }
-  .hero__portrait-tag code {
-    color: var(--accent); font-family: var(--font-mono); font-size: .78rem;
-  }
+  .hero__lead { max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.12rem); color: var(--muted); }
+  .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.6rem 0 1.4rem; }
+  .hero__tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
 
-  @keyframes breathe {
-    0%, 100% { opacity: .55; transform: scale(1); }
-    50%      { opacity: .9;  transform: scale(1.05); }
+  /* Portrait */
+  .hero__visual { display: grid; place-items: center; min-width: 0; }
+  .portrait { position: relative; width: min(400px, 78vw); aspect-ratio: 4 / 5; transition: transform .5s var(--ease); transform-style: preserve-3d; }
+  .portrait__frame {
+    position: absolute; inset: 0; border-radius: 34% 34% 28px 28px / 26% 26% 28px 28px;
+    overflow: hidden; background: var(--grad-soft); border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.08);
   }
-  @keyframes float {
-    0%, 100% { transform: translateY(0); }
-    50%      { transform: translateY(-6px); }
+  .portrait__frame::before {
+    content: ""; position: absolute; inset: 0; z-index: 0;
+    background: radial-gradient(70% 60% at 50% 100%, rgba(var(--accent-rgb), .35), transparent 70%);
   }
+  .portrait__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity 1s var(--ease); z-index: 1; }
+  .portrait__img.is-on { opacity: 1; }
+  .portrait__scan {
+    position: absolute; left: -10%; right: -10%; top: -20%; height: 18%; z-index: 2; pointer-events: none;
+    background: linear-gradient(180deg, transparent, rgba(var(--accent-3-rgb), .16), transparent);
+    animation: scan 7s var(--ease-io) infinite;
+  }
+  @keyframes scan { 0%, 20% { top: -20%; } 60%, 100% { top: 110%; } }
+  .portrait__ring { position: absolute; inset: -8%; border-radius: 50%; border: 1px solid rgba(var(--accent-rgb), .25); z-index: -1; }
+  .portrait__ring--a { animation: spin 26s linear infinite; border-style: dashed; }
+  .portrait__ring--b { inset: -16%; border-color: rgba(var(--accent-2-rgb), .18); animation: spin 40s linear infinite reverse; }
+  .portrait__orbit { position: absolute; inset: -8%; border-radius: 50%; animation: spin 12s linear infinite; z-index: 3; pointer-events: none; }
+  .portrait__orbit span { position: absolute; top: -5px; left: 50%; width: 10px; height: 10px; margin-left: -5px; border-radius: 50%; background: var(--accent-3); box-shadow: 0 0 18px 4px rgba(var(--accent-3-rgb), .55); }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .portrait__tag {
+    position: absolute; z-index: 4; display: inline-flex; align-items: center; gap: 8px;
+    padding: 8px 12px; border-radius: 12px;
+    background: color-mix(in oklab, var(--bg) 70%, transparent); border: 1px solid var(--border);
+    backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+    font: 500 .74rem var(--font-mono); color: var(--fg); white-space: nowrap;
+    box-shadow: var(--shadow-card);
+    animation: floaty 7s ease-in-out infinite;
+  }
+  .portrait__tag i { color: var(--accent-2); }
+  .portrait__tag--tl { top: 6%; left: -10%; }
+  .portrait__tag--br { bottom: 7%; right: -8%; animation-delay: -3.5s; }
+  @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
+  .hero__scroll {
+    position: absolute; left: 50%; bottom: 22px; transform: translateX(-50%);
+    display: flex; flex-direction: column; align-items: center; gap: 8px;
+    color: var(--dim); text-decoration: none; font: 500 .68rem var(--font-mono); letter-spacing: .3em; text-transform: uppercase;
+    opacity: 0; animation: fadeIn 1s ease forwards 1.6s;
+  }
+  .hero__scroll:hover { text-decoration: none; color: var(--fg); }
+  .hero__mouse { width: 22px; height: 34px; border-radius: 12px; border: 1.5px solid currentColor; display: grid; justify-content: center; padding-top: 6px; }
+  .hero__mouse span { width: 3px; height: 6px; border-radius: 2px; background: currentColor; animation: wheel 1.8s var(--ease) infinite; }
+  @keyframes wheel { 0% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(12px); opacity: 0; } }
+  @keyframes fadeIn { to { opacity: 1; } }
 
+  @media (max-width: 920px) {
+    .hero { min-height: auto; padding-top: calc(var(--nav-h) + 30px); }
+    .hero__grid { grid-template-columns: 1fr; }
+    .hero__visual { order: -1; }
+    .portrait { width: min(280px, 70vw); }
+    .portrait__tag--tl { left: -4%; }
+    .portrait__tag--br { right: -4%; }
+    .hero__scroll { display: none; }
+    .hero__title { font-size: clamp(3rem, 15vw, 5rem); }
+  }
 </style>
 
 <script>
-  // Title char reveal via Splitting
-  const splitScript = document.createElement("script");
-  splitScript.src = "/assets/vendor/splitting/splitting.min.js";
-  splitScript.onload = () => {
-    // @ts-ignore
-    if (window.Splitting) Splitting();
-    document.querySelectorAll(".hero__title .char").forEach((c, i) => {
-      (c as HTMLElement).style.setProperty("--i", String(i));
-    });
-  };
-  document.head.appendChild(splitScript);
-
-  // Role rotator
-  const roles = [
-    `<i class="fa-solid fa-chart-line"></i> Data Analyst`,
-    `<i class="fa-solid fa-code"></i> Software Engineer`,
-    `<i class="fa-solid fa-robot"></i> AI Agent Builder`,
-    `<i class="fa-solid fa-server"></i> Systems Admin`,
-    `<i class="fa-solid fa-users"></i> Sales Leader`,
-    `<i class="fa-solid fa-tree"></i> Pacific Northwest Native`
-  ];
-  const rot = document.querySelector(".hero__rotator");
-  if (rot) {
-    let i = 0;
-    setInterval(() => {
-      i = (i + 1) % roles.length;
-      (rot as HTMLElement).animate(
-        [{ opacity: 1, transform: "translateY(0) scale(1)" },
-         { opacity: 0, transform: "translateY(-10px) scale(0.96)" }],
-        { duration: 240, easing: "ease-in", fill: "forwards" }
-      ).onfinish = () => {
-        rot.innerHTML = roles[i];
-        (rot as HTMLElement).animate(
-          [{ opacity: 0, transform: "translateY(10px) scale(0.96)" },
-           { opacity: 1, transform: "translateY(0) scale(1)" }],
-          { duration: 300, easing: "cubic-bezier(0.22,1,0.36,1)", fill: "forwards" }
-        );
-      };
-    }, 2400);
-  }
-
-  // Portrait fade cycle (me-cut1 ↔ me-cut2, every 8s)
-  const imgA = document.getElementById("portrait-a") as HTMLImageElement | null;
-  const imgB = document.getElementById("portrait-b") as HTMLImageElement | null;
-  if (imgA && imgB) {
-    let showingA = true;
-    setInterval(() => {
-      showingA = !showingA;
-      imgA.style.opacity = showingA ? "1" : "0";
-      imgB.style.opacity = showingA ? "0" : "1";
-    }, 8000);
-  }
-
-  // Mountain parallax
-  const m1 = document.querySelector(".hero__mtn--1") as HTMLElement | null;
-  const m2 = document.querySelector(".hero__mtn--2") as HTMLElement | null;
-  const m3 = document.querySelector(".hero__mtn--3") as HTMLElement | null;
-  if (m1 && m2 && m3) {
-    let raf = 0;
-    const onScroll = () => {
-      const y = window.scrollY;
-      m1.style.transform = `translateY(${y * 0.06}px)`;
-      m2.style.transform = `translateY(${y * 0.12}px)`;
-      m3.style.transform = `translateY(${y * 0.20}px)`;
-      raf = 0;
+  // ---- Aurora canvas: four drifting light blobs, pointer-parallaxed ----------
+  const cv = document.getElementById('aurora') as HTMLCanvasElement | null;
+  if (cv) {
+    const ctx = cv.getContext('2d')!;
+    const W = 180, H = 110; cv.width = W; cv.height = H;
+    const isLight = () => document.documentElement.dataset.theme === 'light';
+    const blobs = [
+      { x: .25, y: .35, r: .55, c: [79, 124, 255], s: .00021, p: 0 },
+      { x: .7,  y: .3,  r: .5,  c: [139, 92, 246], s: .00017, p: 2 },
+      { x: .55, y: .8,  r: .45, c: [255, 106, 61], s: .00015, p: 4 },
+      { x: .15, y: .85, r: .4,  c: [62, 230, 176], s: .00019, p: 1 },
+    ];
+    let px = 0, py = 0, tpx = 0, tpy = 0, visible = true;
+    addEventListener('pointermove', (e) => { tpx = (e.clientX / innerWidth - .5); tpy = (e.clientY / innerHeight - .5); }, { passive: true });
+    new IntersectionObserver(([en]) => { visible = en.isIntersecting; }).observe(cv);
+    const draw = (t: number) => {
+      requestAnimationFrame(draw);
+      if (!visible) return;
+      px += (tpx - px) * .04; py += (tpy - py) * .04;
+      ctx.globalCompositeOperation = 'source-over';
+      ctx.fillStyle = isLight() ? '#f4f6fb' : '#07090f';
+      ctx.fillRect(0, 0, W, H);
+      ctx.globalCompositeOperation = isLight() ? 'multiply' : 'lighter';
+      for (const b of blobs) {
+        const x = (b.x + Math.sin(t * b.s + b.p) * .13 + px * .08) * W;
+        const y = (b.y + Math.cos(t * b.s * 1.3 + b.p) * .11 + py * .08) * H;
+        const r = b.r * W * (1 + Math.sin(t * b.s * .7 + b.p) * .12);
+        const g = ctx.createRadialGradient(x, y, 0, x, y, r);
+        const a = isLight() ? .3 : .42;
+        g.addColorStop(0, `rgba(${b.c[0]},${b.c[1]},${b.c[2]},${a})`);
+        g.addColorStop(1, `rgba(${b.c[0]},${b.c[1]},${b.c[2]},0)`);
+        ctx.fillStyle = g; ctx.beginPath(); ctx.arc(x, y, r, 0, Math.PI * 2); ctx.fill();
+      }
     };
-    window.addEventListener("scroll", () => {
-      if (!raf) raf = requestAnimationFrame(onScroll);
-    }, { passive: true });
+    requestAnimationFrame(draw);
   }
 
-
-
-  // tsparticles light rain/snow
-  const ps = document.createElement("script");
-  ps.src = "/assets/vendor/tsparticles/tsparticles.slim.bundle.min.js";
-  ps.onload = async () => {
-    // @ts-ignore
-    if (!window.tsParticles) return;
-    // @ts-ignore
-    await window.tsParticles.load({
-      id: "hero-particles",
-      options: {
-        fullScreen: { enable: false },
-        background: { color: "transparent" },
-        fpsLimit: 60,
-        particles: {
-          number: { value: 60, density: { enable: true, area: 900 } },
-          color: { value: ["#4cc9b0", "#7aa2f7", "#ffffff"] },
-          opacity: { value: { min: 0.15, max: 0.55 } },
-          size: { value: { min: 0.5, max: 1.8 } },
-          move: {
-            enable: true, speed: 0.6, direction: "bottom",
-            outModes: { default: "out" }, straight: false,
-          },
-          shape: { type: "circle" },
-        },
-        detectRetina: true,
-      },
+  // ---- Role rotator with scramble effect ---------------------------------
+  const rot = document.getElementById('rotator');
+  if (rot) {
+    const roles: string[] = JSON.parse(rot.dataset.roles || '[]');
+    const glyphs = '!<>-_\\/[]{}—=+*^?#0123456789';
+    let i = 0, busy = false;
+    const scramble = (to: string) => new Promise<void>((res) => {
+      const from = rot.textContent || '';
+      const len = Math.max(from.length, to.length);
+      const q = Array.from({ length: len }, (_, k) => ({ from: from[k] || '', to: to[k] || '', start: Math.floor(Math.random() * 14), end: Math.floor(Math.random() * 14) + 14, ch: '' }));
+      let frame = 0;
+      const step = () => {
+        let out = '', done = 0;
+        for (const s of q) {
+          if (frame >= s.end) { done++; out += s.to; }
+          else if (frame >= s.start) { if (!s.ch || Math.random() < .28) s.ch = glyphs[Math.floor(Math.random() * glyphs.length)]; out += `<span class="scr">${s.ch}</span>`; }
+          else out += s.from;
+        }
+        rot.innerHTML = out;
+        if (done === q.length) res(); else { frame++; requestAnimationFrame(step); }
+      };
+      step();
     });
-  };
-  document.head.appendChild(ps);
+    setInterval(async () => {
+      if (busy || document.hidden) return;
+      busy = true; i = (i + 1) % roles.length;
+      await scramble(roles[i]); busy = false;
+    }, 2800);
+  }
+
+  // ---- Portrait crossfade ---------------------------------------------------
+  const a = document.getElementById('portrait-a'), b = document.getElementById('portrait-b');
+  if (a && b) { let on = true; setInterval(() => { on = !on; a.classList.toggle('is-on', on); b.classList.toggle('is-on', !on); }, 7000); }
 </script>
+
+<style is:global>
+  .hero__rotator .scr { color: var(--accent-2); opacity: .8; }
+</style>

@@ -1,68 +1,34 @@
 ---
+import profile from "../data/profile.json";
 const year = new Date().getFullYear();
 ---
 <footer class="foot">
   <div class="container foot__inner">
     <div class="foot__brand">
       <span class="foot__name">Alex Frison</span>
-      <span class="foot__sub">&copy; {year} &middot; Built in the Pacific Northwest</span>
+      <span class="foot__sub">&copy; {year} · Built and hosted from the Pacific Northwest · No trackers, no CDNs, no cookies</span>
     </div>
-    <div class="foot__links">
-      <a href="mailto:alex@alexfrison.net" title="Email"><i class="fa-solid fa-envelope"></i> Alex@AlexFrison.net</a>
-      <a href="tel:+14253673997" title="Phone"><i class="fa-solid fa-phone"></i> (425) 367-3997</a>
-      <a href="https://github.com/OpenVibers" rel="me noopener" target="_blank" title="GitHub"><i class="fa-brands fa-github"></i> GitHub</a>
-      <a href="https://www.linkedin.com/in/fris/" rel="me noopener" target="_blank" title="LinkedIn"><i class="fa-brands fa-linkedin"></i> LinkedIn</a>
-    </div>
+    <ul class="foot__links">
+      <li><a href={`mailto:${profile.email}`}><i class="fa-solid fa-envelope"></i> {profile.emailDisplay}</a></li>
+      <li><a href={`tel:${profile.phone}`}><i class="fa-solid fa-phone"></i> {profile.phoneDisplay}</a></li>
+      <li><a href={profile.github} target="_blank" rel="me noopener"><i class="fa-brands fa-github"></i> GitHub</a></li>
+      <li><a href={profile.linkedin} target="_blank" rel="me noopener"><i class="fa-brands fa-linkedin"></i> LinkedIn</a></li>
+      <li><a href="https://openvibe.live" target="_blank" rel="noopener"><i class="fa-solid fa-tower-broadcast"></i> OpenVibe</a></li>
+      <li><a href={profile.resumePdf}><i class="fa-solid fa-file-pdf"></i> Resume PDF</a></li>
+    </ul>
   </div>
+  <div class="foot__line" aria-hidden="true"></div>
 </footer>
+
 <style>
-  .foot {
-    border-top: 1px solid var(--border);
-    padding: 40px 0;
-    color: var(--dim);
-    background: linear-gradient(to top, rgba(76,201,176,0.02), transparent);
-  }
-  .foot__inner {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    flex-wrap: wrap;
-    gap: 20px;
-  }
-  .foot__brand {
-    display: flex;
-    flex-direction: column;
-    gap: 3px;
-  }
-  .foot__name {
-    font-family: var(--font-display);
-    font-weight: 700;
-    font-size: 1rem;
-    color: var(--fg);
-    letter-spacing: -0.01em;
-  }
-  .foot__sub {
-    font-size: 0.8rem;
-    color: var(--muted);
-  }
-  .foot__links {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px 24px;
-    align-items: center;
-  }
-  .foot a {
-    color: var(--muted);
-    font-size: 0.85rem;
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    transition: color .2s;
-    text-decoration: none;
-  }
-  .foot a:hover { color: var(--accent); }
-  .foot a i { font-size: 0.9em; }
-  @media (max-width: 540px) {
-    .foot__inner { flex-direction: column; align-items: flex-start; }
-  }
+  .foot { position: relative; z-index: 1; border-top: 1px solid var(--border); padding: 40px 0 34px; color: var(--dim); background: linear-gradient(to top, rgba(var(--accent-rgb), .04), transparent); }
+  .foot__inner { display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 20px 32px; }
+  .foot__brand { display: flex; flex-direction: column; gap: 4px; }
+  .foot__name { font-family: var(--font-display); font-weight: 700; font-size: 1rem; color: var(--fg); }
+  .foot__sub { font-size: .8rem; color: var(--muted); max-width: 46ch; }
+  .foot__links { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px 22px; }
+  .foot__links a { color: var(--muted); font-size: .85rem; display: inline-flex; align-items: center; gap: 7px; text-decoration: none; transition: color .2s; }
+  .foot__links a:hover { color: var(--accent); }
+  .foot__line { position: absolute; left: 0; right: 0; top: -1px; height: 1px; background: var(--grad); opacity: .5; mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 30%, #000 70%, transparent); }
+  @media (max-width: 560px) { .foot__inner { flex-direction: column; } }
 </style>

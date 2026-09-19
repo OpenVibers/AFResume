@@ -1,0 +1,23 @@
+---
+title: "OpenVibe.Network"
+category: "openvibe"
+summary: "The identity and shared spine of the network: an OIDC/OAuth2 provider with RS256 tokens, the OpenCoins wallet, notifications, themes and the shared navbar every site renders."
+tech: ["Node.js", "Express", "SQLite", "OAuth2 / OIDC", "RS256 JWT / JWKS", "FedCM", "Web Push", "Resend", "Discord.js"]
+role: "Founder · Architect · Sole Engineer"
+year: "2026"
+image: "/assets/img/sites/network.webp"
+icon: "fa-solid fa-id-badge"
+links: { "live": "https://openvibe.network" }
+featured: true
+order: 2
+---
+
+One account for every OpenVibe site. The Network issues RS256 access tokens and rotating refresh tokens, publishes discovery and JWKS, and every other service verifies offline against the cached key set, so a Network outage never blocks a logged-in viewer.
+
+**Sign-in that gets out of the way.** Silent cross-site hand-off, a read-only SSO probe, and FedCM (the Network is an identity provider), so clicking from Live to Tools never shows a login screen twice. Multi-account switching and anonymous identities that can link later.
+
+**Wallet and notifications.** Atomic credit, debit and transfer endpoints with idempotency keys for OpenCoins; a unified inbox with web push, email and Discord delivery and rate governance (go-live cooldowns, per-streamer and per-user daily caps).
+
+**Shared chrome.** One package serves the navbar, footer, theme loader, notification UI, account switcher and the animated OV brand mark to every site. Navigation is ranked by an anonymous per-host page-view beacon that honours Global Privacy Control, and the footer copy is regenerated daily by an AI job behind a budget.
+
+**Themes.** About 30 built-in themes synced network-wide, with derived tokens, theme-following favicons and per-user display preferences for motion and text size.

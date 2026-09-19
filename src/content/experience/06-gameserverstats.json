@@ -1,0 +1,24 @@
+{
+  "company": "GameServerStats, LLC",
+  "role": "Founder · Developer · Systems Admin",
+  "start": "2015",
+  "end": "Present",
+  "kind": "founder",
+  "order": 6,
+  "bullets": [
+    "Built analytics platforms tracking 200,000+ live game servers: ingestion, search, ranking, dashboards and licensed partner APIs. Ranked first on Google for several major titles.",
+    "Self-built and collocated 1U and 2U servers in datacenters; designed for scale and DDoS resilience and ran the whole LLC, from licenses and taxes to partner relations.",
+    "Rebuilt the idea in 2026 as GameServerLists: a 14-service, game-agnostic server-discovery platform with multi-region probes, time-weighted ranking, an anti-fraud integrity engine and a tiered public API."
+  ],
+  "stack": [
+    "Node.js",
+    "TypeScript",
+    "PHP",
+    "Python",
+    "MongoDB",
+    "TimescaleDB",
+    "Redis",
+    "NGINX",
+    "Linux"
+  ]
+}

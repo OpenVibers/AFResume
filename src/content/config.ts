@@ -8,9 +8,13 @@ const experience = defineCollection({
     start: z.string(),
     end: z.string(),
     location: z.string().optional(),
+    kind: z.enum(['engineering', 'founder', 'analytics', 'operations', 'sales']).default('engineering'),
+    link: z.string().url().optional(),
+    summary: z.string().optional(),
     bullets: z.array(z.string()),
     stack: z.array(z.string()).default([]),
     featured: z.boolean().default(false),
+    current: z.boolean().default(false),
     order: z.number().default(0),
   }),
 });
@@ -19,16 +23,19 @@ const projects = defineCollection({
   type: 'content',
   schema: z.object({
     title: z.string(),
-    category: z.enum(['amazon', 'hobo', 'python', 'game', 'hardware', 'web', '3d', 'tools']),
+    category: z.enum(['openvibe', 'powerchat', 'amazon', 'ai', 'infra', 'game', 'tools', 'python', 'hardware', 'web']),
     summary: z.string(),
     tech: z.array(z.string()).default([]),
     role: z.string().optional(),
     year: z.string().optional(),
     image: z.string().optional(),
     images: z.array(z.string()).default([]),
+    accent: z.string().optional(),
+    icon: z.string().optional(),
     links: z.object({
       live: z.string().url().optional(),
       repo: z.string().url().optional(),
+      docs: z.string().url().optional(),
       video: z.string().url().optional(),
     }).default({}),
     featured: z.boolean().default(false),
@@ -40,6 +47,8 @@ const skills = defineCollection({
   type: 'data',
   schema: z.object({
     group: z.string(),
+    icon: z.string().optional(),
+    blurb: z.string().optional(),
     items: z.array(z.object({
       name: z.string(),
       level: z.enum(['core', 'strong', 'familiar']).optional(),

@@ -1,0 +1,48 @@
+{
+  "group": "Infrastructure & operations",
+  "icon": "fa-solid fa-server",
+  "order": 4,
+  "blurb": "I deploy what I build and get paged for it.",
+  "items": [
+    {
+      "name": "Linux (Debian / Ubuntu)",
+      "level": "core"
+    },
+    {
+      "name": "nginx",
+      "level": "core"
+    },
+    {
+      "name": "systemd & socket activation",
+      "level": "core"
+    },
+    {
+      "name": "Docker / Compose",
+      "level": "strong"
+    },
+    {
+      "name": "Cloudflare (DNS, edge, R2)",
+      "level": "strong"
+    },
+    {
+      "name": "Backblaze B2 / S3 APIs",
+      "level": "strong"
+    },
+    {
+      "name": "Zero-downtime deploys & rollback",
+      "level": "core"
+    },
+    {
+      "name": "Performance profiling (CDP)",
+      "level": "strong"
+    },
+    {
+      "name": "DDoS resilience",
+      "level": "strong"
+    },
+    {
+      "name": "Bare-metal 1U/2U builds",
+      "level": "strong"
+    }
+  ]
+}

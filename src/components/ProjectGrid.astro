@@ -1,148 +1,140 @@
 ---
 import { getCollection } from "astro:content";
-const all = (await getCollection("projects"))
-  .sort((a, b) => a.data.order - b.data.order);
-const cats = ["all", ...new Set(all.map((p) => p.data.category))];
-
-const catIcon: Record<string, string> = {
-  amazon:   "fa-brands fa-aws",
-  hobo:     "fa-solid fa-campground",
-  python:   "fa-brands fa-python",
-  game:     "fa-solid fa-gamepad",
-  hardware: "fa-solid fa-microchip",
-  web:      "fa-solid fa-globe",
-  "3d":     "fa-solid fa-cube",
-  tools:    "fa-solid fa-screwdriver-wrench",
+interface Props { limit?: number; showHead?: boolean; id?: string; }
+const { limit, showHead = true, id = "work" } = Astro.props;
+const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+const projects = limit ? all.filter((p) => p.data.featured).slice(0, limit) : all;
+const catLabel: Record<string, string> = {
+  openvibe: "OpenVibe", powerchat: "PowerChat", amazon: "Amazon", ai: "AI", infra: "Infra & ops",
+  game: "Games", tools: "Tools", python: "Python", hardware: "Hardware", web: "Web",
 };
-const filterIcon: Record<string, string> = {
-  all:      "fa-solid fa-border-all",
-  ...catIcon,
-};
+const cats = Array.from(new Set(projects.map((p) => p.data.category)));
 ---
-<section class="grid-sec" id="portfolio">
+<section class={`section work`} id={id} aria-labelledby={`${id}-title`}>
   <div class="container">
-    <div class="section-eyebrow"><i class="fa-solid fa-layer-group"></i> Portfolio</div>
-    <h2 class="section-title">All work</h2>
-    <div class="filters" role="tablist">
-      {cats.map((c, i) => (
-        <button class={`filter ${i === 0 ? "is-active" : ""}`} data-filter={c} role="tab">
-          {filterIcon[c] && <i class={filterIcon[c]}></i>}{c}
-        </button>
+    {showHead && (
+      <div class="sec-head">
+        <span class="sec-num" aria-hidden="true">03</span>
+        <div>
+          <div class="sec-index">Selected work</div>
+          <h2 class="sec-title" id={`${id}-title`}>Things I <em>shipped</em>, not slides about them.</h2>
+        </div>
+        <p class="sec-lead">Platform programs at PowerChat, the OpenVibe services, the AI and analytics tooling I built at Amazon, and a few side projects that kept the tools sharp.</p>
+      </div>
+    )}
+
+    <div class="filters" role="tablist" aria-label="Filter projects" data-reveal>
+      <button class="filter is-active" data-filter="all" role="tab" aria-selected="true">All <span class="filter__n">{projects.length}</span></button>
+      {cats.map((c) => (
+        <button class="filter" data-filter={c} role="tab" aria-selected="false">{catLabel[c] ?? c} <span class="filter__n">{projects.filter((p) => p.data.category === c).length}</span></button>
       ))}
     </div>
-    <div class="proj-grid">
-      {all.map((p) => (
-        <a href={`/portfolio/${p.slug}`} class="proj card" data-cat={p.data.category} data-reveal>
-          <div class="proj__head">
-            <span class={`chip chip--${p.data.category}`}>
-              {catIcon[p.data.category] && <i class={catIcon[p.data.category]}></i>}
-              {p.data.category}
-            </span>
-            {p.data.year && (
-              <span class="proj__year">
-                <i class="fa-regular fa-calendar"></i> {p.data.year}
-              </span>
-            )}
+
+    <ul class="pgrid" data-stagger>
+      {projects.map((p) => (
+        <li class={`pcard spot cat-${p.data.category} ${p.data.image ? "has-img" : ""}`} data-cat={p.data.category} data-tilt>
+          <a href={`/portfolio/${p.slug}`} class="pcard__link" aria-label={`${p.data.title}: ${p.data.summary}`}></a>
+          {p.data.image ? (
+            <div class="pcard__img" aria-hidden="true"><img src={p.data.image} alt="" loading="lazy" width="800" height="500" /></div>
+          ) : (
+            <div class="pcard__deco" aria-hidden="true"><i class={p.data.icon ?? "fa-solid fa-cube"}></i><span class="pcard__deco-grid"></span></div>
+          )}
+          <div class="pcard__body">
+            <div class="pcard__top">
+              <span class="pcard__icon"><i class={p.data.icon ?? "fa-solid fa-cube"}></i></span>
+              <span class="pcard__cat">{catLabel[p.data.category] ?? p.data.category}</span>
+              {p.data.year && <span class="pcard__year mono">{p.data.year}</span>}
+            </div>
+            <h3 class="pcard__title">{p.data.title}</h3>
+            <p class="pcard__sum">{p.data.summary}</p>
+            <ul class="pcard__tech">
+              {p.data.tech.slice(0, 4).map((t) => <li>{t}</li>)}
+              {p.data.tech.length > 4 && <li class="more">+{p.data.tech.length - 4}</li>}
+            </ul>
+            <div class="pcard__foot">
+              <span class="pcard__more">Case notes <span class="btn__arrow">→</span></span>
+              {p.data.links?.live && <a class="pcard__ext" href={p.data.links.live} target="_blank" rel="noopener" aria-label={`Open ${p.data.title} live`}><i class="fa-solid fa-arrow-up-right-from-square"></i></a>}
+            </div>
           </div>
-          <h3>{p.data.title}</h3>
-          <p>{p.data.summary}</p>
-          <ul class="proj__tech">
-            {p.data.tech.slice(0, 4).map((t) => <li><i class="fa-solid fa-tag"></i>{t}</li>)}
-          </ul>
-          <div class="proj__cta">
-            <i class="fa-solid fa-arrow-up-right-from-square"></i> View Project
-          </div>
-        </a>
+        </li>
       ))}
-    </div>
+    </ul>
+
+    {limit && (
+      <div class="work__all" data-reveal>
+        <a href="/portfolio" class="btn" data-magnetic>All {all.length} projects <span class="btn__arrow">→</span></a>
+      </div>
+    )}
   </div>
 </section>
 
 <style>
-  .filters { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 1.6rem; }
+  .filters { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
   .filter {
-    display: inline-flex; align-items: center; gap: 6px;
-    padding: 6px 14px; border-radius: 999px;
-    border: 1px solid var(--border);
-    background: transparent; color: var(--muted);
-    font: 500 .82rem var(--font-mono);
-    cursor: pointer;
-    text-transform: capitalize;
-    transition: all .2s var(--ease);
+    display: inline-flex; align-items: center; gap: 8px; padding: 8px 14px; border-radius: 999px;
+    background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer;
+    font: 500 .84rem var(--font-body); transition: all .3s var(--ease);
   }
-  .filter i { font-size: 0.78rem; }
   .filter:hover { color: var(--fg); border-color: var(--border-strong); }
-  .filter.is-active { background: var(--accent); color: #06221c; border-color: transparent; }
+  .filter.is-active { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+  .filter__n { font-family: var(--font-mono); font-size: .7rem; opacity: .7; }
 
-  .proj-grid {
-    display: grid; gap: 18px;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  .pgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  .pcard {
+    position: relative; overflow: hidden; display: flex; flex-direction: column;
+    border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border);
+    transition: transform .5s var(--ease), border-color .35s var(--ease), box-shadow .5s var(--ease), opacity .4s var(--ease);
+    will-change: transform;
   }
-  .proj {
-    display: flex; flex-direction: column;
-    color: var(--fg); text-decoration: none;
-    transition: transform .3s var(--ease), border-color .3s var(--ease);
-  }
-  .proj:hover { text-decoration: none; transform: translateY(-4px); border-color: var(--accent); }
-  .proj:hover .proj__cta { color: var(--accent); gap: 8px; }
-  .proj.is-hidden { display: none; }
-  .proj__head { display: flex; justify-content: space-between; align-items: center; margin-bottom: .8rem; }
-  .proj__year {
-    color: var(--dim); font-family: var(--font-mono); font-size: .78rem;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
-  .proj__year i { font-size: 0.72rem; }
-  .proj h3 { font-family: var(--font-display); font-size: 1.15rem; margin: 0 0 .5rem; }
-  .proj p  { font-size: .92rem; }
-  .proj__tech {
-    list-style: none; margin: auto 0 0; padding: 0;
-    display: flex; gap: 6px; flex-wrap: wrap;
-    padding-bottom: 0.6rem;
-  }
-  .proj__tech li {
-    font: 500 .7rem var(--font-mono);
-    color: var(--dim);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    padding: 2px 7px;
-    display: inline-flex; align-items: center; gap: 4px;
-  }
-  .proj__tech li i { font-size: 0.6rem; color: var(--accent); opacity: 0.6; }
-
-  .proj__cta {
-    display: inline-flex; align-items: center; gap: 5px;
-    margin-top: 0.8rem;
-    font: 600 0.82rem var(--font-body);
-    color: var(--muted);
-    transition: color .2s var(--ease), gap .2s var(--ease);
-    border-top: 1px solid var(--border);
-    padding-top: 0.8rem;
-  }
-  .proj__cta i { font-size: 0.75rem; }
-
-  /* Category chip accent colors */
-  .chip--amazon   { color: #ff9900; border-color: rgba(255,153,0,.3); }
-  .chip--hobo     { color: #4cc9b0; border-color: rgba(76,201,176,.3); }
-  .chip--python   { color: #4b8bbe; border-color: rgba(75,139,190,.3); }
-  .chip--game     { color: #f4a261; border-color: rgba(244,162,97,.3); }
-  .chip--hardware { color: #7aa2f7; border-color: rgba(122,162,247,.3); }
-  .chip--web      { color: #9ece6a; border-color: rgba(158,206,106,.3); }
-  .chip--3d       { color: #bb9af7; border-color: rgba(187,154,247,.3); }
-  .chip--tools    { color: #e0af68; border-color: rgba(224,175,104,.3); }
-  .chip { display: inline-flex; align-items: center; gap: 5px; }
-  .chip i { font-size: 0.75em; }
+  .pcard:hover { border-color: rgba(var(--accent-rgb), .4); box-shadow: var(--shadow-card), var(--shadow-glow); }
+  .pcard.is-hidden { display: none; }
+  .pcard__link { position: absolute; inset: 0; z-index: 2; border-radius: inherit; }
+  .pcard__img { aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--bg-2); }
+  .pcard__img img { width: 100%; height: 100%; object-fit: cover; object-position: top; transition: transform 1s var(--ease); }
+  .pcard:hover .pcard__img img { transform: scale(1.05); }
+  .pcard__deco { position: relative; aspect-ratio: 16 / 9; overflow: hidden; border-bottom: 1px solid var(--border); background: var(--grad-soft); display: grid; place-items: center; }
+  .pcard__deco i { font-size: 3.4rem; color: var(--fg); opacity: .22; transition: transform .8s var(--ease), opacity .5s; }
+  .pcard:hover .pcard__deco i { transform: scale(1.12) rotate(-6deg); opacity: .4; }
+  .pcard__deco-grid { position: absolute; inset: 0; background-image: linear-gradient(to right, rgba(255,255,255,.05) 1px, transparent 1px), linear-gradient(to bottom, rgba(255,255,255,.05) 1px, transparent 1px); background-size: 28px 28px; mask-image: radial-gradient(60% 60% at 50% 50%, #000, transparent); -webkit-mask-image: radial-gradient(60% 60% at 50% 50%, #000, transparent); }
+  .cat-powerchat .pcard__deco { background: linear-gradient(135deg, rgba(var(--accent-2-rgb), .22), rgba(139,92,246,.14)); }
+  .cat-ai .pcard__deco, .cat-amazon .pcard__deco { background: linear-gradient(135deg, rgba(var(--accent-3-rgb), .18), rgba(var(--accent-rgb), .14)); }
+  .pcard__body { position: relative; z-index: 1; padding: 20px 20px 18px; display: flex; flex-direction: column; gap: 10px; flex: 1; }
+  .pcard__top { display: flex; align-items: center; gap: 10px; }
+  .pcard__icon { width: 34px; height: 34px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .12); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .18); font-size: .85rem; }
+  .cat-powerchat .pcard__icon { background: rgba(var(--accent-2-rgb), .12); color: var(--accent-2); border-color: rgba(var(--accent-2-rgb), .22); }
+  .cat-amazon .pcard__icon, .cat-ai .pcard__icon { background: rgba(var(--accent-3-rgb), .12); color: var(--accent-3); border-color: rgba(var(--accent-3-rgb), .22); }
+  .cat-infra .pcard__icon { background: rgba(139, 92, 246, .14); color: var(--violet); border-color: rgba(139, 92, 246, .25); }
+  .pcard__cat { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
+  .pcard__year { margin-left: auto; font-size: .7rem; color: var(--dim); }
+  .pcard__title { margin: 0; font-size: 1.15rem; }
+  .pcard__sum { margin: 0; font-size: .9rem; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
+  .pcard__tech { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .pcard__tech li { font: 500 .68rem var(--font-mono); padding: 3px 8px; border-radius: 6px; background: var(--surface-2); color: var(--muted); border: 1px solid var(--border); }
+  .pcard__tech .more { color: var(--dim); }
+  .pcard__foot { display: flex; align-items: center; justify-content: space-between; padding-top: 6px; }
+  .pcard__more { font: 600 .78rem var(--font-mono); color: var(--accent); }
+  .pcard__ext { position: relative; z-index: 3; width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; color: var(--muted); border: 1px solid var(--border); transition: all .25s; }
+  .pcard__ext:hover { color: var(--fg); border-color: var(--accent); text-decoration: none; background: rgba(var(--accent-rgb), .12); }
+  .work__all { display: flex; justify-content: center; margin-top: 34px; }
+  @media (max-width: 1000px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
+  @media (max-width: 600px) { .pgrid { grid-template-columns: 1fr; } }
 </style>
 
 <script>
-  document.querySelectorAll<HTMLButtonElement>(".filter").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const f = btn.dataset.filter;
-      document.querySelectorAll(".filter").forEach((b) => b.classList.remove("is-active"));
-      btn.classList.add("is-active");
-      document.querySelectorAll<HTMLAnchorElement>(".proj").forEach((card) => {
-        const show = f === "all" || card.dataset.cat === f;
-        card.classList.toggle("is-hidden", !show);
+  document.querySelectorAll<HTMLElement>('.work').forEach((sec) => {
+    const btns = sec.querySelectorAll<HTMLButtonElement>('.filter');
+    const cards = sec.querySelectorAll<HTMLElement>('.pcard');
+    btns.forEach((b) => b.addEventListener('click', () => {
+      const f = b.dataset.filter!;
+      btns.forEach((x) => { x.classList.toggle('is-active', x === b); x.setAttribute('aria-selected', String(x === b)); });
+      let shown = 0;
+      cards.forEach((c) => {
+        const show = f === 'all' || c.dataset.cat === f;
+        if (show) {
+          c.classList.remove('is-hidden');
+          c.animate([{ opacity: 0, transform: 'translateY(14px) scale(.98)' }, { opacity: 1, transform: 'none' }], { duration: 450, delay: shown++ * 40, easing: 'cubic-bezier(.22,1,.36,1)', fill: 'backwards' });
+        } else c.classList.add('is-hidden');
       });
-    });
+    }));
   });
 </script>

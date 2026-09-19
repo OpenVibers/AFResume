@@ -1,0 +1,15 @@
+---
+title: "Live captions & translation layer"
+category: "ai"
+summary: "Local whisper.cpp transcription feeding LLM translation in about 21 languages: live captions, two-way chat translation and translated bios, built so a Japanese-speaking streamer could be understood."
+tech: ["whisper.cpp", "Node.js", "OpenAI-compatible LLM APIs", "LRU + DB cache", "WebSockets"]
+role: "Designer · Sole Engineer"
+year: "2026"
+icon: "fa-solid fa-language"
+featured: true
+order: 9
+---
+
+The most popular streamer on OpenVibe.Live streams in Japanese and says in his bio that he does not speak English. Nobody could read him, and he could not read chat.
+
+The fix became a platform feature. Speech is transcribed on the server's CPU with whisper.cpp (no per-minute API cost), detected and translated by a cached LLM call, and pushed to viewers as captions. Chat messages are translated in both directions and persisted with the original, so the streamer reads English chat in Japanese and replies in Japanese that viewers read in English. The same layer translates bios and feeds the site's AI-picked daily spotlight.

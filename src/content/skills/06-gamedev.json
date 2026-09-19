@@ -1,0 +1,32 @@
+{
+  "group": "Game development",
+  "icon": "fa-solid fa-gamepad",
+  "order": 6,
+  "blurb": "Multiplayer first, physics second, everything authoritative.",
+  "items": [
+    {
+      "name": "Babylon.js (WebGPU/WebGL)",
+      "level": "strong"
+    },
+    {
+      "name": "Havok physics",
+      "level": "strong"
+    },
+    {
+      "name": "Authoritative servers & prediction",
+      "level": "core"
+    },
+    {
+      "name": "Lua / Source Engine",
+      "level": "core"
+    },
+    {
+      "name": "C# / C++",
+      "level": "familiar"
+    },
+    {
+      "name": "Gameplay systems & economies",
+      "level": "strong"
+    }
+  ]
+}

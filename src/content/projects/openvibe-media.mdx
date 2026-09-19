@@ -1,0 +1,23 @@
+---
+title: "OpenVibe.Media"
+category: "openvibe"
+summary: "Multi-tenant media backend for the whole network: RTMP and RTP recording, chunked uploads, clip cutting, thumbnails, pastes, view counting and local → B2 → R2 storage tiering."
+tech: ["Node.js", "Express", "SQLite", "ffmpeg / ffprobe", "sharp", "AWS SDK v3 (S3)", "Backblaze B2", "Cloudflare R2", "HMAC webhooks"]
+role: "Founder · Architect · Sole Engineer"
+year: "2026"
+image: "/assets/img/sites/media.webp"
+icon: "fa-solid fa-photo-film"
+links: { "live": "https://openvibe.media" }
+featured: true
+order: 3
+---
+
+Every video, clip, thumbnail, paste and avatar on the network lives here, keyed by tenant app. Apps authenticate with constant-time keys or offline-verified user tokens, and cross-tenant access is a hard 403.
+
+**Recording.** VODs are pulled from RTMP or ingested over RTP/SDP with codec passthrough, then finalized through remux, probe, master-recovery, thumbnail and webhook steps. A background health scanner probes, decodes and quarantines broken files.
+
+**Storage tiering.** Files move from local disk to Backblaze B2 and Cloudflare R2 under disk pressure and play back through presigned URLs. Two production incidents shaped it: ghost rows starving the drain, and a file-descriptor leak from aborted range requests pinning 81 GB of unlinked files. Both are now guarded by design, including an fd watchdog.
+
+**Clips.** Failed cuts retry with backoff and pull cloud VODs back to hot storage on the second attempt, because seeking a fragmented MP4 over HTTP scans the whole file.
+
+**Privacy.** View counting is per visitor per six hours using an HMAC of the IP; raw addresses are never stored. Avatars from any site are ingested server-side, SSRF-checked and re-encoded, so no client-supplied image URL is ever stored or served.

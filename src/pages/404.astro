@@ -1,16 +1,22 @@
 ---
 import Base from "../layouts/Base.astro";
 ---
-<Base title="404 — Lost in the woods">
+<Base title="404 — Signal lost · Alex Frison">
   <section class="container nf">
-    <div class="section-eyebrow">404</div>
-    <h1>Lost in the woods.</h1>
-    <p>That page doesn't exist — or maybe it's just hiding behind a Douglas fir.</p>
-    <a href="/" class="btn btn--primary">Take me home →</a>
+    <div class="nf__code mono" aria-hidden="true">HTTP/2 404</div>
+    <h1>Signal <span class="grad-text">lost</span>.</h1>
+    <p>That page isn't broadcasting. Maybe it moved, maybe it never existed, maybe it's on one of the other twenty domains.</p>
+    <div class="nf__actions">
+      <a href="/" class="btn btn--primary" data-magnetic>Back to the start <span class="btn__arrow">→</span></a>
+      <a href="/portfolio" class="btn" data-magnetic>Browse projects</a>
+    </div>
   </section>
 </Base>
 <style>
-  .nf { padding: 120px 0; text-align: center; }
-  .nf h1 { font-size: clamp(2.6rem, 7vw, 5rem); }
-  .nf p { max-width: 50ch; margin: 0 auto 1.5rem; }
+  .nf { padding: calc(var(--nav-h) + 100px) var(--gutter) 140px; text-align: center; }
+  .nf__code { display: inline-block; padding: 6px 12px; border-radius: 8px; border: 1px solid var(--border); color: var(--accent-2); font-size: .78rem; letter-spacing: .2em; margin-bottom: 20px; animation: flicker 3s infinite; }
+  @keyframes flicker { 0%, 92%, 100% { opacity: 1; } 94% { opacity: .3; } 96% { opacity: 1; } 98% { opacity: .5; } }
+  .nf h1 { font-size: clamp(3rem, 9vw, 6.5rem); }
+  .nf p { max-width: 50ch; margin: 0 auto 1.6rem; font-size: 1.05rem; }
+  .nf__actions { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
 </style>

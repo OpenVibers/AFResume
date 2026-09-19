@@ -1,43 +1,31 @@
 ---
-const tech = [
-  "Python", "TypeScript", "Node.js", "SQL", "Anthropic", "OpenAI", "Machine Learning", "Electron", "React", "Vue",
-  "Lua", "C#", "Linux", "NGINX", "MongoDB", "Redis", "FFmpeg", "Excel", "PHP", "TamperMonkey",
-  "WebRTC", "PostgreSQL", "OAuth2 / OIDC", "Microservices", "Event-Driven Architecture", "WebSockets", "Canvas API",
-];
+const rowA = ["openvibe.live", "openvibe.network", "openvibe.media", "openvibe.tools", "openvibe.games", "openvibe.community", "openvibe.chat", "openvibe.codes", "openvibe.wiki", "openvibe.news", "openre.stream", "powerchat.gg"];
+const rowB = ["TypeScript", "Node.js", "mediasoup", "WebRTC", "RTMP / SRT / WHIP", "ffmpeg", "whisper.cpp", "OAuth2 / OIDC", "PostgreSQL", "SQLite", "Redis", "BullMQ", "Stripe", "Square", "PayPal", "nginx", "systemd", "Cloudflare R2", "Backblaze B2", "Babylon.js", "Havok", "React", "Prisma", "Python", "SQL", "Anthropic API"];
 ---
 <div class="marquee" aria-hidden="true">
-  <div class="marquee__track">
-    {tech.concat(tech).map((t) => <span>{t}</span>)}
+  <div class="marquee__row marquee__row--a">
+    <div class="marquee__track">
+      {rowA.concat(rowA).map((t) => <span class="marquee__item marquee__item--dom"><i class="live-dot"></i>{t}</span>)}
+    </div>
+  </div>
+  <div class="marquee__row marquee__row--b">
+    <div class="marquee__track marquee__track--rev">
+      {rowB.concat(rowB).map((t) => <span class="marquee__item">{t}</span>)}
+    </div>
   </div>
 </div>
 
-<style is:global>
-  .marquee {
-    overflow: hidden;
-    border-block: 1px solid var(--border);
-    background: var(--surface);
-    backdrop-filter: blur(8px);
-  }
-  .marquee__track {
-    display: flex; gap: 0; padding: 16px 0;
-    width: max-content;
-    animation: scroll 80s linear infinite;
-    font-family: var(--font-mono);
-    color: var(--muted);
-    font-size: .88rem;
-    letter-spacing: 0.04em;
-  }
-  .marquee__track span {
-    white-space: nowrap;
-    padding: 0 28px;
-    border-right: 1px solid var(--border);
-  }
-  .marquee__track span:last-child { border-right: none; }
-  @media (hover: hover) {
-    .marquee:hover .marquee__track { animation-play-state: paused; }
-  }
-  @keyframes scroll {
-    from { transform: translateX(0); }
-    to   { transform: translateX(-50%); }
-  }
+<style>
+  .marquee { position: relative; z-index: 1; overflow: hidden; border-block: 1px solid var(--border); background: color-mix(in oklab, var(--bg-2) 70%, transparent); backdrop-filter: blur(8px); mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); -webkit-mask-image: linear-gradient(90deg, transparent, #000 8%, #000 92%, transparent); }
+  .marquee__row { overflow: hidden; }
+  .marquee__row--a { border-bottom: 1px dashed var(--border); }
+  .marquee__track { display: flex; width: max-content; padding: 14px 0; animation: scroll 70s linear infinite; }
+  .marquee__track--rev { animation-direction: reverse; animation-duration: 90s; }
+  .marquee:hover .marquee__track { animation-play-state: paused; }
+  .marquee__item { display: inline-flex; align-items: center; gap: 10px; padding: 0 26px; font: 500 .84rem var(--font-mono); color: var(--muted); letter-spacing: .03em; white-space: nowrap; border-right: 1px solid var(--border); transition: color .25s; }
+  .marquee__item:hover { color: var(--fg); }
+  .marquee__item--dom { color: var(--fg); font-weight: 600; }
+  .marquee__item--dom .live-dot { width: 6px; height: 6px; }
+  .marquee__item--dom .live-dot::after { display: none; }
+  @keyframes scroll { from { transform: translateX(0); } to { transform: translateX(-50%); } }
 </style>

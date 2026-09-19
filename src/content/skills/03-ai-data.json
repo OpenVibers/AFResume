@@ -1,0 +1,40 @@
+{
+  "group": "AI tooling & data",
+  "icon": "fa-solid fa-robot",
+  "order": 3,
+  "blurb": "LLM features with budgets, caching and guardrails, plus the analytics that came first.",
+  "items": [
+    {
+      "name": "Anthropic / OpenAI-compatible APIs",
+      "level": "core"
+    },
+    {
+      "name": "Tool-use agents",
+      "level": "core"
+    },
+    {
+      "name": "Local inference (whisper.cpp, Ollama)",
+      "level": "strong"
+    },
+    {
+      "name": "Prompt & cost governance",
+      "level": "core"
+    },
+    {
+      "name": "SQL analytics",
+      "level": "core"
+    },
+    {
+      "name": "Excel / Power Query / VBA",
+      "level": "core"
+    },
+    {
+      "name": "Dashboards & reporting",
+      "level": "core"
+    },
+    {
+      "name": "Root-cause analysis",
+      "level": "core"
+    }
+  ]
+}

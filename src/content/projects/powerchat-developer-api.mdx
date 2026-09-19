@@ -1,0 +1,16 @@
+---
+title: "PowerChat Developer API platform"
+category: "powerchat"
+summary: "Turned PowerChat into an OAuth2 authorization server with scoped consent, HMAC-signed webhooks and an inbound API, so third-party apps act as platforms feeding chat, subs, currency and tips into overlays."
+tech: ["TypeScript", "Node.js", "Express", "React", "Prisma", "PostgreSQL", "OAuth2", "HMAC webhooks", "BullMQ"]
+role: "Designer · Sole Engineer on the program"
+year: "2026"
+icon: "fa-solid fa-plug"
+links: { "live": "https://powerchat.gg" }
+featured: true
+order: 11
+---
+
+Designed and built end to end in my first weeks on the contract. Developers register an app once, request scoped permissions and send streamers through a standard consent screen. Authorized apps receive HMAC-signed webhooks and can push chat, view counts, follows, subscriptions, virtual currency and tips straight into a streamer's overlays, exactly as a first-party platform would.
+
+The work spanned OAuth and consent flows, token lifecycle, the inbound API and webhook delivery, the developer dashboard and documentation, admin review and audit tooling, branding and currency configuration, schema and migrations, and the unit and integration coverage behind it. Streamlabs was re-implemented as the first official app on the framework, retiring its hardcoded integration path. OpenVibe.Live was the first external platform to integrate.
