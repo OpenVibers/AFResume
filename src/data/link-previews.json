@@ -27,6 +27,54 @@
     "img": "/assets/img/previews/openvibe.chat.jpg",
     "label": "openvibe.chat"
   },
+  "openre.stream": {
+    "img": "/assets/img/previews/openre.stream.jpg",
+    "label": "openre.stream"
+  },
+  "openvibe.tips": {
+    "img": "/assets/img/previews/openvibe.tips.jpg",
+    "label": "openvibe.tips"
+  },
+  "openvibe.vip": {
+    "img": "/assets/img/previews/openvibe.vip.jpg",
+    "label": "openvibe.vip"
+  },
+  "openvibe.codes": {
+    "img": "/assets/img/previews/openvibe.codes.jpg",
+    "label": "openvibe.codes"
+  },
+  "openvibe.host": {
+    "img": "/assets/img/previews/openvibe.host.jpg",
+    "label": "openvibe.host"
+  },
+  "openvibe.wiki": {
+    "img": "/assets/img/previews/openvibe.wiki.jpg",
+    "label": "openvibe.wiki"
+  },
+  "openvibe.blog": {
+    "img": "/assets/img/previews/openvibe.blog.jpg",
+    "label": "openvibe.blog"
+  },
+  "openvibe.news": {
+    "img": "/assets/img/previews/openvibe.news.jpg",
+    "label": "openvibe.news"
+  },
+  "openvibe.reviews": {
+    "img": "/assets/img/previews/openvibe.reviews.jpg",
+    "label": "openvibe.reviews"
+  },
+  "openvibe.deals": {
+    "img": "/assets/img/previews/openvibe.deals.jpg",
+    "label": "openvibe.deals"
+  },
+  "openvibe.coupons": {
+    "img": "/assets/img/previews/openvibe.coupons.jpg",
+    "label": "openvibe.coupons"
+  },
+  "openvibe.trade": {
+    "img": "/assets/img/previews/openvibe.trade.jpg",
+    "label": "openvibe.trade"
+  },
   "powerchat.live": {
     "img": "/assets/img/previews/powerchat.live.jpg",
     "label": "powerchat.live"
@@ -62,10 +110,6 @@
   "path:/portfolio/gameserverlists": {
     "img": "/assets/img/previews/local_portfolio_gameserverlists.jpg",
     "label": "alexfrison.net/portfolio/gameserverlists"
-  },
-  "path:/portfolio/gameserverstats": {
-    "img": "/assets/img/previews/local_portfolio_gameserverstats.jpg",
-    "label": "alexfrison.net/portfolio/gameserverstats"
   },
   "path:/portfolio/hartools": {
     "img": "/assets/img/previews/local_portfolio_hartools.jpg",

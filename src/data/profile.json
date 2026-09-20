@@ -70,6 +70,21 @@
     { "key": "community", "name": "OpenVibe.Community", "url": "https://openvibe.community", "role": "Pastes & posts", "blurb": "Server-rendered paste hub with forks, search, feeds and silent SSO, proxied to Live so identity stays consistent.", "stat": "No DB of its own", "image": "/assets/img/sites/community.webp" },
     { "key": "sites", "name": "OpenVibe.Sites", "url": "https://openvibe.chat", "role": "13 front doors", "blurb": "One catalog and one template generate the pages and nginx configs for openvibe.chat, .codes, .wiki, .news and more.", "stat": "13 domains · 1 build", "image": null }
   ],
+  "networkPlanned": [
+    { "name": "OpenRe.Stream", "url": "https://openre.stream", "role": "Restreaming" },
+    { "name": "OpenVibe.Chat", "url": "https://openvibe.chat", "role": "Chat & calls" },
+    { "name": "OpenVibe.Tips", "url": "https://openvibe.tips", "role": "Creator tips" },
+    { "name": "OpenVibe.VIP", "url": "https://openvibe.vip", "role": "Memberships" },
+    { "name": "OpenVibe.Codes", "url": "https://openvibe.codes", "role": "Developer portal" },
+    { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting" },
+    { "name": "OpenVibe.Wiki", "url": "https://openvibe.wiki", "role": "Wiki" },
+    { "name": "OpenVibe.Blog", "url": "https://openvibe.blog", "role": "Blogs" },
+    { "name": "OpenVibe.News", "url": "https://openvibe.news", "role": "News" },
+    { "name": "OpenVibe.Reviews", "url": "https://openvibe.reviews", "role": "Reviews" },
+    { "name": "OpenVibe.Deals", "url": "https://openvibe.deals", "role": "Deals" },
+    { "name": "OpenVibe.Coupons", "url": "https://openvibe.coupons", "role": "Coupons" },
+    { "name": "OpenVibe.Trade", "url": "https://openvibe.trade", "role": "Markets" }
+  ],
   "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs.",
   "capabilities": ["websites", "platforms", "APIs", "dashboards", "AI features", "automations", "identity systems", "payment systems", "real-time chat", "streaming infra", "whatever you need"]
 }

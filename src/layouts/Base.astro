@@ -248,12 +248,14 @@ const imageUrl = new URL(image, site).toString();
         const el = en.target as HTMLElement;
         const kind = el.dataset.reveal || 'up';
         const delay = Number(el.dataset.delay || 0);
-        const from: Keyframe = kind === 'left' ? { opacity: 0, transform: 'translateX(-30px)' }
-          : kind === 'right' ? { opacity: 0, transform: 'translateX(30px)' }
-          : kind === 'scale' ? { opacity: 0, transform: 'scale(.94)' }
-          : { opacity: 0, transform: 'translateY(26px)' };
+        // Offsets stay small (and never accumulate on nested [data-reveal] ancestors): larger ones
+        // made cards visibly overlap the next card mid-animation when someone scrolls fast.
+        const from: Keyframe = kind === 'left' ? { opacity: 0, transform: 'translateX(-12px)' }
+          : kind === 'right' ? { opacity: 0, transform: 'translateX(12px)' }
+          : kind === 'scale' ? { opacity: 0, transform: 'scale(.975)' }
+          : { opacity: 0, transform: 'translateY(8px) scale(.99)' };
         el.style.opacity = '1'; el.style.transform = 'none';
-        el.animate([from, { opacity: 1, transform: 'none' }], { duration: 750, delay, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+        el.animate([from, { opacity: 1, transform: 'none' }], { duration: 600, delay, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
         io.unobserve(el);
       }
     }, { rootMargin: '0px 0px -8% 0px', threshold: 0.06 });
@@ -266,8 +268,8 @@ const imageUrl = new URL(image, site).toString();
         const kids = Array.from((en.target as HTMLElement).children) as HTMLElement[];
         kids.forEach((k, i) => {
           k.style.opacity = '1';
-          k.animate([{ opacity: 0, transform: 'translateY(22px)' }, { opacity: 1, transform: 'none' }],
-            { duration: 650, delay: i * 70, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
+          k.animate([{ opacity: 0, transform: 'translateY(8px) scale(.99)' }, { opacity: 1, transform: 'none' }],
+            { duration: 550, delay: Math.min(i, 8) * 55, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
         });
         sio.unobserve(en.target);
       }

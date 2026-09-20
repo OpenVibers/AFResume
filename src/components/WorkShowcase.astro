@@ -28,25 +28,25 @@ const groups = [
     key: "openvibe", tone: "a", anchor: "network", icon: "fa-solid fa-diagram-project",
     title: "The OpenVibe network", blurb: "Seven live services behind one sign-in, all built and run by me since 2026.",
     count: profile.network.length, allHref: "/portfolio/?cat=openvibe,infra", allLabel: "All OpenVibe case notes",
-    items: [] as { href: string; external: boolean; image?: string | null; icon: string; title: string; sub: string; text: string; meta: string }[],
+    items: [] as { href: string; external: boolean; image?: string | null; icon: string; title: string; sub: string; text: string; meta: string; soon?: boolean }[],
   },
   {
     key: "powerchat", tone: "b", icon: "fa-solid fa-bolt",
     title: "PowerChat", blurb: "Contract platform work for a creator-monetization product: payments and the developer API.",
     count: countCats(["powerchat"]), allHref: "/portfolio/?cat=powerchat", allLabel: "All PowerChat work",
-    items: byCats(["powerchat"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "" })),
+    items: byCats(["powerchat"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "", soon: p.data.status === "coming-soon" })),
   },
   {
     key: "ai", tone: "c", icon: "fa-solid fa-robot",
     title: "AI, data & automation", blurb: "Agents, analytics and tooling that did real work at Amazon and inside OpenVibe.",
     count: countCats(["ai", "amazon"]), allHref: "/portfolio/?cat=ai,amazon", allLabel: "All AI & data work",
-    items: byCats(["ai", "amazon"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "" })),
+    items: byCats(["ai", "amazon"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "", soon: p.data.status === "coming-soon" })),
   },
   {
     key: "more", tone: "d", icon: "fa-solid fa-shapes",
     title: "Games, tools & side projects", blurb: "The builds that keep the tools sharp: a multiplayer game, desktop apps, hardware and utilities.",
     count: countCats(["game", "tools", "python", "hardware", "web"]), allHref: "/portfolio/", allLabel: "The whole archive",
-    items: byCats(["game", "tools", "python", "hardware", "web"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "" })),
+    items: byCats(["game", "tools", "python", "hardware", "web"], 4).map((p) => ({ href: `/portfolio/${p.slug}`, external: false, icon: p.data.icon ?? "fa-solid fa-cube", title: p.data.title, sub: catLabel[p.data.category], text: p.data.summary, meta: p.data.year ?? "", soon: p.data.status === "coming-soon" })),
   },
 ];
 ---
@@ -63,7 +63,7 @@ const groups = [
 
     <div class="wk">
       {groups.map((g, gi) => (
-        <section class={`wk-group wk-group--${g.tone}`} id={g.anchor} aria-labelledby={`wk-${g.key}`} data-reveal style={`--i:${gi}`}>
+        <section class={`wk-group wk-group--${g.tone}`} id={g.anchor} aria-labelledby={`wk-${g.key}`} style={`--i:${gi}`}>
           <header class="wk-group__head">
             <span class="wk-group__ico"><i class={g.icon} aria-hidden="true"></i></span>
             <div class="wk-group__txt">
@@ -73,21 +73,31 @@ const groups = [
             <a class="wk-group__all" href={g.allHref}><i class="fa-solid fa-grip" aria-hidden="true"></i> <span>{g.allLabel}</span> <i class="fa-solid fa-arrow-right wk-group__arrow" aria-hidden="true"></i></a>
           </header>
           {g.key === "openvibe" && <OpenVibeBento />}
+          {g.key === "openvibe" && (
+            <div class="wk-planned" aria-label="Planned OpenVibe sites">
+              <span class="wk-planned__label"><i class="fa-solid fa-clock" aria-hidden="true"></i> Coming soon</span>
+              <ul class="wk-planned__list">
+                {profile.networkPlanned.map((n) => (
+                  <li><a href={n.url} target="_blank" rel="noopener" title={`${n.name}: ${n.role} (placeholder page)`}>{n.name.replace("OpenVibe.", ".").replace("OpenRe.", "OpenRe.")}<small>{n.role}</small></a></li>
+                ))}
+              </ul>
+            </div>
+          )}
           <ul class="wk-grid" data-stagger hidden={g.items.length === 0}>
             {g.items.map((it) => (
-              <li class={`wk-card ${it.image ? "wk-card--img" : ""}`}>
+              <li class={`wk-card ${it.image ? "wk-card--img" : ""} ${it.soon ? "wk-card--soon" : ""}`}>
                 <a href={it.href} class="wk-card__link" target={it.external ? "_blank" : undefined} rel={it.external ? "noopener" : undefined}>
                   {it.image && <span class="wk-card__thumb" aria-hidden="true"><img src={it.image} alt="" loading="lazy" width="640" height="240" /></span>}
                   <span class="wk-card__body">
                     <span class="wk-card__top">
                       <span class="wk-card__ico"><i class={it.icon} aria-hidden="true"></i></span>
                       {!it.image && <span class="wk-card__sub">{it.sub}</span>}
-                      {it.meta && <span class="wk-card__meta mono">{it.meta}</span>}
+                      {it.soon ? <span class="wk-card__soon mono"><i class="fa-solid fa-clock" aria-hidden="true"></i> Coming soon</span> : it.meta && <span class="wk-card__meta mono">{it.meta}</span>}
                     </span>
                     <span class="wk-card__title">{it.title}</span>
                     {it.image && <span class="wk-card__role">{it.sub}</span>}
                     <span class="wk-card__text">{it.text}</span>
-                    <span class="wk-card__go"><span>{it.external ? "Open site" : "Case notes"}</span> <i class={it.external ? "fa-solid fa-arrow-up-right-from-square" : "fa-solid fa-arrow-right"} aria-hidden="true"></i></span>
+                    <span class="wk-card__go"><span>{it.soon ? "Preview the plan" : it.external ? "Open site" : "Case notes"}</span> <i class={it.external ? "fa-solid fa-arrow-up-right-from-square" : "fa-solid fa-arrow-right"} aria-hidden="true"></i></span>
                   </span>
                 </a>
               </li>
@@ -150,6 +160,16 @@ const groups = [
   .wk-card__go i { transition: transform .3s var(--ease); font-size: .7rem; }
   .wk-card__link:hover .wk-card__go i { transform: translateX(3px); }
   .mono { font-family: var(--font-mono); }
+  .wk-card__soon { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; color: var(--accent-3); background: rgba(var(--accent-3-rgb), .12); border: 1px solid rgba(var(--accent-3-rgb), .35); white-space: nowrap; }
+  .wk-card--soon .wk-card__link { border-style: dashed; }
+  /* Planned domains: every one already has a truthful "coming soon" page, so the chips link there. */
+  .wk-planned { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; padding: 12px 14px; border-radius: 14px; border: 1px dashed var(--border-strong); background: var(--surface); }
+  .wk-planned__label { display: inline-flex; align-items: center; gap: 7px; font: 600 .68rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-3); }
+  .wk-planned__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+  .wk-planned__list a { display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--fg); font: 600 .74rem var(--font-body); text-decoration: none; transition: border-color .25s var(--ease), transform .25s var(--ease); }
+  .wk-planned__list a small { font: 500 .62rem var(--font-mono); color: var(--dim); letter-spacing: .04em; }
+  .wk-planned__list a:hover { text-decoration: none; border-color: rgba(var(--accent-3-rgb), .55); transform: translateY(-1px); }
+  @media (max-width: 560px) { .wk-planned__list a small { display: none; } }
 
   .work__more { margin-top: clamp(22px, 3vw, 34px); display: flex; justify-content: center; }
   .work__all-btn {

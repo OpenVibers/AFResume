@@ -39,6 +39,7 @@ const projects = defineCollection({
       video: z.string().url().optional(),
     }).default({}),
     featured: z.boolean().default(false),
+    status: z.enum(['live', 'coming-soon', 'archived']).default('live'),
     order: z.number().default(0),
   }),
 });

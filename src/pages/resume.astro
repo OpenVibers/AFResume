@@ -12,7 +12,6 @@ const projects = (await getCollection("projects")).filter((p) => p.data.featured
 const LINK_TERMS = {
   "OpenVibe": { href: "https://openvibe.network", external: true },
   "PowerChat": { href: "https://powerchat.live", external: true },
-  "GameServerStats": { href: "/portfolio/gameserverstats" },
 };
 const pitchParts = linkify(profile.pitch, LINK_TERMS);
 ---

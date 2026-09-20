@@ -13,6 +13,7 @@ const W = 1280, H = 800, SCALE = 0.5; // 640x400 output
 
 const external = [
   ...profile.network.map((n) => n.url),
+  ...(profile.networkPlanned || []).map((n) => n.url),
   'https://powerchat.live',
   'https://github.com/OpenVibers',
   'https://alexfrison.net',

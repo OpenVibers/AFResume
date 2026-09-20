@@ -26,7 +26,7 @@ const catLabel: Record<string, string> = {
     <header class="pp__head" data-reveal>
       <div class="pp__meta-top">
         <span class="chip">{catLabel[d.category] ?? d.category}</span>
-        {d.year && <span class="mono pp__year">{d.year}</span>}
+        {d.status === "coming-soon" ? <span class="mono pp__soon"><i class="fa-solid fa-clock"></i> Coming soon</span> : d.year && <span class="mono pp__year">{d.year}</span>}
       </div>
       <h1 class="pp__title">{d.title}</h1>
       <p class="pp__lead">{d.summary}</p>
@@ -82,6 +82,7 @@ const catLabel: Record<string, string> = {
   .pp__back:hover { color: var(--fg); text-decoration: none; }
   .pp__meta-top { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
   .pp__year { color: var(--dim); font-size: .8rem; }
+  .pp__soon { display: inline-flex; align-items: center; gap: 6px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; color: var(--accent-3); background: rgba(var(--accent-3-rgb), .12); border: 1px solid rgba(var(--accent-3-rgb), .35); }
   .pp__title { font-size: clamp(2.2rem, 5.5vw, 4rem); margin: 0 0 .3em; }
   .pp__lead { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--fg); max-width: 62ch; line-height: 1.6; }
   .pp__meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 1.4rem 0; }

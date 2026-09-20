@@ -43,7 +43,7 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
             <div class="pcard__top">
               <span class="pcard__icon"><i class={p.data.icon ?? "fa-solid fa-cube"}></i></span>
               <span class="pcard__cat">{catLabel[p.data.category] ?? p.data.category}</span>
-              {p.data.year && <span class="pcard__year mono">{p.data.year}</span>}
+              {p.data.status === "coming-soon" ? <span class="pcard__soon mono"><i class="fa-solid fa-clock"></i> Coming soon</span> : p.data.year && <span class="pcard__year mono">{p.data.year}</span>}
             </div>
             <h3 class="pcard__title">{p.data.title}</h3>
             <p class="pcard__sum">{p.data.summary}</p>
@@ -108,6 +108,7 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
   .cat-infra .pcard__icon { background: rgba(139, 92, 246, .14); color: var(--violet); border-color: rgba(139, 92, 246, .25); }
   .pcard__cat { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); }
   .pcard__year { margin-left: auto; font-size: .7rem; color: var(--dim); }
+  .pcard__soon { margin-left: auto; display: inline-flex; align-items: center; gap: 6px; font-size: .66rem; letter-spacing: .08em; text-transform: uppercase; padding: 3px 9px; border-radius: 999px; color: var(--accent-3); background: rgba(var(--accent-3-rgb), .12); border: 1px solid rgba(var(--accent-3-rgb), .35); }
   .pcard__title { margin: 0; font-size: 1.15rem; }
   .pcard__sum { margin: 0; font-size: .9rem; color: var(--muted); line-height: 1.55; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; }
   .pcard__tech { list-style: none; margin: auto 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
