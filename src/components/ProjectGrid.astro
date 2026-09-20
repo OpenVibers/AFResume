@@ -146,7 +146,7 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
   }
   .work__all-ico {
     flex: none; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
-    background: var(--grad); color: #fff; font-size: 1.25rem; box-shadow: var(--shadow-glow);
+    background: var(--grad); color: var(--on-accent); font-size: 1.25rem; box-shadow: var(--shadow-glow);
     animation: workAllPulse 2.6s var(--ease) infinite;
   }
   @keyframes workAllPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }

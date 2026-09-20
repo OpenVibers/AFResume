@@ -6,6 +6,7 @@ import ThemePicker from "../components/ThemePicker.astro";
 import profile from "../data/profile.json";
 import themePresets from "../data/theme-presets.json";
 import themePdfManifest from "../data/theme-pdf-manifest.json";
+import linkPreviews from "../data/link-previews.json";
 
 interface Props {
   title?: string;
@@ -141,11 +142,18 @@ const imageUrl = new URL(image, site).toString();
         var hsl = hexToHsl(hex), h = hsl[0];
         // Clamp saturation/lightness so a very dark or very pale pick still reads as an accent
         // (not black text or an invisible near-white) in both themes.
-        var accent = hslToHex(h, Math.max(55, Math.min(hsl[1], 90)), Math.max(48, Math.min(hsl[2], 68)));
-        var violet = hslToHex(h + 45, 65, 65);
-        var ember = hslToHex(h + 180, 80, 62);
-        var mint = hslToHex(h + 150, 65, 55);
+        // Toned down from the first version: saturation capped lower and lightness kept in a
+        // narrower band, so picks stop reading as pure neon slabs and derived colors sit in
+        // the same, slightly desaturated family.
+        var accent = hslToHex(h, Math.max(48, Math.min(hsl[1], 76)), Math.max(46, Math.min(hsl[2], 62)));
+        var violet = hslToHex(h + 40, 56, 62);
+        var ember = hslToHex(h + 180, 64, 60);
+        var mint = hslToHex(h + 150, 54, 52);
         var root = d.style;
+        // Text on top of the accent: relative luminance decides dark ink vs white.
+        var rgb = hexToRgbStr(accent).split(', ').map(function (v) { v = parseInt(v, 10) / 255; return v <= 0.03928 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4); });
+        var lum = 0.2126 * rgb[0] + 0.7152 * rgb[1] + 0.0722 * rgb[2];
+        root.setProperty('--on-accent', lum > 0.36 ? '#0b0f1a' : '#ffffff');
         root.setProperty('--accent', accent);
         root.setProperty('--accent-rgb', hexToRgbStr(accent));
         root.setProperty('--violet', violet);
@@ -195,6 +203,8 @@ const imageUrl = new URL(image, site).toString();
   <main id="main"><slot /></main>
   <Footer />
   <ThemePicker />
+  <div class="lp" id="lp" aria-hidden="true"><div class="lp__img"><img alt="" decoding="async" /></div><div class="lp__cap"><i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i><span></span></div></div>
+  <script type="application/json" id="lp-data" set:html={JSON.stringify(linkPreviews)} />
 
   <script>
     // ---- Resume PDF links: match whatever color was picked before paint ---
@@ -209,10 +219,10 @@ const imageUrl = new URL(image, site).toString();
     lenisScript.onload = () => {
       // @ts-ignore
       const L = window.Lenis;
-      if (!L) return;
-      // syncTouch keeps native-feeling touch scrolling but runs it through the same lerp, so
-      // phones get the same eased scroll as trackpads instead of an entirely different feel.
-      const lenis = new L({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true, syncTouch: true, touchMultiplier: 1.15 });
+      // Wheel/trackpad only. Smoothing touch scroll felt laggy on phones and swallowed
+      // Chrome's pull-to-refresh, so touch stays fully native.
+      if (!L || matchMedia('(pointer: coarse)').matches) return;
+      const lenis = new L({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true });
       // @ts-ignore
       window.__lenis = lenis;
       const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
@@ -359,6 +369,58 @@ const imageUrl = new URL(image, site).toString();
       if (!t) return;
       setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
     });
+
+    // ---- Link hover previews ----------------------------------------------------
+    // Pre-rendered thumbnails only (see scripts/make-link-previews.mjs) — nothing is fetched
+    // live. External links match by host, internal ones by pathname. Links that are already
+    // image cards (project tiles) are skipped so the card doesn't duplicate what's under it.
+    if (matchMedia('(hover: hover) and (pointer: fine)').matches) {
+      const lp = document.getElementById('lp') as HTMLElement;
+      const lpImg = lp.querySelector('img') as HTMLImageElement;
+      const lpCap = lp.querySelector('.lp__cap span') as HTMLElement;
+      const previews: Record<string, { img?: string; label: string }> = JSON.parse(document.getElementById('lp-data')?.textContent || '{}');
+      const iconFor = (host: string) => host.includes('github') ? 'fa-brands fa-github' : host.includes('linkedin') ? 'fa-brands fa-linkedin-in' : 'fa-solid fa-arrow-up-right-from-square';
+      const keyFor = (a: HTMLAnchorElement) => {
+        try {
+          const u = new URL(a.href, location.href);
+          if (u.origin === location.origin) { const p = u.pathname.replace(/\/$/, '') || '/'; return previews['path:' + p] ? 'path:' + p : null; }
+          const h = u.host.replace(/^www\./, '');
+          return previews[h] ? h : (h.includes('linkedin') ? 'linkedin.com' : null);
+        } catch { return null; }
+      };
+      let cur: HTMLAnchorElement | null = null, px = 0, py = 0, cx = 0, cy = 0, lpRaf = 0;
+      const place = () => {
+        cx += (px - cx) * 0.18; cy += (py - cy) * 0.18;
+        const w = lp.offsetWidth || 290, h = lp.offsetHeight || 220;
+        let x = cx + 20, y = cy + 22;
+        const flip = x + w > innerWidth - 12;
+        if (flip) x = cx - w - 20;
+        if (y + h > innerHeight - 12) y = cy - h - 18;
+        lp.classList.toggle('is-flip', flip);
+        lp.style.setProperty('--x', `${Math.max(8, x)}px`); lp.style.setProperty('--y', `${Math.max(8, y)}px`);
+        if (cur) lpRaf = requestAnimationFrame(place);
+      };
+      const hide = () => { cur = null; lp.classList.remove('is-on'); cancelAnimationFrame(lpRaf); };
+      document.addEventListener('mousemove', (e) => { px = e.clientX; py = e.clientY; }, { passive: true });
+      document.addEventListener('mouseover', (e) => {
+        const a = (e.target as HTMLElement).closest('a[href]') as HTMLAnchorElement | null;
+        if (!a || a === cur) return;
+        if (a.querySelector('img') || a.closest('.nav__drawer, .lp')) return;
+        const key = keyFor(a); if (!key) return;
+        const p = previews[key] || { label: key };
+        cur = a; cx = px; cy = py;
+        lp.classList.toggle('lp--noimg', !p.img); lp.classList.remove('is-loaded');
+        lpCap.textContent = p.label; (lp.querySelector('.lp__cap i') as HTMLElement).className = iconFor(key);
+        if (p.img) { lpImg.onload = () => lp.classList.add('is-loaded'); if (lpImg.src.endsWith(p.img)) lp.classList.add('is-loaded'); else lpImg.src = p.img; }
+        lp.classList.add('is-on');
+        cancelAnimationFrame(lpRaf); place();
+      });
+      document.addEventListener('mouseout', (e) => {
+        const a = (e.target as HTMLElement).closest('a[href]');
+        if (a && a === cur && !a.contains(e.relatedTarget as Node)) hide();
+      });
+      addEventListener('scroll', hide, { passive: true });
+    }
 
     // ---- Floating scrollbar ---------------------------------------------------
     // The native sbar is hidden (global.css); this overlay one floats above the content, takes no

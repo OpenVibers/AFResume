@@ -59,7 +59,7 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
   .tp-close:hover { color: var(--fg); border-color: var(--border-strong); }
   .tp-icon {
     width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 16px;
-    background: var(--grad); color: #fff; font-size: 1.3rem; box-shadow: var(--shadow-glow);
+    background: var(--grad); color: var(--on-accent); font-size: 1.3rem; box-shadow: var(--shadow-glow);
   }
   .tp-panel h2 { font-size: 1.4rem; margin: 0 0 8px; }
   .tp-lead { color: var(--muted); font-size: .92rem; margin: 0 0 18px; line-height: 1.6; }
@@ -71,7 +71,7 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
     font: 600 .88rem var(--font-body); cursor: pointer; transition: all .25s var(--ease);
   }
   .tp-mode-btn:hover { color: var(--fg); border-color: var(--accent); }
-  .tp-mode-btn.is-active { background: var(--grad); color: #fff; border-color: transparent; box-shadow: var(--shadow-glow); }
+  .tp-mode-btn.is-active { background: var(--grad); color: var(--on-accent); border-color: transparent; box-shadow: var(--shadow-glow); }
 
   .tp-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
   .tp-swatch {

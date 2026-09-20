@@ -28,6 +28,7 @@ const path = Astro.url.pathname;
       </span>
       <span class="nav__name">Alex Frison</span>
     </a>
+    <span class="nav__where" id="nav-where" aria-live="polite"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="nav__where-txt">Home</span></span>
 
     <nav class="nav__links" aria-label="Primary">
       <ul>
@@ -57,7 +58,7 @@ const path = Astro.url.pathname;
     <ul>
       {links.map((l, i) => (
         <li style={`--i:${i}`}>
-          <a href={l.href} class="nav__drawer-link" aria-current={path.startsWith(`/${l.id}`) ? "page" : undefined}>
+          <a href={l.href} class="nav__drawer-link" data-nav={l.id} aria-current={path.startsWith(`/${l.id}`) ? "page" : undefined}>
             <span class="nav__drawer-ico"><i class={l.icon} aria-hidden="true"></i></span>
             <span class="nav__drawer-text">{l.label}</span>
             <i class="fa-solid fa-chevron-right nav__drawer-go" aria-hidden="true"></i>
@@ -130,6 +131,22 @@ const path = Astro.url.pathname;
   }
   @media (prefers-reduced-motion: reduce) { .nav__mark-comet { animation: none; } }
   .nav__name { font-size: .98rem; }
+  /* Current-section readout: swaps icon + label as you scroll into each section. */
+  .nav__where {
+    display: inline-flex; align-items: center; gap: 8px; height: 32px; padding: 0 12px 0 10px; border-radius: 999px; flex: none;
+    background: rgba(var(--accent-rgb), .1); border: 1px solid rgba(var(--accent-rgb), .25);
+    font: 500 .72rem var(--font-mono); letter-spacing: .08em; text-transform: uppercase; color: var(--fg);
+    opacity: 0; transform: translateX(-6px); transition: opacity .35s var(--ease), transform .35s var(--ease); overflow: hidden;
+  }
+  .nav__where i { color: var(--accent); font-size: .8rem; }
+  .nav.is-scrolled .nav__where { opacity: 1; transform: none; }
+  .nav__where.is-swap .nav__where-txt, .nav__where.is-swap i { animation: whereIn .45s var(--ease); }
+  @keyframes whereIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
+  @media (max-width: 920px) { .nav__where { margin-left: auto; } }
+  /* Phones: the drawer has its own dark-mode switch, so the standalone toggle goes; the section
+     chip drops its label below 520px so the PDF button, palette and burger always fit. */
+  @media (max-width: 560px) { .nav__inner { gap: 8px; padding: 0 8px 0 10px; } .nav__icon[data-theme-toggle] { display: none; } }
+  @media (max-width: 520px) { .nav__where .nav__where-txt { display: none; } .nav__where { padding: 0 10px; } }
 
   .nav__links { flex: 1; display: flex; justify-content: center; }
   .nav__links ul { position: relative; list-style: none; margin: 0; padding: 4px; display: flex; gap: 2px; border-radius: 999px; }
@@ -151,7 +168,7 @@ const path = Astro.url.pathname;
   .nav__end { margin-left: auto; display: flex; align-items: center; gap: 6px; }
   .nav__cta {
     display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px;
-    background: var(--accent); color: #fff; font: 600 .82rem var(--font-body); text-decoration: none;
+    background: var(--accent); color: var(--on-accent); font: 600 .82rem var(--font-body); text-decoration: none;
     box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), .9);
     transition: transform .3s var(--ease), box-shadow .3s var(--ease), filter .3s;
   }
@@ -194,13 +211,18 @@ const path = Astro.url.pathname;
   .nav__drawer-sep { height: 1px; margin: 6px 10px; background: var(--border); flex: none; }
 
   .nav__drawer-link {
-    display: flex; align-items: center; gap: 13px; width: 100%; padding: 10px 12px; border-radius: 14px;
+    position: relative; display: flex; align-items: center; gap: 13px; width: 100%; padding: 10px 12px; border-radius: 14px;
     color: var(--fg); font: 600 1rem var(--font-display); text-decoration: none;
     background: transparent; border: 1px solid transparent; cursor: pointer; text-align: left;
     transition: background .2s var(--ease), border-color .2s var(--ease), transform .2s var(--ease);
   }
   .nav__drawer-link:hover, .nav__drawer-link:active { background: var(--surface-2); border-color: var(--border); text-decoration: none; transform: translateX(2px); }
   .nav__drawer-link[aria-current="page"] { background: var(--surface); border-color: var(--border-strong); }
+  .nav__drawer-link::before { content: ""; position: absolute; left: 0; top: 22%; bottom: 22%; width: 3px; border-radius: 3px; background: var(--grad); transform: scaleY(0); transition: transform .35s var(--ease); }
+  .nav__drawer-link.is-active { background: rgba(var(--accent-rgb), .1); border-color: rgba(var(--accent-rgb), .35); }
+  .nav__drawer-link.is-active::before { transform: scaleY(1); }
+  .nav__drawer-link.is-active .nav__drawer-ico { background: var(--grad); color: var(--on-accent); border-color: transparent; box-shadow: 0 8px 20px -10px rgba(var(--accent-rgb), .9); }
+  .nav__drawer-link.is-active .nav__drawer-go { opacity: 1; transform: none; color: var(--accent); }
   .nav__drawer-ico {
     flex: none; width: 38px; height: 38px; border-radius: 11px; display: inline-grid; place-items: center;
     background: rgba(var(--accent-rgb), .12); color: var(--accent); font-size: .95rem;
@@ -231,10 +253,10 @@ const path = Astro.url.pathname;
   .nav__switch[aria-checked="false"] .nav__switch-knob .fa-moon { opacity: 0; transform: rotate(90deg) scale(.6); }
   .nav__switch[aria-checked="false"] .nav__switch-knob .fa-sun { opacity: 1; transform: none; }
   .nav__switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
-  .nav__drawer-link--cta { background: var(--grad); color: #fff; }
+  .nav__drawer-link--cta { background: var(--grad); color: var(--on-accent); }
   .nav__drawer-link--cta:hover { background: var(--grad); filter: brightness(1.08); transform: translateX(2px); }
-  .nav__drawer-ico--cta { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.3); }
-  .nav__drawer-link--cta .nav__drawer-go { color: #fff; opacity: .8; }
+  .nav__drawer-ico--cta { background: rgba(255,255,255,.2); color: var(--on-accent); border-color: rgba(255,255,255,.3); }
+  .nav__drawer-link--cta .nav__drawer-go { color: var(--on-accent); opacity: .8; }
 
   @media (max-width: 900px) { .nav__links a { padding: 8px 10px; font-size: .84rem; } }
   @media (max-width: 760px) {
@@ -296,6 +318,20 @@ const path = Astro.url.pathname;
   // Sliding pill follows the active section
   const list = nav.querySelector<HTMLUListElement>('.nav__links ul');
   const anchors = Array.from(nav.querySelectorAll<HTMLAnchorElement>('.nav__links a[data-nav]'));
+  const drawerAnchors = Array.from(drawer.querySelectorAll<HTMLAnchorElement>('a[data-nav]'));
+  const where = document.getElementById('nav-where');
+  const whereIcon = where?.querySelector('i'), whereTxt = where?.querySelector('.nav__where-txt');
+  // Sections that aren't nav items still get a readout of their own.
+  const extraWhere: Record<string, [string, string]> = { about: ['Profile', 'fa-solid fa-user'], metrics: ['At a glance', 'fa-solid fa-chart-simple'] };
+  const setWhere = (id: string) => {
+    if (!where || !whereIcon || !whereTxt) return;
+    const src = anchors.find((a) => a.dataset.nav === id);
+    const icon = src ? src.querySelector('i')!.className : (extraWhere[id]?.[1] || 'fa-solid fa-house');
+    const label = src ? (src.textContent || '').trim() : (extraWhere[id]?.[0] || 'Home');
+    if (whereTxt.textContent === label) return;
+    whereIcon.className = icon; whereTxt.textContent = label;
+    where.classList.remove('is-swap'); void where.offsetWidth; where.classList.add('is-swap');
+  };
   const movePill = (a: HTMLAnchorElement | null) => {
     if (!list) return;
     if (!a) { list.style.setProperty('--po', '0'); return; }
@@ -307,7 +343,7 @@ const path = Astro.url.pathname;
   anchors.forEach((a) => a.addEventListener('mouseenter', () => movePill(a)));
   list?.addEventListener('mouseleave', () => movePill(anchors.find((a) => a.classList.contains('is-active')) || null));
 
-  const sections = ['top', ...anchors.map((a) => a.dataset.nav!)].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
+  const sections = ['top', 'metrics', 'about', ...anchors.map((a) => a.dataset.nav!)].map((id) => document.getElementById(id)).filter(Boolean) as HTMLElement[];
   if (sections.length) {
     let lastSection = '';
     const markPulse = document.querySelector('#nav-mark .nav__mark-pulse');
@@ -316,6 +352,8 @@ const path = Astro.url.pathname;
       if (!vis) return;
       const id = vis.target.id === 'top' ? '' : vis.target.id;
       anchors.forEach((a) => a.classList.toggle('is-active', a.dataset.nav === id));
+      drawerAnchors.forEach((a) => a.classList.toggle('is-active', a.dataset.nav === id));
+      setWhere(id);
       movePill(anchors.find((a) => a.dataset.nav === id) || null);
       // The brand mark gives a quiet pulse each time you cross into a new section — a small
       // sign the page is tracking where you are, not just a static logo.

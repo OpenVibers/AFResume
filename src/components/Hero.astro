@@ -43,14 +43,14 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
         <a href="#contact" class="btn btn--ghost" data-magnetic><i class="fa-solid fa-paper-plane"></i> Get in touch</a>
       </div>
 
-      <ul class="hero__tags hero__in" style="--d:950ms">
-        <li class="chip"><i class="fa-solid fa-robot"></i> AI agents</li>
-        <li class="chip"><i class="fa-solid fa-gears"></i> Automation</li>
-        <li class="chip"><i class="fa-solid fa-microchip"></i> Robotics</li>
-        <li class="chip"><i class="fa-solid fa-tower-broadcast"></i> Streaming infra</li>
-        <li class="chip chip--ember"><i class="fa-solid fa-credit-card"></i> Payments</li>
-        <li class="chip chip--mint"><i class="fa-solid fa-server"></i> Ops & deploys</li>
-      </ul>
+      <div class="hero__tags hero__in" style="--d:950ms">
+        <div class="hero__tags-label"><i class="fa-solid fa-wand-magic-sparkles" aria-hidden="true"></i> What I build and do</div>
+        <ul class="hero__tags-grid" aria-label="Areas of work">
+          {profile.strengths.map((t, i) => (
+            <li class="hero__tag" style={`--i:${i}`}><span class="hero__tag-ico"><i class={t.icon} aria-hidden="true"></i></span><span>{t.label}</span></li>
+          ))}
+        </ul>
+      </div>
     </div>
 
     <div class="hero__visual hero__in hero__in--scale" style="--d:300ms">
@@ -136,17 +136,49 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
     min-height: 2.5em;
   }
   .hero__role-static { color: var(--dim); font-weight: 500; }
-  .hero__rotator { position: relative; color: var(--accent); padding-bottom: .12em; }
-  .hero__rotator::before {
-    content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%;
-    background: var(--grad); border-radius: 2px; opacity: .55;
+  .hero__rotator {
+    position: relative; color: var(--accent); padding-bottom: .14em;
+    text-shadow: 0 0 22px rgba(var(--accent-rgb), .35);
   }
-  .hero__rotator::after { content: "_"; margin-left: 2px; color: var(--accent-2); animation: caret 1s steps(2) infinite; }
-  @keyframes caret { 50% { opacity: 0; } }
+  /* The rule under the word is a slow-moving gradient sheen; the caret is a thin glowing bar
+     that sits inline after the last glyph (not an underscore fighting the rule for the same
+     baseline). While the scramble runs the caret goes solid, like a terminal mid-output. */
+  .hero__rotator::before {
+    content: ""; position: absolute; left: 0; bottom: 0; height: 2px; width: 100%; border-radius: 2px;
+    background: linear-gradient(90deg, var(--accent), var(--violet), var(--accent-2), var(--accent-3), var(--accent));
+    background-size: 300% 100%; opacity: .6; animation: ruleSheen 6s linear infinite;
+    mask-image: linear-gradient(90deg, #000 85%, transparent); -webkit-mask-image: linear-gradient(90deg, #000 85%, transparent);
+  }
+  @keyframes ruleSheen { to { background-position: -300% 0; } }
+  .hero__rotator::after {
+    content: ""; display: inline-block; width: .085em; height: .82em; margin-left: .14em; vertical-align: -.04em; border-radius: 2px;
+    background: linear-gradient(180deg, var(--accent-2), var(--accent)); box-shadow: 0 0 14px rgba(var(--accent-2-rgb), .8);
+    animation: caret 1.15s ease-in-out infinite;
+  }
+  .hero__rotator.is-scrambling::after { animation: none; opacity: 1; }
+  .hero__rotator.is-scrambling { animation: glitchShift .18s steps(2) infinite; }
+  @keyframes caret { 0%, 100% { opacity: 1; } 50% { opacity: .15; } }
+  @keyframes glitchShift { 0% { text-shadow: -1px 0 rgba(0, 220, 255, .55), 1px 0 rgba(255, 60, 120, .55), 0 0 22px rgba(var(--accent-rgb), .35); } 100% { text-shadow: 1px 0 rgba(0, 220, 255, .55), -1px 0 rgba(255, 60, 120, .55), 0 0 22px rgba(var(--accent-rgb), .35); } }
 
   .hero__lead { max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.12rem); color: var(--muted); }
   .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.6rem 0 1.4rem; }
-  .hero__tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; }
+  .hero__tags { max-width: 620px; }
+  .hero__tags-label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font: 500 .72rem var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
+  .hero__tags-label i { color: var(--accent); }
+  .hero__tags-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 8px; }
+  .hero__tag {
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; min-height: 44px;
+    background: var(--surface); border: 1px solid var(--border); color: var(--fg);
+    font: 500 .82rem/1.2 var(--font-body); letter-spacing: -.005em;
+    opacity: 0; animation: tagIn .6s var(--ease) forwards; animation-delay: calc(1000ms + var(--i) * 45ms);
+    transition: border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
+  }
+  .hero__tag:hover { border-color: rgba(var(--accent-rgb), .5); background: var(--surface-2); transform: translateY(-2px); }
+  @keyframes tagIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+  .hero__tag-ico { flex: none; width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; font-size: .78rem; background: rgba(var(--accent-rgb), .14); color: var(--accent); }
+  .hero__tag:nth-child(3n+2) .hero__tag-ico { background: rgba(var(--accent-2-rgb), .14); color: var(--accent-2); }
+  .hero__tag:nth-child(3n) .hero__tag-ico { background: rgba(var(--accent-3-rgb), .14); color: var(--accent-3); }
+  @media (max-width: 520px) { .hero__tags-grid { grid-template-columns: 1fr 1fr; } .hero__tag { font-size: .78rem; padding: 7px 9px; min-height: 42px; } }
 
   /* Portrait */
   .hero__visual { display: grid; place-items: center; min-width: 0; }
@@ -294,6 +326,7 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
     const glyphs = '!<>-_\\/[]{}—=+*^?#0123456789';
     let i = 0, busy = false;
     const scramble = (to: string) => new Promise<void>((res) => {
+      rot.classList.add('is-scrambling');
       const from = rot.textContent || '';
       const len = Math.max(from.length, to.length);
       const q = Array.from({ length: len }, (_, k) => ({ from: from[k] || '', to: to[k] || '', start: Math.floor(Math.random() * 14), end: Math.floor(Math.random() * 14) + 14, ch: '' }));
@@ -306,7 +339,7 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
           else out += s.from;
         }
         rot.innerHTML = out;
-        if (done === q.length) res(); else { frame++; requestAnimationFrame(step); }
+        if (done === q.length) { rot.classList.remove('is-scrambling'); res(); } else { frame++; requestAnimationFrame(step); }
       };
       step();
     });
@@ -451,5 +484,6 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
 </script>
 
 <style is:global>
-  .hero__rotator .scr { color: var(--accent-2); opacity: .8; }
+  .hero__rotator .scr { display: inline-block; color: var(--accent-2); opacity: .85; animation: scrJit .09s steps(2) infinite; }
+  @keyframes scrJit { 0% { transform: translateY(-1px) skewX(-6deg); opacity: .6; } 100% { transform: translateY(1px) skewX(4deg); opacity: .95; } }
 </style>

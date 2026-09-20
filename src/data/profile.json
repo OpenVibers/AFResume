@@ -2,6 +2,20 @@
   "name": "Alex Frison",
   "tagline": "Software engineer, data analyst and founder of OpenVibe.",
   "headline": "I build the whole stack, then run it.",
+  "strengths": [
+    { "icon": "fa-solid fa-globe", "label": "Websites & web apps" },
+    { "icon": "fa-solid fa-plug", "label": "APIs & integrations" },
+    { "icon": "fa-solid fa-robot", "label": "AI agents" },
+    { "icon": "fa-solid fa-gears", "label": "Automation" },
+    { "icon": "fa-solid fa-microchip", "label": "Robotics & hardware" },
+    { "icon": "fa-solid fa-chart-line", "label": "Data & analytics" },
+    { "icon": "fa-solid fa-credit-card", "label": "Payments & billing" },
+    { "icon": "fa-solid fa-tower-broadcast", "label": "Streaming & realtime" },
+    { "icon": "fa-solid fa-shield-halved", "label": "Identity & security" },
+    { "icon": "fa-solid fa-server", "label": "Servers & deploys" },
+    { "icon": "fa-solid fa-gamepad", "label": "Games & 3D" },
+    { "icon": "fa-solid fa-handshake", "label": "Sales & leadership" }
+  ],
   "highlights": [
     { "icon": "fa-solid fa-layer-group", "title": "Ships the whole product", "text": "Design, code, infrastructure, deployment and support, with no hand-off in between." },
     { "icon": "fa-solid fa-credit-card", "title": "Moves money safely", "text": "Rebuilt PowerChat's payments across five processors, with ledgers that make double-charging impossible." },
@@ -22,7 +36,7 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Sep_2026_fde01332.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Sep_2026_1c4cdbb2.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",

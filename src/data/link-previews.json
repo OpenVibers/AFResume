@@ -1,0 +1,154 @@
+{
+  "openvibe.live": {
+    "img": "/assets/img/previews/openvibe.live.jpg",
+    "label": "openvibe.live"
+  },
+  "openvibe.network": {
+    "img": "/assets/img/previews/openvibe.network.jpg",
+    "label": "openvibe.network"
+  },
+  "openvibe.media": {
+    "img": "/assets/img/previews/openvibe.media.jpg",
+    "label": "openvibe.media"
+  },
+  "openvibe.tools": {
+    "img": "/assets/img/previews/openvibe.tools.jpg",
+    "label": "openvibe.tools"
+  },
+  "openvibe.games": {
+    "img": "/assets/img/previews/openvibe.games.jpg",
+    "label": "openvibe.games"
+  },
+  "openvibe.community": {
+    "img": "/assets/img/previews/openvibe.community.jpg",
+    "label": "openvibe.community"
+  },
+  "openvibe.chat": {
+    "img": "/assets/img/previews/openvibe.chat.jpg",
+    "label": "openvibe.chat"
+  },
+  "powerchat.live": {
+    "img": "/assets/img/previews/powerchat.live.jpg",
+    "label": "powerchat.live"
+  },
+  "github.com": {
+    "img": "/assets/img/previews/github.com.jpg",
+    "label": "github.com"
+  },
+  "alexfrison.net": {
+    "img": "/assets/img/previews/alexfrison.net.jpg",
+    "label": "alexfrison.net"
+  },
+  "path:/": {
+    "img": "/assets/img/previews/local_home.jpg",
+    "label": "alexfrison.net"
+  },
+  "path:/resume": {
+    "img": "/assets/img/previews/local_resume.jpg",
+    "label": "alexfrison.net/resume"
+  },
+  "path:/portfolio": {
+    "img": "/assets/img/previews/local_portfolio.jpg",
+    "label": "alexfrison.net/portfolio"
+  },
+  "path:/portfolio/amazon-sql-copilot": {
+    "img": "/assets/img/previews/local_portfolio_amazon-sql-copilot.jpg",
+    "label": "alexfrison.net/portfolio/amazon-sql-copilot"
+  },
+  "path:/portfolio/amazon-userscripts": {
+    "img": "/assets/img/previews/local_portfolio_amazon-userscripts.jpg",
+    "label": "alexfrison.net/portfolio/amazon-userscripts"
+  },
+  "path:/portfolio/gameserverlists": {
+    "img": "/assets/img/previews/local_portfolio_gameserverlists.jpg",
+    "label": "alexfrison.net/portfolio/gameserverlists"
+  },
+  "path:/portfolio/gameserverstats": {
+    "img": "/assets/img/previews/local_portfolio_gameserverstats.jpg",
+    "label": "alexfrison.net/portfolio/gameserverstats"
+  },
+  "path:/portfolio/hartools": {
+    "img": "/assets/img/previews/local_portfolio_hartools.jpg",
+    "label": "alexfrison.net/portfolio/hartools"
+  },
+  "path:/portfolio/inbound-pull-tool": {
+    "img": "/assets/img/previews/local_portfolio_inbound-pull-tool.jpg",
+    "label": "alexfrison.net/portfolio/inbound-pull-tool"
+  },
+  "path:/portfolio/irdr-autonomous-bot": {
+    "img": "/assets/img/previews/local_portfolio_irdr-autonomous-bot.jpg",
+    "label": "alexfrison.net/portfolio/irdr-autonomous-bot"
+  },
+  "path:/portfolio/irdr-quality-recap": {
+    "img": "/assets/img/previews/local_portfolio_irdr-quality-recap.jpg",
+    "label": "alexfrison.net/portfolio/irdr-quality-recap"
+  },
+  "path:/portfolio/live-translation": {
+    "img": "/assets/img/previews/local_portfolio_live-translation.jpg",
+    "label": "alexfrison.net/portfolio/live-translation"
+  },
+  "path:/portfolio/lyric-video-toolkit": {
+    "img": "/assets/img/previews/local_portfolio_lyric-video-toolkit.jpg",
+    "label": "alexfrison.net/portfolio/lyric-video-toolkit"
+  },
+  "path:/portfolio/mp-select-mini": {
+    "img": "/assets/img/previews/local_portfolio_mp-select-mini.jpg",
+    "label": "alexfrison.net/portfolio/mp-select-mini"
+  },
+  "path:/portfolio/openvibe-community": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-community.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-community"
+  },
+  "path:/portfolio/openvibe-cutover": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-cutover.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-cutover"
+  },
+  "path:/portfolio/openvibe-games": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-games.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-games"
+  },
+  "path:/portfolio/openvibe-live": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-live.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-live"
+  },
+  "path:/portfolio/openvibe-media": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-media.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-media"
+  },
+  "path:/portfolio/openvibe-network": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-network.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-network"
+  },
+  "path:/portfolio/openvibe-sites": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-sites.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-sites"
+  },
+  "path:/portfolio/openvibe-tools": {
+    "img": "/assets/img/previews/local_portfolio_openvibe-tools.jpg",
+    "label": "alexfrison.net/portfolio/openvibe-tools"
+  },
+  "path:/portfolio/perf-harness": {
+    "img": "/assets/img/previews/local_portfolio_perf-harness.jpg",
+    "label": "alexfrison.net/portfolio/perf-harness"
+  },
+  "path:/portfolio/powerchat-developer-api": {
+    "img": "/assets/img/previews/local_portfolio_powerchat-developer-api.jpg",
+    "label": "alexfrison.net/portfolio/powerchat-developer-api"
+  },
+  "path:/portfolio/powerchat-payments": {
+    "img": "/assets/img/previews/local_portfolio_powerchat-payments.jpg",
+    "label": "alexfrison.net/portfolio/powerchat-payments"
+  },
+  "path:/portfolio/pytools-workshop": {
+    "img": "/assets/img/previews/local_portfolio_pytools-workshop.jpg",
+    "label": "alexfrison.net/portfolio/pytools-workshop"
+  },
+  "path:/portfolio/robotstreamer-toolkit": {
+    "img": "/assets/img/previews/local_portfolio_robotstreamer-toolkit.jpg",
+    "label": "alexfrison.net/portfolio/robotstreamer-toolkit"
+  },
+  "path:/portfolio/youtube-desktop-client": {
+    "img": "/assets/img/previews/local_portfolio_youtube-desktop-client.jpg",
+    "label": "alexfrison.net/portfolio/youtube-desktop-client"
+  }
+}
