@@ -1,7 +1,7 @@
 {
   "company": "OpenVibe",
   "role": "Founder · Architect · Sole Engineer",
-  "start": "2022",
+  "start": "2026",
   "end": "Present",
   "location": "openvibe.live and 20+ domains",
   "kind": "founder",
@@ -9,7 +9,7 @@
   "featured": true,
   "current": true,
   "order": 2,
-  "summary": "An open, community-run live-streaming network I own end to end. Started in 2022 as a single streaming site; by 2026 it had grown into seven connected apps sharing one login, and I'm still the only engineer on it.",
+  "summary": "An open, community-run live-streaming network I own end to end. Launched in 2026 as a single streaming site and grown, in the same year, into seven connected apps sharing one login, with me as the only engineer on it.",
   "bullets": [
     "Designed and built an entire network of seven apps that work together under one account: live streaming, sign-in and a virtual-currency wallet, media storage, a 169-tool toolbox, a browser game and a community hub. About 363,000 lines of code and 900+ web endpoints — all built, deployed and kept running by me alone.",
     "Built the live-streaming engine from the ground up: anyone can broadcast from a browser or an app, and it automatically re-broadcasts to Twitch, YouTube, Kick and more at the same time, saves the recording and auto-generates short clips. It also produces live captions and translates them into about 21 languages in real time, and uses AI to spot and label the best moments in every stream.",
