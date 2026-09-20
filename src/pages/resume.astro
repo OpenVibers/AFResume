@@ -2,10 +2,17 @@
 import Base from "../layouts/Base.astro";
 import { getCollection } from "astro:content";
 import profile from "../data/profile.json";
+import { linkify } from "../lib/linkify";
 
 const exp = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
 const skills = (await getCollection("skills")).sort((a, b) => a.data.order - b.data.order);
 const projects = (await getCollection("projects")).filter((p) => p.data.featured).sort((a, b) => a.data.order - b.data.order).slice(0, 6);
+const LINK_TERMS = {
+  "OpenVibe": { href: "https://openvibe.network", external: true },
+  "PowerChat": { href: "https://powerchat.live", external: true },
+  "GameServerStats": { href: "/portfolio/gameserverstats" },
+};
+const pitchParts = linkify(profile.pitch, LINK_TERMS);
 ---
 <Base title="Resume — Alex Frison" description="Resume of Alex Frison: software engineer, platform architect and founder of OpenVibe. Contract engineer at PowerChat. Formerly Amazon ICQA analytics.">
   <article class="resume container">
@@ -28,12 +35,21 @@ const projects = (await getCollection("projects")).filter((p) => p.data.featured
 
     <div class="resume__actions" data-reveal>
       <a href={profile.resumePdf} class="btn btn--primary" data-magnetic><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
+      <button id="themed-pdf-btn" class="btn" data-magnetic><i class="fa-solid fa-paintbrush"></i> <span>Themed PDF (your color)</span></button>
       <button onclick="window.print()" class="btn" data-magnetic><i class="fa-solid fa-print"></i> Print this page</button>
     </div>
+    <p class="resume__pdf-note">The <strong>Download PDF</strong> is the canonical résumé — dense and ATS-safe. <strong>Themed PDF</strong> generates one in your browser, in whatever accent color you picked (palette icon in the nav), same content.</p>
+
+    <script type="application/json" id="resume-data" set:html={JSON.stringify({
+      profile,
+      experience: exp.map((e) => e.data),
+      skills: skills.map((s) => s.data),
+      projects: projects.map((p) => ({ title: p.data.title, summary: p.data.summary, links: p.data.links })),
+    })} />
 
     <section class="resume__sec" data-reveal>
       <h2>Profile</h2>
-      <p class="resume__pitch">{profile.pitch}</p>
+      <p class="resume__pitch">{pitchParts.map((p) => typeof p === "string" ? p : <a href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener" : undefined}>{p.text}</a>)}</p>
     </section>
 
     <section class="resume__sec" data-reveal>
@@ -98,6 +114,8 @@ const projects = (await getCollection("projects")).filter((p) => p.data.featured
   .resume__contact a:hover { color: var(--accent); text-decoration: none; }
   .resume__contact i { color: var(--accent); width: 14px; }
   .resume__actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 22px 0 6px; }
+  .resume__pdf-note { font-size: .82rem; color: var(--dim); max-width: 62ch; margin: 0 0 8px; }
+  .resume__pdf-note strong { color: var(--muted); }
   .resume__sec { padding: 26px 0; border-top: 1px solid var(--border); }
   .resume__sec:first-of-type { border-top: 0; }
   .resume__sec h2 { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.1rem; display: flex; align-items: center; gap: 12px; }
@@ -132,3 +150,5 @@ const projects = (await getCollection("projects")).filter((p) => p.data.featured
     a { color: #000; }
   }
 </style>
+
+<script src="/js/resume-pdf-client.js" defer></script>

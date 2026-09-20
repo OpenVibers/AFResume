@@ -2,6 +2,7 @@
 import "../styles/global.css";
 import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
+import ThemePicker from "../components/ThemePicker.astro";
 import profile from "../data/profile.json";
 
 interface Props {
@@ -62,7 +63,7 @@ const imageUrl = new URL(image, site).toString();
     jobTitle: "Software Engineer · Platform Architect · Founder of OpenVibe",
     description: profile.pitch,
     worksFor: [
-      { "@type": "Organization", name: "PowerChat", url: "https://powerchat.gg" },
+      { "@type": "Organization", name: "PowerChat", url: "https://powerchat.live" },
       { "@type": "Organization", name: "OpenVibe", url: "https://openvibe.live" },
     ],
     knowsAbout: ["Live streaming infrastructure", "WebRTC", "RTMP", "OAuth2", "OIDC", "Payments systems", "Node.js", "TypeScript", "PostgreSQL", "SQLite", "Redis", "ffmpeg", "LLM tooling", "SQL analytics", "Linux", "nginx", "systemd"],
@@ -84,6 +85,63 @@ const imageUrl = new URL(image, site).toString();
         var t = localStorage.getItem('afnet-theme');
         if (t === 'light' || t === 'dark') d.dataset.theme = t;
       } catch (e) {}
+
+      // ---- Accent color system --------------------------------------------------------
+      // One "favorite color" (a plain hex) drives every accent on the site. Everything else
+      // (violet, ember, mint) is a hue rotation off it, so the palette always reads as one
+      // family instead of a picked color plus three unrelated leftovers. Exposed on window so
+      // the picker component (loaded later, on demand) can call the same function instead of
+      // redefining this math — this copy only exists to run before first paint.
+      function hexToHsl(hex) {
+        hex = hex.replace('#', '');
+        var r = parseInt(hex.substr(0, 2), 16) / 255, g = parseInt(hex.substr(2, 2), 16) / 255, b = parseInt(hex.substr(4, 2), 16) / 255;
+        var max = Math.max(r, g, b), min = Math.min(r, g, b), h, s, l = (max + min) / 2;
+        if (max === min) { h = s = 0; }
+        else {
+          var d2 = max - min;
+          s = l > 0.5 ? d2 / (2 - max - min) : d2 / (max + min);
+          if (max === r) h = (g - b) / d2 + (g < b ? 6 : 0);
+          else if (max === g) h = (b - r) / d2 + 2;
+          else h = (r - g) / d2 + 4;
+          h /= 6;
+        }
+        return [h * 360, s * 100, l * 100];
+      }
+      function hslToHex(h, s, l) {
+        h = ((h % 360) + 360) % 360; s /= 100; l /= 100;
+        var c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs((h / 60) % 2 - 1)), m = l - c / 2, r, g, b;
+        if (h < 60) { r = c; g = x; b = 0; } else if (h < 120) { r = x; g = c; b = 0; } else if (h < 180) { r = 0; g = c; b = x; }
+        else if (h < 240) { r = 0; g = x; b = c; } else if (h < 300) { r = x; g = 0; b = c; } else { r = c; g = 0; b = x; }
+        function toHex(v) { var s2 = Math.round((v + m) * 255).toString(16); return s2.length < 2 ? '0' + s2 : s2; }
+        return '#' + toHex(r) + toHex(g) + toHex(b);
+      }
+      function hexToRgbStr(hex) {
+        hex = hex.replace('#', '');
+        return parseInt(hex.substr(0, 2), 16) + ', ' + parseInt(hex.substr(2, 2), 16) + ', ' + parseInt(hex.substr(4, 2), 16);
+      }
+      function applyAccent(hex) {
+        if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+        var hsl = hexToHsl(hex), h = hsl[0];
+        // Clamp saturation/lightness so a very dark or very pale pick still reads as an accent
+        // (not black text or an invisible near-white) in both themes.
+        var accent = hslToHex(h, Math.max(55, Math.min(hsl[1], 90)), Math.max(48, Math.min(hsl[2], 68)));
+        var violet = hslToHex(h + 45, 65, 65);
+        var ember = hslToHex(h + 180, 80, 62);
+        var mint = hslToHex(h + 150, 65, 55);
+        var root = d.style;
+        root.setProperty('--accent', accent);
+        root.setProperty('--accent-rgb', hexToRgbStr(accent));
+        root.setProperty('--violet', violet);
+        root.setProperty('--accent-2', ember);
+        root.setProperty('--accent-2-rgb', hexToRgbStr(ember));
+        root.setProperty('--accent-3', mint);
+        root.setProperty('--accent-3-rgb', hexToRgbStr(mint));
+      }
+      window.__ovApplyAccent = applyAccent;
+      try {
+        var fav = localStorage.getItem('ov_fav_color');
+        if (fav) applyAccent(fav);
+      } catch (e) {}
     })();
   </script>
 </head>
@@ -94,6 +152,7 @@ const imageUrl = new URL(image, site).toString();
   <Nav />
   <main id="main"><slot /></main>
   <Footer />
+  <ThemePicker />
 
   <script>
     // ---- Smooth scroll (Lenis) --------------------------------------------

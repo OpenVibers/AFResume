@@ -1,5 +1,15 @@
 ---
 import profile from "../data/profile.json";
+import { linkify } from "../lib/linkify";
+
+const LINK_TERMS = {
+  "OpenVibe": { href: "https://openvibe.network", external: true },
+  "PowerChat": { href: "https://powerchat.live", external: true },
+  "GameServerStats": { href: "/portfolio/gameserverstats" },
+};
+const pitchParts = linkify(profile.pitch, LINK_TERMS);
+const statusNowParts = linkify(profile.status.now, LINK_TERMS);
+const statusAlsoParts = linkify(profile.status.also, LINK_TERMS);
 ---
 <section class="section now" id="about" aria-labelledby="now-title">
   <div class="container">
@@ -14,7 +24,7 @@ import profile from "../data/profile.json";
 
     <div class="now__grid">
       <article class="card spot now__pitch" data-reveal>
-        <p class="now__text">{profile.pitch}</p>
+        <p class="now__text">{pitchParts.map((p) => typeof p === "string" ? p : <a href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener" : undefined}>{p.text}</a>)}</p>
         <p class="now__text">Ten years of running my own company taught me to care about the whole loop: the SQL, the socket, the nginx config, the invoice and the person on the other end. I like small teams, hard problems and code that stays up.</p>
         <div class="now__cta">
           <a href="#experience" class="btn btn--ghost">Experience <span class="btn__arrow">→</span></a>
@@ -26,9 +36,13 @@ import profile from "../data/profile.json";
         <div class="card spot now__status" data-reveal data-delay="100">
           <div class="now__status-head"><span class="live-dot"></span><span class="eyebrow">Right now</span></div>
           <ul class="now__status-list">
-            <li><i class="fa-solid fa-bolt"></i><span>{profile.status.now}</span></li>
-            <li><i class="fa-solid fa-satellite-dish"></i><span>{profile.status.also}</span></li>
+            <li><i class="fa-solid fa-bolt"></i><span>{statusNowParts.map((p) => typeof p === "string" ? p : <a href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener" : undefined}>{p.text}</a>)}</span></li>
+            <li><i class="fa-solid fa-satellite-dish"></i><span>{statusAlsoParts.map((p) => typeof p === "string" ? p : <a href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener" : undefined}>{p.text}</a>)}</span></li>
             <li><i class="fa-solid fa-location-dot"></i><span>{profile.location}</span></li>
+          </ul>
+          <ul class="now__facts">
+            <li><strong>Last role</strong><span>{profile.lastRole}</span></li>
+            <li><strong>Founder</strong><span>{profile.foundedOrg}</span></li>
           </ul>
         </div>
         <div class="card spot now__seeking" data-reveal data-delay="200">
@@ -53,6 +67,10 @@ import profile from "../data/profile.json";
   .now__status-list, .now__seek { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
   .now__status-list li { display: flex; gap: 12px; color: var(--muted); font-size: .94rem; line-height: 1.55; }
   .now__status-list i { color: var(--accent); margin-top: 4px; width: 16px; text-align: center; flex: none; }
+  .now__facts { list-style: none; margin: 14px 0 0; padding: 14px 0 0; border-top: 1px dashed var(--border); display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .now__facts strong { display: block; font-family: var(--font-mono); font-size: .68rem; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: 3px; }
+  .now__facts span { color: var(--muted); font-size: .86rem; }
+  @media (max-width: 420px) { .now__facts { grid-template-columns: 1fr; } }
   .now__seek { margin-top: 12px; }
   .now__seek li { display: grid; gap: 2px; padding: 10px 0; border-top: 1px solid var(--border); }
   .now__seek li:first-child { border-top: 0; padding-top: 0; }

@@ -1,0 +1,140 @@
+---
+// First-visit "what's your favorite color" modal, plus the reopen trigger wired to the small
+// palette button Nav.astro renders next to the light/dark toggle. The actual color math
+// (hex → HSL → derived accent/violet/ember/mint) lives once, in Base.astro's pre-paint script,
+// as window.__ovApplyAccent — this component only has to persist a choice and call it.
+const PRESETS = [
+  "#4f7cff", "#8b5cf6", "#ec4899", "#ef4444", "#f97316", "#f59e0b",
+  "#eab308", "#84cc16", "#22c55e", "#14b8a6", "#06b6d4", "#6366f1",
+];
+---
+<div class="tp-modal" id="tp-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tp-title">
+  <div class="tp-backdrop" data-tp-close aria-hidden="true"></div>
+  <div class="tp-panel">
+    <button class="tp-close" data-tp-close aria-label="Close"><i class="fa-solid fa-xmark"></i></button>
+    <div class="tp-icon"><i class="fa-solid fa-palette"></i></div>
+    <h2 id="tp-title">What's your favorite color?</h2>
+    <p class="tp-lead">I'll theme the whole site around it. Swap it anytime from the palette icon in the nav.</p>
+
+    <div class="tp-swatches" role="group" aria-label="Preset colors">
+      {PRESETS.map((hex) => (
+        <button type="button" class="tp-swatch" data-hex={hex} style={`--sw:${hex}`} aria-label={`Use ${hex}`}></button>
+      ))}
+    </div>
+
+    <label class="tp-custom">
+      <input type="color" id="tp-color-input" value="#4f7cff" aria-label="Pick a custom color" />
+      <span>Or pick any color at all</span>
+    </label>
+
+    <div class="tp-actions">
+      <button type="button" class="btn btn--ghost" id="tp-random"><i class="fa-solid fa-shuffle"></i> Surprise me</button>
+      <button type="button" class="btn btn--ghost" id="tp-skip">Maybe later</button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .tp-modal { position: fixed; inset: 0; z-index: 200; display: grid; place-items: center; padding: 20px; }
+  .tp-modal[hidden] { display: none; }
+  .tp-backdrop { position: absolute; inset: 0; background: color-mix(in oklab, var(--bg) 55%, transparent); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px); }
+  .tp-panel {
+    position: relative; width: min(440px, 100%); padding: clamp(24px, 4vw, 34px);
+    border-radius: var(--radius-lg); background: var(--surface-solid); border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-card), 0 30px 80px -20px rgba(0,0,0,.6);
+    opacity: 0; transform: translateY(18px) scale(.97); transition: opacity .35s var(--ease), transform .35s var(--ease);
+  }
+  .tp-modal.is-open .tp-panel { opacity: 1; transform: none; }
+  .tp-close {
+    position: absolute; top: 14px; right: 14px; width: 32px; height: 32px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--surface); border: 1px solid var(--border); color: var(--muted); cursor: pointer;
+  }
+  .tp-close:hover { color: var(--fg); border-color: var(--border-strong); }
+  .tp-icon {
+    width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center; margin-bottom: 16px;
+    background: var(--grad); color: #fff; font-size: 1.3rem; box-shadow: var(--shadow-glow);
+  }
+  .tp-panel h2 { font-size: 1.4rem; margin: 0 0 8px; }
+  .tp-lead { color: var(--muted); font-size: .92rem; margin: 0 0 20px; line-height: 1.6; }
+  .tp-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
+  .tp-swatch {
+    aspect-ratio: 1; border-radius: 50%; background: var(--sw); border: 2px solid transparent;
+    box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+    padding: 0;
+  }
+  .tp-swatch:hover, .tp-swatch:focus-visible { transform: scale(1.14); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sw) 55%, transparent); outline: none; }
+  .tp-custom {
+    display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 20px;
+    border-radius: 12px; border: 1px dashed var(--border-strong); cursor: pointer; color: var(--muted); font-size: .88rem;
+  }
+  .tp-custom:hover { border-color: var(--accent); color: var(--fg); }
+  .tp-custom input[type="color"] { width: 34px; height: 34px; padding: 0; border: none; border-radius: 8px; background: none; cursor: pointer; flex: none; }
+  .tp-custom input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+  .tp-custom input[type="color"]::-webkit-color-swatch { border: 1px solid var(--border-strong); border-radius: 8px; }
+  .tp-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+  .tp-actions .btn { flex: 1; justify-content: center; }
+</style>
+
+<script>
+  const modal = document.getElementById('tp-modal')!;
+  const ASKED_KEY = 'ov_theme_asked';
+  const COLOR_KEY = 'ov_fav_color';
+  const applyAccent = (hex: string) => { (window as any).__ovApplyAccent?.(hex); };
+
+  const open = (prefill?: string) => {
+    const input = document.getElementById('tp-color-input') as HTMLInputElement;
+    try { input.value = prefill || localStorage.getItem(COLOR_KEY) || '#4f7cff'; } catch { /* */ }
+    modal.hidden = false;
+    modal.setAttribute('aria-hidden', 'false');
+    requestAnimationFrame(() => modal.classList.add('is-open'));
+  };
+  const close = () => {
+    modal.classList.remove('is-open');
+    modal.setAttribute('aria-hidden', 'true');
+    setTimeout(() => { modal.hidden = true; }, 350);
+  };
+  const choose = (hex: string) => {
+    applyAccent(hex);
+    try { localStorage.setItem(COLOR_KEY, hex); localStorage.setItem(ASKED_KEY, '1'); } catch { /* */ }
+    close();
+  };
+  const dismiss = () => {
+    try { localStorage.setItem(ASKED_KEY, '1'); } catch { /* */ }
+    close();
+  };
+
+  modal.querySelectorAll<HTMLButtonElement>('.tp-swatch').forEach((sw) => {
+    sw.addEventListener('click', () => choose(sw.dataset.hex!));
+  });
+  document.getElementById('tp-random')?.addEventListener('click', () => {
+    const hue = Math.floor(Math.random() * 360);
+    // Fixed, pleasant saturation/lightness — only the hue is random, so "surprise me" never
+    // lands on something muddy or unreadable.
+    const hex = hslToHexLocal(hue, 72, 58);
+    choose(hex);
+  });
+  document.getElementById('tp-skip')?.addEventListener('click', dismiss);
+  modal.querySelectorAll<HTMLElement>('[data-tp-close]').forEach((el) => el.addEventListener('click', dismiss));
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) dismiss(); });
+
+  const colorInput = document.getElementById('tp-color-input') as HTMLInputElement;
+  colorInput?.addEventListener('input', () => applyAccent(colorInput.value)); // live preview while dragging
+  colorInput?.addEventListener('change', () => choose(colorInput.value)); // native picker closed = decided
+
+  function hslToHexLocal(h: number, s: number, l: number): string {
+    s /= 100; l /= 100;
+    const c = (1 - Math.abs(2 * l - 1)) * s, x = c * (1 - Math.abs(((h / 60) % 2) - 1)), m = l - c / 2;
+    let r = 0, g = 0, b = 0;
+    if (h < 60) { r = c; g = x; } else if (h < 120) { r = x; g = c; } else if (h < 180) { g = c; b = x; }
+    else if (h < 240) { g = x; b = c; } else if (h < 300) { r = x; b = c; } else { r = c; b = x; }
+    const toHex = (v: number) => Math.round((v + m) * 255).toString(16).padStart(2, '0');
+    return `#${toHex(r)}${toHex(g)}${toHex(b)}`;
+  }
+
+  // Exposed for the nav's palette button, so reopening is always available, not just first visit.
+  (window as any).__ovOpenThemePicker = () => open();
+
+  let asked = false;
+  try { asked = localStorage.getItem(ASKED_KEY) === '1'; } catch { /* */ }
+  if (!asked) setTimeout(() => open(), 1600);
+</script>

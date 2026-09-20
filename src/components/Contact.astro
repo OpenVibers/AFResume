@@ -8,8 +8,8 @@ import profile from "../data/profile.json";
       <div class="ct__grid">
         <div>
           <div class="sec-index">Contact</div>
-          <h2 class="ct__title" id="contact-title">Have a system that needs an <em class="grad-text">owner</em>?</h2>
-          <p class="ct__lead">{profile.availability}. I answer email fastest, and I'm happy to talk shop about streaming infra, identity, payments or whatever you're building.</p>
+          <h2 class="ct__title" id="contact-title">I build <span class="grad-text ct-cycle" id="ct-cycle" data-words={JSON.stringify(profile.capabilities)}>{profile.capabilities[0]}</span>.</h2>
+          <p class="ct__lead">Web and software engineering, guru-level: I'm the person you call whether it's a landing page or a live-streaming platform — I design it, build it and keep it running. {profile.availability}. I answer email fastest.</p>
           <div class="ct__actions">
             <a class="btn btn--primary" href={`mailto:${profile.email}`} data-magnetic><i class="fa-solid fa-envelope"></i> {profile.emailDisplay}</a>
             <button class="btn" data-copy={profile.email} data-magnetic><i class="fa-regular fa-copy"></i> <span>Copy email</span></button>
@@ -32,7 +32,8 @@ import profile from "../data/profile.json";
   .ct__glow { position: absolute; inset: -40% -20% auto auto; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--accent-rgb), .35), transparent 70%); filter: blur(30px); animation: breathe 9s ease-in-out infinite; pointer-events: none; }
   @keyframes breathe { 50% { transform: scale(1.15) translate(-6%, 8%); opacity: .7; } }
   .ct__grid { position: relative; display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
-  .ct__title { font-size: clamp(2rem, 4.4vw, 3.4rem); margin: 8px 0 14px; max-width: 16ch; }
+  .ct__title { font-size: clamp(2rem, 4.4vw, 3.4rem); margin: 8px 0 14px; max-width: 20ch; }
+  .ct-cycle { display: inline-block; min-width: 1ch; }
   .ct__lead { font-size: 1.05rem; max-width: 52ch; }
   .ct__actions { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 22px; }
   .ct__social { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; }
@@ -49,6 +50,26 @@ import profile from "../data/profile.json";
 </style>
 
 <script>
+  // "I build ___." cycles through everything the site's copy claims elsewhere — one place that
+  // says the versatility out loud instead of implying it.
+  const cyc = document.getElementById('ct-cycle');
+  if (cyc) {
+    const words: string[] = JSON.parse(cyc.dataset.words || '[]');
+    let i = 0;
+    if (words.length > 1 && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      setInterval(() => {
+        if (document.hidden) return;
+        i = (i + 1) % words.length;
+        cyc.animate([{ opacity: 1, transform: 'translateY(0)' }, { opacity: 0, transform: 'translateY(-8px)' }],
+          { duration: 220, easing: 'ease-in', fill: 'forwards' }).onfinish = () => {
+          cyc.textContent = words[i];
+          cyc.animate([{ opacity: 0, transform: 'translateY(8px)' }, { opacity: 1, transform: 'translateY(0)' }],
+            { duration: 320, easing: 'cubic-bezier(0.22,1,0.36,1)', fill: 'forwards' });
+        };
+      }, 2200);
+    }
+  }
+
   document.querySelectorAll<HTMLButtonElement>('[data-copy]').forEach((b) => {
     const label = b.querySelector('span')!;
     b.addEventListener('click', async () => {

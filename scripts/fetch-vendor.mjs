@@ -14,6 +14,8 @@ const FILES = [
   ['https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.0/files/inter-latin-400-normal.woff2', 'fonts/inter-400.woff2'],
   ['https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.0/files/inter-latin-600-normal.woff2', 'fonts/inter-600.woff2'],
   ['https://cdn.jsdelivr.net/npm/@fontsource/inter@5.1.0/files/inter-latin-800-normal.woff2', 'fonts/inter-800.woff2'],
+  // jsPDF (MIT) — client-side themed résumé export
+  ['https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js', 'jspdf/jspdf.umd.min.js'],
   // Space Grotesk (OFL)
   ['https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.1.0/files/space-grotesk-latin-500-normal.woff2', 'fonts/space-grotesk-500.woff2'],
   ['https://cdn.jsdelivr.net/npm/@fontsource/space-grotesk@5.1.0/files/space-grotesk-latin-700-normal.woff2', 'fonts/space-grotesk-700.woff2'],

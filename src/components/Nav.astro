@@ -35,11 +35,14 @@ const path = Astro.url.pathname;
 
     <div class="nav__end">
       <a class="nav__cta" href={profile.resumePdf} aria-label="Download resume PDF"><i class="fa-solid fa-arrow-down"></i><span>PDF</span></a>
+      <button class="nav__icon" id="nav-color" aria-label="Pick an accent color">
+        <i class="fa-solid fa-palette"></i>
+      </button>
       <button class="nav__icon" data-theme-toggle aria-label="Toggle light and dark theme">
         <i class="fa-solid fa-sun nav__sun"></i><i class="fa-solid fa-moon nav__moon"></i>
       </button>
       <button class="nav__icon nav__burger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-drawer">
-        <span></span><span></span>
+        <span></span><span></span><span></span>
       </button>
     </div>
   </div>
@@ -110,10 +113,11 @@ const path = Astro.url.pathname;
   :root[data-theme="light"] .nav__sun { opacity: 0; transform: rotate(90deg) scale(.6); }
   :root[data-theme="light"] .nav__moon { opacity: 1; transform: none; }
 
-  .nav__burger { display: none; flex-direction: column; gap: 5px; }
-  .nav__burger span { display: block; width: 16px; height: 1.6px; background: currentColor; border-radius: 2px; transition: transform .35s var(--ease), opacity .3s; }
-  .nav__burger[aria-expanded="true"] span:first-child { transform: translateY(3.3px) rotate(45deg); }
-  .nav__burger[aria-expanded="true"] span:last-child { transform: translateY(-3.3px) rotate(-45deg); }
+  .nav__burger { display: none; flex-direction: column; align-items: center; justify-content: center; gap: 4px; }
+  .nav__burger span { display: block; width: 17px; height: 1.6px; background: currentColor; border-radius: 2px; transition: transform .35s var(--ease), opacity .3s, width .3s var(--ease); }
+  .nav__burger[aria-expanded="true"] span:nth-child(1) { transform: translateY(5.6px) rotate(45deg); }
+  .nav__burger[aria-expanded="true"] span:nth-child(2) { opacity: 0; width: 0; }
+  .nav__burger[aria-expanded="true"] span:nth-child(3) { transform: translateY(-5.6px) rotate(-45deg); }
 
   .nav__drawer {
     pointer-events: auto;
@@ -140,6 +144,8 @@ const path = Astro.url.pathname;
 </style>
 
 <script>
+  document.getElementById('nav-color')?.addEventListener('click', () => (window as any).__ovOpenThemePicker?.());
+
   const nav = document.getElementById('nav')!;
   const burger = nav.querySelector<HTMLButtonElement>('.nav__burger')!;
   const drawer = document.getElementById('nav-drawer')!;

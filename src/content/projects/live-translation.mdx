@@ -10,6 +10,6 @@ featured: true
 order: 9
 ---
 
-The most popular streamer on OpenVibe.Live streams in Japanese and says in his bio that he does not speak English. Nobody could read him, and he could not read chat.
+The most popular streamer on [OpenVibe.Live](https://openvibe.live) streams in Japanese and says in his bio that he does not speak English. Nobody could read him, and he could not read chat.
 
 The fix became a platform feature. Speech is transcribed on the server's CPU with whisper.cpp (no per-minute API cost), detected and translated by a cached LLM call, and pushed to viewers as captions. Chat messages are translated in both directions and persisted with the original, so the streamer reads English chat in Japanese and replies in Japanese that viewers read in English. The same layer translates bios and feeds the site's AI-picked daily spotlight.

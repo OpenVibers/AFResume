@@ -16,18 +16,20 @@
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
   "resumePdf": "/Alex_Frison_Resume_Sep_2026.pdf",
-  "availability": "Open to senior engineering, platform and founding-engineer roles · remote or Pacific Northwest",
+  "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
     "also": "Founder and sole engineer of OpenVibe: seven services, 20+ domains, one operator."
   },
-  "pitch": "Full-stack engineer with 10+ years shipping production systems and a habit of owning them end to end. I designed and run OpenVibe, an open live-streaming and tools network of seven Node services behind one identity provider. At PowerChat I turned the product into an OAuth2 platform and rebuilt its payments across five processors. Before that I ran SOX-compliance analytics at Amazon and shipped autonomous research agents that analysts used daily.",
+  "pitch": "Full-stack engineer with 10+ years shipping production systems and a habit of owning them end to end. I designed and run OpenVibe, an open live-streaming and tools network of seven Node services behind one identity provider. At PowerChat I turned the product into an OAuth2 platform and rebuilt its payments across five processors. Before that I ran SOX-compliance analytics at Amazon, shipped autonomous research agents analysts used daily, and spent three years in sales at Verizon Wireless — district top performer, promoted to Assistant Manager, coaching 4-8 reps. I've also run my own company, GameServerStats, for 10+ years. I'm genuinely open to where that combination fits: engineering, platform, analytics, ops or something in between.",
   "seeking": [
-    { "label": "Senior / staff engineer", "detail": "Full-stack, platform, streaming or realtime systems" },
-    { "label": "Founding engineer", "detail": "Small teams that need someone to own the stack" },
-    { "label": "AI tooling & agents", "detail": "LLM products with budgets, guardrails and real users" },
-    { "label": "Data & analytics", "detail": "SQL, reporting and compliance tooling that people act on" }
+    { "label": "Honestly, open to anything", "detail": "Title and level are negotiable — a good team and a real problem matter more" },
+    { "label": "Software engineering", "detail": "Full-stack, platform, streaming or realtime systems" },
+    { "label": "Data & analytics", "detail": "SQL, reporting and compliance tooling that people act on" },
+    { "label": "Ops, support, sales — whatever fits", "detail": "Ten years of sales and running a company count for something too" }
   ],
+  "foundedOrg": "GameServerStats, LLC",
+  "lastRole": "PowerChat — Software Engineer (Contract)",
   "metrics": [
     { "num": 7, "suffix": "", "label": "OpenVibe services designed, built and operated solo", "icon": "fa-solid fa-cubes-stacked" },
     { "num": 900, "suffix": "+", "label": "HTTP routes across the OpenVibe network", "icon": "fa-solid fa-route" },
@@ -47,5 +49,6 @@
     { "key": "community", "name": "OpenVibe.Community", "url": "https://openvibe.community", "role": "Pastes & posts", "blurb": "Server-rendered paste hub with forks, search, feeds and silent SSO, proxied to Live so identity stays consistent.", "stat": "No DB of its own", "image": "/assets/img/sites/community.webp" },
     { "key": "sites", "name": "OpenVibe.Sites", "url": "https://openvibe.chat", "role": "13 front doors", "blurb": "One catalog and one template generate the pages and nginx configs for openvibe.chat, .codes, .wiki, .news and more.", "stat": "13 domains · 1 build", "image": null }
   ],
-  "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs."
+  "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs.",
+  "capabilities": ["websites", "platforms", "APIs", "dashboards", "AI features", "automations", "identity systems", "payment systems", "real-time chat", "streaming infra", "whatever you need"]
 }
