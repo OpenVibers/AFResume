@@ -53,7 +53,7 @@ SELECTED_PROJECTS = [
 # Metrics strip: pick by a keyword found in the label, in this order.
 # Falls back to the first four metrics if fewer than four match.
 METRIC_KEYWORDS = ["services", "routes", "payment processors", "irdrs", "years"]
-FULL_ROLES = 3            # roles with summary + all bullets on page 1
+FULL_ROLES = 2            # roles with summary + all bullets on page 1 (feature-cards + a full metrics strip need the room)
 COMPACT_BULLETS = 2       # bullets per role on page 2
 
 # --------------------------------------------------------------------------
@@ -62,8 +62,8 @@ COMPACT_BULLETS = 2       # bullets per role on page 2
 # --------------------------------------------------------------------------
 PAPER = HexColor("#f2f4fb")
 CARD = HexColor("#ffffff")
-CARD_TINT = HexColor("#f6f8ff")
-BORDER = HexColor("#dbe1f5")
+CARD_TINT = HexColor("#eef1fc")
+BORDER = HexColor("#c3ccec")
 INK = HexColor("#0c1020")
 BODY = HexColor("#2a3148")
 MUTED = HexColor("#5c6683")
@@ -73,7 +73,7 @@ BLUE_SOFT = HexColor("#6c8bf5")
 VIOLET = HexColor("#7c5cff")
 CORAL = HexColor("#f0562a")
 MINT = HexColor("#16b98a")
-ICON_BG = HexColor("#e4eaff")
+ICON_BG = HexColor("#dbe3ff")
 
 # --------------------------------------------------------------------------
 # Page geometry
@@ -83,7 +83,7 @@ MARGIN = 28.0
 CONTENT_W = PAGE_W - 2 * MARGIN
 TOP = PAGE_H - MARGIN
 BOTTOM = MARGIN
-CARD_PAD = 7.0
+CARD_PAD = 6.5
 
 # --------------------------------------------------------------------------
 # Fonts
@@ -273,6 +273,27 @@ def esc(s: str) -> str:
     return s
 
 
+# Proper nouns worth bolding wherever they appear in a bullet or the profile paragraph — the
+# same trick the earlier resume PDF used to make itself skimmable in five seconds. Numbers with
+# a "+"/"K+"/"%" are bolded unconditionally (they're never inside a URL or code fragment here).
+HIGHLIGHT_TERMS = [
+    "OpenVibe", "PowerChat", "Amazon", "Verizon Wireless", "GameServerStats",
+    "Anthropic", "SOX", "OAuth2", "Streamlabs",
+]
+_HIGHLIGHT_NUM_RE = re.compile(r"\b\d[\d,]*(?:\.\d+)?(?:\+|[Kk]\+|%)")
+_HIGHLIGHT_TERM_RE = re.compile("|".join(re.escape(t) for t in sorted(HIGHLIGHT_TERMS, key=len, reverse=True)))
+
+
+def highlight(text: str) -> str:
+    """esc() the text, then wrap standout numbers and known proper nouns in <b>. Order matters:
+    escaping first means the regexes only ever see already-safe text, so re.sub can't reopen a
+    tag or eat an entity."""
+    s = esc(text)
+    s = _HIGHLIGHT_NUM_RE.sub(lambda m: f"<b>{m.group(0)}</b>", s)
+    s = _HIGHLIGHT_TERM_RE.sub(lambda m: f"<b>{m.group(0)}</b>", s)
+    return s
+
+
 def style(name: str, size: float, leading: float, color, font: str | None = None, **kw) -> ParagraphStyle:
     return ParagraphStyle(name, fontName=font or FONT["regular"], fontSize=size, leading=leading,
                           textColor=color, alignment=TA_LEFT, **kw)
@@ -361,11 +382,30 @@ def hairline(c, x0: float, y: float, x1: float, color=BORDER, width: float = 0.6
     c.restoreState()
 
 
-def card(c, x: float, y_top: float, w: float, h: float, radius: float = 8.0, fill=CARD, stroke=BORDER) -> None:
+def vline(c, x: float, y0: float, y1: float, color=BORDER, width: float = 0.6) -> None:
     c.saveState()
+    c.setStrokeColor(color)
+    c.setLineWidth(width)
+    c.line(x, y0, x, y1)
+    c.restoreState()
+
+
+SHADOW = HexColor("#c5cce3")
+
+
+def card(c, x: float, y_top: float, w: float, h: float, radius: float = 8.0, fill=CARD, stroke=BORDER,
+         shadow: bool = True) -> None:
+    """A rounded card with a real drop shadow and a visibly darker border than the page
+    background — the earlier version's near-white-on-near-white fill made every card
+    disappear at normal viewing size. This one is meant to read as a distinct card even on a
+    phone screen, not just at full zoom."""
+    c.saveState()
+    if shadow:
+        c.setFillColor(SHADOW)
+        c.roundRect(x + 1.6, y_top - h - 1.6, w, h, radius, stroke=0, fill=1)
     c.setFillColor(fill)
     c.setStrokeColor(stroke)
-    c.setLineWidth(0.75)
+    c.setLineWidth(1.1)
     c.roundRect(x, y_top - h, w, h, radius, stroke=1, fill=1)
     c.restoreState()
 
@@ -516,56 +556,76 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
 
 
 def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: bool) -> float:
-    """A row of small icon-badge chips, one per profile.json `seeking` entry — the "what I'm
-    open to" teaser row the earlier resume design had, now driven by the same list the site's
-    Now.astro section renders, so it can't say something different from the site. Deliberately
-    compact (one line each): the detail sentence behind each label lives on the site."""
+    """Four bordered cards, one per profile.json `seeking` entry: an icon circle, a bold
+    two-line title, a divider, and its detail sentence as a bullet — the exact shape the
+    earlier resume PDF used for "Analytics/Data · Robotics/AFM · Sales/Leadership ·
+    Product/Engineering", now driven by the same list Now.astro renders on the site."""
     n = max(1, len(seeking))
-    gap = 7.0
+    gap = 8.0
     w = (CONTENT_W - gap * (n - 1)) / n
-    pad = 6.0
-    icon_r = 7.0
-    inner_w = w - 2 * pad - icon_r * 2 - 5
-    label_st = ParagraphStyle("fclabel", fontName=FONT["bold"], fontSize=7.6, leading=8.8, textColor=INK)
-    h = pad * 2 + icon_r * 2
+    pad = 8.0
+    icon_r = 11.0
+    inner_w = w - 2 * pad
+    title_w = inner_w - icon_r * 2 - 8
+    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.6, leading=10.8, textColor=INK)
+    detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.4, leading=9.0, textColor=MUTED,
+                                bulletFontName=FONT["regular"], bulletFontSize=7.4, bulletColor=BLUE)
+    prepared = []
+    for s in seeking:
+        title_p = para(esc(s["label"]), title_st)
+        detail_text, _ = truncate_to_lines(s.get("detail", ""), detail_st, inner_w, 3)
+        detail_p = para(esc(detail_text), detail_st, bullet="•")
+        prepared.append((title_p, detail_p))
+    title_h = max(para_height(p, title_w) for p, _ in prepared)
+    detail_h = max(para_height(p, inner_w) for _, p in prepared)
+    top_row_h = max(icon_r * 2, title_h)
+    h = pad + top_row_h + 8 + detail_h + pad
     if draw:
-        for i, s in enumerate(seeking):
+        for i, ((s, (title_p, detail_p))) in enumerate(zip(seeking, prepared)):
             x = MARGIN + i * (w + gap)
-            card(c, x, y_top, w, h, radius=h / 2, fill=CARD_TINT)
-            cy = y_top - h / 2
-            icon_circle(c, x + pad + icon_r, cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 7.6)
-            label, _ = truncate_to_lines(s["label"], label_st, inner_w, 2)
-            draw_para(c, para(esc(label), label_st), x + pad + icon_r * 2 + 6, cy + label_st.leading * 0.42, inner_w)
+            card(c, x, y_top, w, h, radius=10)
+            top = y_top - pad
+            icon_circle(c, x + pad + icon_r, top - icon_r, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 9.6)
+            draw_para(c, title_p, x + pad + icon_r * 2 + 8, top - (top_row_h - title_h) / 2, title_w)
+            rule_y = top - top_row_h - 5
+            hairline(c, x + pad, rule_y, x + w - pad)
+            draw_para(c, detail_p, x + pad, rule_y - 7, inner_w)
     return h
 
 
 def block_metrics(c, metrics: list[dict], st: Styles, y_top: float, draw: bool) -> float:
+    """One continuous rounded strip divided by hairlines, icon on the left of each column and
+    a bold colored number + label to its right — the earlier PDF's metric strip, not a row of
+    separate boxed cards."""
     n = len(metrics)
-    gap = 8.0
-    w = (CONTENT_W - gap * (n - 1)) / n
-    num_size, suf_size = 14.5, 8.4
-    pad = 6.0
-    icon_r = 8.0
-    inner_w = w - 2 * pad
-    label_paras = [para(esc(m["label"]), st.metric_label) for m in metrics]
-    label_h = max(para_height(p, inner_w) for p in label_paras)
-    h = pad + icon_r * 2 + 4 + num_size * 0.78 + 3 + label_h + pad
+    col_w = CONTENT_W / n
+    icon_r = 11.0
+    num_size = 15.0
+    pad = 10.0
+    label_st = ParagraphStyle("mlabel2", fontName=FONT["regular"], fontSize=6.9, leading=8.2, textColor=MUTED)
+    text_w = col_w - pad - icon_r * 2 - 8 - 6
+    label_paras = [para(esc(m["label"]), label_st) for m in metrics]
+    label_h = max(para_height(p, text_w) for p in label_paras)
+    h = max(icon_r * 2 + 12, num_size + label_h + 6) + 12
     if draw:
+        card(c, MARGIN, y_top, CONTENT_W, h, radius=12)
+        cy = y_top - h / 2
         for i, (m, lp) in enumerate(zip(metrics, label_paras)):
-            x = MARGIN + i * (w + gap)
-            card(c, x, y_top, w, h, radius=10, fill=CARD_TINT)
-            top = y_top - pad
-            icon_circle(c, x + pad + icon_r, top - icon_r, icon_r, metric_icon(m.get("icon", "")), BLUE, ICON_BG, 8.2)
-            base = top - icon_r * 2 - 4 - num_size * 0.78
+            x = MARGIN + i * col_w
+            if i:
+                vline(c, x, y_top - h + 8, y_top - 8)
+            icon_circle(c, x + pad + icon_r, cy, icon_r, metric_icon(m.get("icon", "")), BLUE, ICON_BG, 9.8)
+            tx = x + pad + icon_r * 2 + 8
+            num = f"{m['num']:,}" if isinstance(m["num"], int) else str(m["num"])
+            top_y = cy + (num_size + 2 + label_h) / 2
             c.setFillColor(CORAL)
             c.setFont(FONT["bold"], num_size)
-            num = f"{m['num']:,}" if isinstance(m["num"], int) else str(m["num"])
-            c.drawString(x + pad, base, num)
+            c.drawString(tx, top_y - num_size * 0.78, num)
             nw = pdfmetrics.stringWidth(num, FONT["bold"], num_size)
             if m.get("suffix"):
-                c.setFont(FONT["bold"], suf_size)
-                c.drawString(x + pad + nw + 1, base, m["suffix"])
-            draw_para(c, lp, x + pad, base - 4, inner_w)
+                c.setFont(FONT["bold"], num_size * 0.6)
+                c.drawString(tx + nw + 1, top_y - num_size * 0.78, m["suffix"])
+            draw_para(c, lp, tx, top_y - num_size - 2, text_w)
     return h
 
 
@@ -575,7 +635,7 @@ def block_profile(c, profile: dict, st: Styles, y_top: float, draw: bool) -> flo
     if draw:
         section_header(c, x, y, "Profile", w, "")
     y -= SECTION_PILL_H + SECTION_GAP
-    p = para(esc(profile["pitch"]), st.body)
+    p = para(highlight(profile["pitch"]), st.body)
     h = para_height(p, w)
     if draw:
         draw_para(c, p, x, y, w)
@@ -643,7 +703,7 @@ def block_role_full(c, role: dict, st: Styles, x: float, w: float, y_top: float,
             draw_para(c, p, xi, y, wi)
         y -= h + 2.5
     for b in role.get("bullets", []):
-        p = para(esc(b), st.bullet, bullet="•")
+        p = para(highlight(b), st.bullet, bullet="•")
         h = para_height(p, wi)
         if draw:
             draw_para(c, p, xi, y, wi)
@@ -658,7 +718,7 @@ def block_role_compact(c, role: dict, st: Styles, x: float, w: float, y_top: flo
     y -= role_header(c, role, st, x, w, y, draw)
     xi, wi = x + 15.0, w - 15.0
     for b in role.get("bullets", [])[:COMPACT_BULLETS]:
-        p = para(esc(b), st.bullet_compact, bullet="•")
+        p = para(highlight(b), st.bullet_compact, bullet="•")
         h = para_height(p, wi)
         if draw:
             draw_para(c, p, xi, y, wi)
@@ -877,14 +937,14 @@ def build(out_path: Path) -> dict:
     h, drawer = measured(block_experience, experience[FULL_ROLES:], st, y, "Experience (continued)", True)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
-    y -= h + 6
+    y -= h + 4
     h, truncated = block_projects(c, projects, st, y, draw=True)
     report["truncated"] = truncated
-    y -= h + 6
+    y -= h + 4
     h, drawer = measured(block_skills, skills, st, y)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
-    y -= h + 6
+    y -= h + 4
     h, drawer = measured(block_education, profile, st, y)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
