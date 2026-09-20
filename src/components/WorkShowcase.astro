@@ -5,11 +5,14 @@
 // compact — one line of title, two of summary — with the full case notes one click away.
 import { getCollection } from "astro:content";
 import profile from "../data/profile.json";
+import OpenVibeBento from "./OpenVibeBento.astro";
 
 const all = (await getCollection("projects")).sort((a, b) => a.data.order - b.data.order);
+// OpenVibe's own services are shown once, as the bento in group one — their case-study
+// pages (openvibe-* slugs) stay out of the other groups so nothing appears twice.
 const byCats = (cats: string[], n: number) =>
-  all.filter((p) => cats.includes(p.data.category)).sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.order - b.data.order).slice(0, n);
-const countCats = (cats: string[]) => all.filter((p) => cats.includes(p.data.category)).length;
+  all.filter((p) => cats.includes(p.data.category) && !p.slug.startsWith("openvibe-")).sort((a, b) => Number(b.data.featured) - Number(a.data.featured) || a.data.order - b.data.order).slice(0, n);
+const countCats = (cats: string[]) => all.filter((p) => cats.includes(p.data.category) && !p.slug.startsWith("openvibe-")).length;
 
 const catLabel: Record<string, string> = {
   openvibe: "OpenVibe", powerchat: "PowerChat", amazon: "Amazon", ai: "AI", infra: "Infra & ops",
@@ -25,7 +28,7 @@ const groups = [
     key: "openvibe", tone: "a", anchor: "network", icon: "fa-solid fa-diagram-project",
     title: "The OpenVibe network", blurb: "Seven live services behind one sign-in, all built and run by me since 2026.",
     count: profile.network.length, allHref: "/portfolio/?cat=openvibe,infra", allLabel: "All OpenVibe case notes",
-    items: profile.network.map((n) => ({ href: n.url, external: true, image: n.image, icon: netIcon[n.key] ?? "fa-solid fa-cube", title: n.name, sub: n.role, text: n.blurb, meta: n.stat })),
+    items: [] as { href: string; external: boolean; image?: string | null; icon: string; title: string; sub: string; text: string; meta: string }[],
   },
   {
     key: "powerchat", tone: "b", icon: "fa-solid fa-bolt",
@@ -69,7 +72,8 @@ const groups = [
             </div>
             <a class="wk-group__all" href={g.allHref}><i class="fa-solid fa-grip" aria-hidden="true"></i> <span>{g.allLabel}</span> <i class="fa-solid fa-arrow-right wk-group__arrow" aria-hidden="true"></i></a>
           </header>
-          <ul class="wk-grid" data-stagger>
+          {g.key === "openvibe" && <OpenVibeBento />}
+          <ul class="wk-grid" data-stagger hidden={g.items.length === 0}>
             {g.items.map((it) => (
               <li class={`wk-card ${it.image ? "wk-card--img" : ""}`}>
                 <a href={it.href} class="wk-card__link" target={it.external ? "_blank" : undefined} rel={it.external ? "noopener" : undefined}>
