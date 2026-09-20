@@ -39,7 +39,7 @@ const path = Astro.url.pathname;
     </nav>
 
     <div class="nav__end">
-      <a class="nav__cta" href={profile.resumePdf} aria-label="Download resume PDF"><i class="fa-solid fa-arrow-down"></i><span>PDF</span></a>
+      <a class="nav__cta" href={profile.resumePdf} data-resume-link aria-label="Download resume PDF"><i class="fa-solid fa-arrow-down"></i><span>PDF</span></a>
       <button class="nav__icon" id="nav-color" aria-label="Pick an accent color, and dark or light theme">
         <i class="fa-solid fa-palette"></i>
         <span class="nav__color-dot" id="nav-color-dot" aria-hidden="true"></span>
@@ -66,7 +66,7 @@ const path = Astro.url.pathname;
       ))}
       <li class="nav__drawer-sep" style={`--i:${links.length}`} aria-hidden="true"></li>
       <li style={`--i:${links.length + 1}`}>
-        <a href={profile.resumePdf} class="nav__drawer-link nav__drawer-link--cta">
+        <a href={profile.resumePdf} data-resume-link class="nav__drawer-link nav__drawer-link--cta">
           <span class="nav__drawer-ico nav__drawer-ico--cta"><i class="fa-solid fa-file-pdf" aria-hidden="true"></i></span>
           <span class="nav__drawer-text">Download resume PDF</span>
           <i class="fa-solid fa-arrow-down nav__drawer-go" aria-hidden="true"></i>

@@ -53,7 +53,7 @@ SELECTED_PROJECTS = [
 # Metrics strip: pick by a keyword found in the label, in this order.
 # Falls back to the first four metrics if fewer than four match.
 METRIC_KEYWORDS = ["services", "routes", "payment processors", "irdrs", "years"]
-FULL_ROLES = 2            # roles with summary + all bullets on page 1 (feature-cards + a full metrics strip need the room)
+FULL_ROLES = 2            # PowerChat + OpenVibe get full treatment on page 1
 COMPACT_BULLETS = 2       # bullets per role on page 2
 
 # --------------------------------------------------------------------------
@@ -79,11 +79,11 @@ ICON_BG = HexColor("#dbe3ff")
 # Page geometry
 # --------------------------------------------------------------------------
 PAGE_W, PAGE_H = letter
-MARGIN = 28.0
+MARGIN = 23.0
 CONTENT_W = PAGE_W - 2 * MARGIN
 TOP = PAGE_H - MARGIN
 BOTTOM = MARGIN
-CARD_PAD = 6.5
+CARD_PAD = 6.0
 
 # --------------------------------------------------------------------------
 # Fonts
@@ -185,6 +185,24 @@ def metric_icon(css_class: str) -> str:
         if kw in c:
             return glyph
     return DEFAULT_ICON
+
+
+# profile.json `roles[]` (the header chip row) → icon, matched by keyword; falls back to
+# the generic "engineer" glyph so an unrecognized role degrades instead of going icon-less.
+ROLE_ICON_KEYWORDS = [
+    ("idea", "\uf0eb"), ("business", "\uf0eb"), ("automat", "\uf085"),
+    ("platform", "\uf233"), ("architect", "\uf233"), ("founder", "\uf135"),
+    ("ai ", "\uf2db"), ("engineer", "\uf121"),
+]
+DEFAULT_ROLE_ICON = "\uf121"  # code
+
+
+def role_icon(text: str) -> str:
+    t = (text or "").lower()
+    for kw, glyph in ROLE_ICON_KEYWORDS:
+        if kw in t:
+            return glyph
+    return DEFAULT_ROLE_ICON
 
 
 # profile.json `seeking[].label` → icon for the feature-card row, matched by keyword.
@@ -302,11 +320,11 @@ def style(name: str, size: float, leading: float, color, font: str | None = None
 class Styles:
     def __init__(self) -> None:
         self.body = style("body", 8.7, 10.8, BODY)
-        self.summary = style("summary", 8.0, 9.6, MUTED, FONT["italic"])
-        self.bullet = style("bullet", 8.1, 9.5, BODY, leftIndent=9, bulletIndent=0,
-                            bulletFontName=FONT["regular"], bulletFontSize=8.1, bulletColor=BLUE)
-        self.bullet_compact = style("bulletc", 8.1, 9.5, BODY, leftIndent=9, bulletIndent=0,
-                                    bulletFontName=FONT["regular"], bulletFontSize=8.1, bulletColor=BLUE)
+        self.summary = style("summary", 8.1, 9.8, MUTED, FONT["italic"])
+        self.bullet = style("bullet", 8.2, 9.9, BODY, leftIndent=9, bulletIndent=0,
+                            bulletFontName=FONT["regular"], bulletFontSize=8.2, bulletColor=BLUE)
+        self.bullet_compact = style("bulletc", 8.2, 10.0, BODY, leftIndent=9, bulletIndent=0,
+                                    bulletFontName=FONT["regular"], bulletFontSize=8.2, bulletColor=BLUE)
         self.stack = style("stack", 6.9, 8.3, MUTED)
         self.metric_label = style("mlabel", 7.0, 8.5, MUTED)
         self.proj_title = style("ptitle", 8.5, 10.2, INK, FONT["bold"])
@@ -517,18 +535,19 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
     # feature cards above) there is no separate "measure" vs "draw" width that could disagree.
     roles = (profile.get("roles") or [])[:6]
     chip_font, chip_size, chip_pad_x, chip_gap = FONT["bold"], 7.6, 20.0, 7.0
+    chip_icon_w = 13.0  # icon glyph + gap before the label
     chips_w = w - pad * 2 - panel_w - 14
     chip_rows: list[list[tuple[str, float]]] = [[]]
     cx = 0.0
     for r in roles:
-        cw = pdfmetrics.stringWidth(r, chip_font, chip_size) + chip_pad_x
+        cw = pdfmetrics.stringWidth(r, chip_font, chip_size) + chip_pad_x + chip_icon_w
         if cx > 0 and cx + cw > chips_w:
             chip_rows.append([])
             cx = 0.0
         chip_rows[-1].append((r, cw))
         cx += cw + chip_gap
-    chip_h = chip_size + 10
-    chips_total_h = len(chip_rows) * chip_h + max(0, len(chip_rows) - 1) * 5
+    chip_h = chip_size + 8
+    chips_total_h = len(chip_rows) * chip_h + max(0, len(chip_rows) - 1) * 4
 
     banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + 12 + chips_total_h + pad
     banner_h = max(banner_h, pad * 1.6 + panel_h)
@@ -567,9 +586,10 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
                 c.setFillAlpha(0.4)
                 c.roundRect(cx2, row_top - chip_h, cw, chip_h, chip_h / 2, stroke=0, fill=1)
                 c.restoreState()
+                icon(c, cx2 + chip_pad_x / 2, row_top - chip_h / 2 - chip_size * 0.36, role_icon(text), chip_size, white)
                 c.setFillColor(white)
                 c.setFont(chip_font, chip_size)
-                c.drawString(cx2 + chip_pad_x / 2, row_top - chip_h / 2 - chip_size * 0.36, text)
+                c.drawString(cx2 + chip_pad_x / 2 + chip_icon_w, row_top - chip_h / 2 - chip_size * 0.36, text)
                 cx2 += cw + chip_gap
             row_top -= chip_h + 5
 
@@ -595,51 +615,61 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
 
 
 def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: bool) -> float:
-    """Four bordered cards, one per profile.json `seeking` entry: an icon circle, a bold
-    one-line title (truncated with an ellipsis if it doesn't fit — the full label is never
-    hidden, since it also has its own place on the site's Now.astro section), a divider, and
-    its detail sentence as a bullet.
+    """A 2×2 grid, one card per profile.json `seeking` entry: icon, one-line title (still
+    truncated as a last resort if a future label is unusually long — but at this width none of
+    the current four are), a divider, and its detail sentence as a bullet.
 
-    Titles here are deliberately capped to a single line rather than left to wrap: with four
-    cards forced to a shared height, letting one label wrap to 2-3 lines either stretched every
-    other card into wasted blank space or — when the wrap was measured against one width and
-    room was tighter at draw time — let the detail text collide with the title's last line.
-    A fixed one-line title makes every card's height the same simple sum, with no dependency on
-    how long any one label happens to be."""
-    n = max(1, len(seeking))
+    Two columns instead of four gives each title roughly double the width a four-across row
+    had, so the truncation that made every title unreadable ("Honestly, o…to…") stops being
+    the normal case. Row height is still a single shared value (the taller of the two detail
+    texts in that row), computed and used identically for measuring and drawing."""
+    cols = 2
+    n = len(seeking)
+    rows = [seeking[i:i + cols] for i in range(0, n, cols)]
     gap = 8.0
-    w = (CONTENT_W - gap * (n - 1)) / n
-    pad = 8.0
+    w = (CONTENT_W - gap * (cols - 1)) / cols
+    pad = 9.0
     icon_r = 11.0
     inner_w = w - 2 * pad
-    title_w = inner_w - icon_r * 2 - 8
-    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.2, leading=1, textColor=INK)
-    detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.4, leading=9.0, textColor=MUTED,
-                                bulletFontName=FONT["regular"], bulletFontSize=7.4, bulletColor=BLUE)
+    title_w = inner_w - icon_r * 2 - 10
+    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.6, leading=1, textColor=INK)
+    detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.6, leading=9.4, textColor=MUTED,
+                                bulletFontName=FONT["regular"], bulletFontSize=7.6, bulletColor=BLUE)
     prepared = []
     for s in seeking:
         title_text = s["label"]
         while pdfmetrics.stringWidth(title_text, title_st.fontName, title_st.fontSize) > title_w and len(title_text) > 4:
             title_text = title_text[:-2].rstrip(",;: —–-") + "…"
-        detail_text, _ = truncate_to_lines(s.get("detail", ""), detail_st, inner_w, 3)
-        detail_p = para(esc(detail_text), detail_st, bullet="•")
+        detail_p = para(esc(s.get("detail", "")), detail_st, bullet="•")
         prepared.append((title_text, detail_p))
     title_row_h = max(icon_r * 2, title_st.fontSize * 1.2)
-    detail_h = max(para_height(p, inner_w) for _, p in prepared)
-    h = pad + title_row_h + 8 + detail_h + pad
+    row_gap = 7.0
+    row_heights = []
+    for r in range(len(rows)):
+        chunk = prepared[r * cols:(r + 1) * cols]
+        detail_h = max(para_height(p, inner_w) for _, p in chunk)
+        row_heights.append(pad + title_row_h + 9 + detail_h + pad)
+    h = sum(row_heights) + row_gap * (len(rows) - 1)
     if draw:
-        for i, (s, (title_text, detail_p)) in enumerate(zip(seeking, prepared)):
-            x = MARGIN + i * (w + gap)
-            card(c, x, y_top, w, h, radius=10)
-            top = y_top - pad
-            icon_cy = top - title_row_h / 2
-            icon_circle(c, x + pad + icon_r, icon_cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 9.6)
-            c.setFillColor(INK)
-            c.setFont(title_st.fontName, title_st.fontSize)
-            c.drawString(x + pad + icon_r * 2 + 8, icon_cy - title_st.fontSize * 0.36, title_text)
-            rule_y = top - title_row_h - 5
-            hairline(c, x + pad, rule_y, x + w - pad)
-            draw_para(c, detail_p, x + pad, rule_y - 7, inner_w)
+        row_top = y_top
+        for r, row in enumerate(rows):
+            rh = row_heights[r]
+            for ci in range(len(row)):
+                idx = r * cols + ci
+                s = seeking[idx]
+                title_text, detail_p = prepared[idx]
+                x = MARGIN + ci * (w + gap)
+                card(c, x, row_top, w, rh, radius=12)
+                top = row_top - pad
+                icon_cy = top - title_row_h / 2
+                icon_circle(c, x + pad + icon_r, icon_cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 10.6)
+                c.setFillColor(INK)
+                c.setFont(title_st.fontName, title_st.fontSize)
+                c.drawString(x + pad + icon_r * 2 + 10, icon_cy - title_st.fontSize * 0.36, title_text)
+                rule_y = top - title_row_h - 6
+                hairline(c, x + pad, rule_y, x + w - pad)
+                draw_para(c, detail_p, x + pad, rule_y - 8, inner_w)
+            row_top -= rh + row_gap
     return h
 
 
@@ -758,7 +788,7 @@ def block_role_full(c, role: dict, st: Styles, x: float, w: float, y_top: float,
         if draw:
             draw_para(c, p, xi, y, wi)
         y -= h
-    y -= 1.8
+    y -= 1.4
     y -= stack_line(c, role, st, x, w, y, draw)
     return y_top - y
 
@@ -783,7 +813,7 @@ def block_experience(c, roles: list[dict], st: Styles, y_top: float, label: str,
         section_header(c, x, y, label, w, "")
     y -= SECTION_PILL_H + SECTION_GAP
     fn = block_role_compact if compact else block_role_full
-    sep = 4.0 if compact else 5.0
+    sep = 3.0 if compact else 4.0
     for i, role in enumerate(roles):
         if i:
             if draw:
@@ -795,18 +825,22 @@ def block_experience(c, roles: list[dict], st: Styles, y_top: float, label: str,
 
 
 def block_projects(c, projects: list[dict], st: Styles, y_top: float, draw: bool) -> tuple[float, list[str]]:
-    """2 rows × 3 columns of small cards, each with a category icon. Returns (height, truncated titles)."""
+    """2 rows x 3 columns of small cards, each with a category icon and -- if it has a live URL --
+    a small link-out badge in the top-right corner instead of a separate domain-text row.
+    Shorter two-line summaries: punchy over complete; the full write-up is one tap away at
+    alexfrison.net/portfolio. Returns (height, truncated titles)."""
     truncated: list[str] = []
     y = y_top
     if draw:
-        section_header(c, MARGIN, y, "Selected work", CONTENT_W, "")
+        section_header(c, MARGIN, y, "Selected work", CONTENT_W, ICON["link"])
     y -= SECTION_PILL_H + SECTION_GAP
-    cols, gap, pad = 3, 8.0, 7.0
+    cols, gap, pad = 3, 8.0, 8.0
     cw = (CONTENT_W - gap * (cols - 1)) / cols
     icon_col = 20.0
+    link_badge = 16.0
     inner = cw - 2 * pad
-    title_w = inner - icon_col
-    max_lines = 3
+    title_w = inner - icon_col - link_badge
+    max_lines = 2
     prepared = []
     for pr in projects:
         title = pr.get("title", "")
@@ -817,34 +851,34 @@ def block_projects(c, projects: list[dict], st: Styles, y_top: float, draw: bool
         prepared.append((title, summary, url, pr.get("category")))
     title_h = st.proj_title.leading
     sum_h = st.proj_summary.leading * max_lines
-    link_h = st.proj_link.leading
-    ch = pad + title_h + 3 + sum_h + 3 + link_h + pad
+    ch = pad + title_h + 6 + sum_h + pad
     rows = (len(prepared) + cols - 1) // cols
     if draw:
         for i, (title, summary, url, cat) in enumerate(prepared):
             r, col = divmod(i, cols)
             x = MARGIN + col * (cw + gap)
             top = y - r * (ch + gap)
-            card(c, x, top, cw, ch, radius=8)
+            card(c, x, top, cw, ch, radius=10)
             ty = top - pad
             glyph = CATEGORY_ICON.get(cat, DEFAULT_ICON)
             icon_circle(c, x + pad + 6.5, ty - 6.5, 7.0, glyph, BLUE, ICON_BG, 7.0)
+            if url:
+                bx, by = x + cw - pad - link_badge, ty - link_badge + 3
+                c.saveState()
+                c.setFillColor(ICON_BG)
+                c.roundRect(bx, by, link_badge, link_badge, 5, stroke=0, fill=1)
+                c.restoreState()
+                iw = pdfmetrics.stringWidth(ICON["link"], "FA", 7.0)
+                icon(c, bx + (link_badge - iw) / 2, by + 4.6, ICON["link"], 7.0, BLUE)
+                c.linkURL(url, (x, top - ch, x + cw, top), relative=0, thickness=0)
             tsize = st.proj_title.fontSize
-            while tsize > 7.2 and pdfmetrics.stringWidth(title, FONT["bold"], tsize) > title_w:
+            while tsize > 7.0 and pdfmetrics.stringWidth(title, FONT["bold"], tsize) > title_w:
                 tsize -= 0.2
             c.setFillColor(INK)
             c.setFont(FONT["bold"], tsize)
             c.drawString(x + pad + icon_col, ty - tsize * 0.78, title)
-            ty -= title_h + 3
+            ty -= title_h + 6
             draw_para(c, para(esc(summary), st.proj_summary), x + pad, ty, inner)
-            ty -= sum_h + 3
-            if url:
-                disp = re.sub(r"^https?://", "", url).rstrip("/")
-                iw = icon(c, x + pad, ty - st.proj_link.fontSize * 0.78, ICON["link"], 7.0, BLUE)
-                c.setFillColor(BLUE)
-                c.setFont(FONT["regular"], st.proj_link.fontSize)
-                c.drawString(x + pad + iw + 4, ty - st.proj_link.fontSize * 0.78, disp)
-                c.linkURL(url, (x, top - ch, x + cw, top), relative=0, thickness=0)
     y -= rows * ch + (rows - 1) * gap
     return y_top - y, truncated
 
@@ -1063,7 +1097,7 @@ def build(out_path: Path) -> dict:
     page_background(c)
     y = TOP
     y -= block_header(c, profile, st, y, draw=True)
-    y -= 6
+    y -= 5
     y -= block_feature_cards(c, profile.get("seeking", []), st, y, draw=True)
     y -= 6
     y -= block_metrics(c, pick_metrics(profile["metrics"]), st, y, draw=True)
@@ -1087,14 +1121,14 @@ def build(out_path: Path) -> dict:
     h, drawer = measured(block_experience, experience[FULL_ROLES:], st, y, "Experience (continued)", True)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
-    y -= h + 4
+    y -= h + 2
     h, truncated = block_projects(c, projects, st, y, draw=True)
     report["truncated"] = truncated
-    y -= h + 4
+    y -= h + 2
     h, drawer = measured(block_skills, skills, st, y)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
-    y -= h + 4
+    y -= h + 2
     h, drawer = measured(block_education, profile, st, y)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
@@ -1127,26 +1161,26 @@ def main() -> None:
     warnings: list[str] = []
     keep: set[Path] = set()
 
-    # The canonical PDF: the one every "Download PDF" link points at, no color choice involved.
-    print("canonical:")
-    rel = f"Alex_Frison_Resume_{month_tag}_{h}.pdf"
-    out = build_one(rel, warnings)
-    keep.add(out)
-    sync_resume_pdf_path(f"/{rel}")
-
-    # One PDF per preset accent color — pre-built here so the "themed PDF" download on the site
-    # is a plain static link, never a client-side jsPDF render. src/data/theme-presets.json is
-    # the same list ThemePicker.astro reads, so the swatches you can pick from the site and the
-    # colors you can download in are always the same set.
+    # Every preset color, including the default ("blue"), goes through the exact same
+    # configure_palette() call — there is no separate hardcoded default anymore. That used to be
+    # the bug behind "why is the default orange": the very first build ran before any palette
+    # call, so it kept the *original* fixed BLUE/CORAL module constants (a blue header next to an
+    # unrelated hardcoded orange), while every preset below it got the newer monochromatic
+    # derivation. One code path now produces all thirteen files.
     presets = json.loads((ROOT / "src/data/theme-presets.json").read_text(encoding="utf-8"))
-    manifest = {"default": f"/{rel}"}
-    print("themed:")
+    default_name = "blue"
+    manifest: dict[str, str] = {}
     for p in presets:
         configure_palette(p["hex"])
-        t_rel = f"Alex_Frison_Resume_Themed_{p['name']}_{h}.pdf"
-        t_out = build_one(t_rel, warnings)
-        keep.add(t_out)
-        manifest[p["name"]] = f"/{t_rel}"
+        is_default = p["name"] == default_name
+        rel = f"Alex_Frison_Resume_{month_tag}_{h}.pdf" if is_default else f"Alex_Frison_Resume_Themed_{p['name']}_{h}.pdf"
+        print(f"{p['name']}{' (default)' if is_default else ''}:")
+        out = build_one(rel, warnings)
+        keep.add(out)
+        manifest[p["name"]] = f"/{rel}"
+        if is_default:
+            manifest["default"] = f"/{rel}"
+            sync_resume_pdf_path(f"/{rel}")
     (ROOT / "src/data/theme-pdf-manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 

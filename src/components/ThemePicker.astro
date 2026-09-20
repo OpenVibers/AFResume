@@ -101,7 +101,10 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
   const modal = document.getElementById('tp-modal')!;
   const ASKED_KEY = 'ov_theme_asked';
   const COLOR_KEY = 'ov_fav_color';
-  const applyAccent = (hex: string) => { (window as any).__ovApplyAccent?.(hex); };
+  const applyAccent = (hex: string) => {
+    (window as any).__ovApplyAccent?.(hex);
+    (window as any).__ovApplyResumeLinks?.(hex);
+  };
 
   const MODE_KEY = 'afnet-theme';
   const setMode = (mode: 'dark' | 'light') => {

@@ -4,6 +4,8 @@ import Nav from "../components/Nav.astro";
 import Footer from "../components/Footer.astro";
 import ThemePicker from "../components/ThemePicker.astro";
 import profile from "../data/profile.json";
+import themePresets from "../data/theme-presets.json";
+import themePdfManifest from "../data/theme-pdf-manifest.json";
 
 interface Props {
   title?: string;
@@ -76,7 +78,7 @@ const imageUrl = new URL(image, site).toString();
   <link rel="stylesheet" href="/assets/vendor/fontawesome/css/all.min.css" />
   <link rel="stylesheet" href="/assets/vendor/lenis/lenis.css" />
 
-  <script is:inline>
+  <script is:inline define:vars={{ themePresets, themePdfManifest }}>
     // Theme before paint (no flash) and JS marker for reveal fallbacks
     (function () {
       var d = document.documentElement;
@@ -142,6 +144,31 @@ const imageUrl = new URL(image, site).toString();
         var fav = localStorage.getItem('ov_fav_color');
         if (fav) applyAccent(fav);
       } catch (e) {}
+
+      // ---- Resume PDF matching -----------------------------------------------------------
+      // Every "Download PDF" link (nav, footer, contact, hero, resume page) points at the
+      // build-time default (blue) file by default. Once a visitor has picked a favorite color,
+      // point those same links at the pre-generated PDF for the preset nearest that color's hue,
+      // so the file they download actually matches the site they're looking at. Defined here
+      // (data is only available server-side, at layout render time) but invoked later, once
+      // [data-resume-link] elements exist in the DOM — see the deferred script below.
+      var THEME_PRESETS = themePresets;
+      var THEME_PDF_MANIFEST = themePdfManifest;
+      function nearestPresetName(hex) {
+        var h = hexToHsl(hex)[0], best = null, bestDist = Infinity;
+        for (var i = 0; i < THEME_PRESETS.length; i++) {
+          var dh = Math.abs(hexToHsl(THEME_PRESETS[i].hex)[0] - h);
+          dh = Math.min(dh, 360 - dh);
+          if (dh < bestDist) { bestDist = dh; best = THEME_PRESETS[i].name; }
+        }
+        return best;
+      }
+      window.__ovApplyResumeLinks = function (hex) {
+        if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+        var path = THEME_PDF_MANIFEST[nearestPresetName(hex)] || THEME_PDF_MANIFEST.default;
+        if (!path) return;
+        document.querySelectorAll('[data-resume-link]').forEach(function (a) { a.setAttribute('href', path); });
+      };
     })();
   </script>
 </head>
@@ -155,6 +182,12 @@ const imageUrl = new URL(image, site).toString();
   <ThemePicker />
 
   <script>
+    // ---- Resume PDF links: match whatever color was picked before paint ---
+    try {
+      const fav = localStorage.getItem('ov_fav_color');
+      if (fav) (window as any).__ovApplyResumeLinks?.(fav);
+    } catch { /* */ }
+
     // ---- Smooth scroll (Lenis) --------------------------------------------
     const lenisScript = document.createElement('script');
     lenisScript.src = '/assets/vendor/lenis/lenis.min.js';
