@@ -151,9 +151,9 @@
     "img": "/assets/img/previews/local_portfolio_youtube-desktop-client.jpg",
     "label": "alexfrison.net/portfolio/youtube-desktop-client"
   },
-  "path:/#network": {
-    "img": "/assets/img/previews/local_home__network.jpg",
-    "label": "alexfrison.net#network"
+  "path:/#about": {
+    "img": "/assets/img/previews/local_home__about.jpg",
+    "label": "alexfrison.net#about"
   },
   "path:/#work": {
     "img": "/assets/img/previews/local_home__work.jpg",
@@ -170,6 +170,10 @@
   "path:/#contact": {
     "img": "/assets/img/previews/local_home__contact.jpg",
     "label": "alexfrison.net#contact"
+  },
+  "path:/#network": {
+    "img": "/assets/img/previews/local_home__network.jpg",
+    "label": "alexfrison.net#network"
   },
   "path:/#metrics": {
     "img": "/assets/img/previews/local_home__metrics.jpg",
