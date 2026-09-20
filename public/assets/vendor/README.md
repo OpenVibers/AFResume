@@ -9,4 +9,3 @@ dependencies**. Re-fetch with `npm run vendor:fetch`.
 | Font Awesome Free (CSS + webfonts) | 6.x | CC BY 4.0 / SIL OFL 1.1 / MIT |
 | Inter | 5.1.0 | SIL OFL 1.1 |
 | Space Grotesk | 5.1.0 | SIL OFL 1.1 |
-| jsPDF | 2.5.1 | MIT |

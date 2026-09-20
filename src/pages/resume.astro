@@ -3,6 +3,8 @@ import Base from "../layouts/Base.astro";
 import { getCollection } from "astro:content";
 import profile from "../data/profile.json";
 import { linkify } from "../lib/linkify";
+import themePdfManifest from "../data/theme-pdf-manifest.json";
+import themePresets from "../data/theme-presets.json";
 
 const exp = (await getCollection("experience")).sort((a, b) => a.data.order - b.data.order);
 const skills = (await getCollection("skills")).sort((a, b) => a.data.order - b.data.order);
@@ -35,17 +37,18 @@ const pitchParts = linkify(profile.pitch, LINK_TERMS);
 
     <div class="resume__actions" data-reveal>
       <a href={profile.resumePdf} class="btn btn--primary" data-magnetic><i class="fa-solid fa-file-pdf"></i> Download PDF</a>
-      <button id="themed-pdf-btn" class="btn" data-magnetic><i class="fa-solid fa-paintbrush"></i> <span>Themed PDF (your color)</span></button>
+      <button type="button" class="btn" id="themed-pdf-toggle" data-magnetic aria-expanded="false" aria-controls="themed-pdf-swatches">
+        <i class="fa-solid fa-paintbrush"></i> Themed PDF <i class="fa-solid fa-chevron-down themed-pdf-caret" aria-hidden="true"></i>
+      </button>
       <button onclick="window.print()" class="btn" data-magnetic><i class="fa-solid fa-print"></i> Print this page</button>
     </div>
-    <p class="resume__pdf-note">The <strong>Download PDF</strong> is the canonical résumé — dense and ATS-safe. <strong>Themed PDF</strong> generates one in your browser, in whatever accent color you picked (palette icon in the nav), same content.</p>
+    <p class="resume__pdf-note">The <strong>Download PDF</strong> is the canonical résumé — dense and ATS-safe. <strong>Themed PDF</strong> is the same content, pre-built in whichever color you pick below (every color is generated ahead of time, nothing renders in your browser).</p>
 
-    <script type="application/json" id="resume-data" set:html={JSON.stringify({
-      profile,
-      experience: exp.map((e) => e.data),
-      skills: skills.map((s) => s.data),
-      projects: projects.map((p) => ({ title: p.data.title, summary: p.data.summary, links: p.data.links })),
-    })} />
+    <div class="themed-pdf-swatches" id="themed-pdf-swatches" hidden>
+      {themePresets.map((p) => (
+        <a href={themePdfManifest[p.name]} class="themed-pdf-swatch" style={`--sw:${p.hex}`} title={`Download in ${p.label}`} aria-label={`Download résumé PDF themed in ${p.label}`} data-magnetic></a>
+      ))}
+    </div>
 
     <section class="resume__sec" data-reveal>
       <h2>Profile</h2>
@@ -116,6 +119,19 @@ const pitchParts = linkify(profile.pitch, LINK_TERMS);
   .resume__actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 22px 0 6px; }
   .resume__pdf-note { font-size: .82rem; color: var(--dim); max-width: 62ch; margin: 0 0 8px; }
   .resume__pdf-note strong { color: var(--muted); }
+  .themed-pdf-caret { font-size: .68em; transition: transform .3s var(--ease); }
+  #themed-pdf-toggle[aria-expanded="true"] .themed-pdf-caret { transform: rotate(180deg); }
+  .themed-pdf-swatches {
+    display: flex; flex-wrap: wrap; gap: 10px; margin: 4px 0 20px; padding: 14px;
+    border-radius: 16px; border: 1px dashed var(--border-strong); background: var(--surface);
+  }
+  .themed-pdf-swatches[hidden] { display: none; }
+  .themed-pdf-swatch {
+    width: 34px; height: 34px; border-radius: 50%; background: var(--sw);
+    border: 2px solid transparent; box-shadow: inset 0 0 0 1px rgba(0,0,0,.1);
+    transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  }
+  .themed-pdf-swatch:hover { transform: scale(1.15) translateY(-2px); box-shadow: 0 6px 16px -4px var(--sw), inset 0 0 0 1px rgba(0,0,0,.1); }
   .resume__sec { padding: 26px 0; border-top: 1px solid var(--border); }
   .resume__sec:first-of-type { border-top: 0; }
   .resume__sec h2 { font-family: var(--font-mono); font-size: .78rem; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 1.1rem; display: flex; align-items: center; gap: 12px; }
@@ -144,11 +160,22 @@ const pitchParts = linkify(profile.pitch, LINK_TERMS);
     :root { --bg: #fff; --fg: #000; --muted: #222; --dim: #444; --border: #ccc; --accent: #1d4ed8; --accent-2: #000; --surface: transparent; }
     html, body { background: #fff !important; }
     .resume { padding: 0; max-width: 100%; }
-    .resume__actions, .live-dot { display: none !important; }
+    .resume__actions, .live-dot, .themed-pdf-swatches, .resume__pdf-note { display: none !important; }
     .resume__sec { break-inside: avoid; padding: 14px 0; }
     .job { break-inside: avoid; }
     a { color: #000; }
   }
 </style>
 
-<script src="/js/resume-pdf-client.js" defer></script>
+<script>
+  // The swatches are pre-built static files (resume/build_resume.py generates one PDF per
+  // src/data/theme-presets.json entry ahead of time) — this just shows/hides the row, no PDF
+  // generation happens in the browser.
+  const toggle = document.getElementById('themed-pdf-toggle');
+  const swatches = document.getElementById('themed-pdf-swatches');
+  toggle?.addEventListener('click', () => {
+    const open = swatches?.hasAttribute('hidden');
+    if (open) swatches?.removeAttribute('hidden'); else swatches?.setAttribute('hidden', '');
+    toggle.setAttribute('aria-expanded', String(!!open));
+  });
+</script>

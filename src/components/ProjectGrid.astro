@@ -30,7 +30,7 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
       ))}
     </div>
 
-    <ul class="pgrid" data-stagger>
+    <ul class={`pgrid ${limit ? "pgrid--fades" : ""}`} data-stagger>
       {projects.map((p) => (
         <li class={`pcard spot cat-${p.data.category} ${p.data.image ? "has-img" : ""}`} data-cat={p.data.category} data-tilt>
           <a href={`/portfolio/${p.slug}`} class="pcard__link" aria-label={`${p.data.title}: ${p.data.summary}`}></a>
@@ -61,8 +61,15 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
     </ul>
 
     {limit && (
-      <div class="work__all" data-reveal>
-        <a href="/portfolio" class="btn" data-magnetic>All {all.length} projects <span class="btn__arrow">→</span></a>
+      <div class="work__more" data-reveal="scale">
+        <a href="/portfolio" class="work__all-btn" data-magnetic>
+          <span class="work__all-ico"><i class="fa-solid fa-layer-group"></i></span>
+          <span class="work__all-text">
+            <strong>See all {all.length} projects</strong>
+            <small>OpenVibe, PowerChat, Amazon, side builds and more — the full case-note archive</small>
+          </span>
+          <span class="work__all-go" aria-hidden="true"><i class="fa-solid fa-arrow-right"></i></span>
+        </a>
       </div>
     )}
   </div>
@@ -80,6 +87,13 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
   .filter__n { font-family: var(--font-mono); font-size: .7rem; opacity: .7; }
 
   .pgrid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+  /* The last row visually trails off into the page rather than ending on a hard edge right
+     above the "see all" button — a real fade of the content itself, not a separate overlay
+     sitting in the empty gap below it. */
+  .pgrid--fades {
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 80%, transparent 100%);
+  }
   .pcard {
     position: relative; overflow: hidden; display: flex; flex-direction: column;
     border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border);
@@ -115,7 +129,41 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
   .pcard__more { font: 600 .78rem var(--font-mono); color: var(--accent); }
   .pcard__ext { position: relative; z-index: 3; width: 32px; height: 32px; border-radius: 50%; display: inline-grid; place-items: center; color: var(--muted); border: 1px solid var(--border); transition: all .25s; }
   .pcard__ext:hover { color: var(--fg); border-color: var(--accent); text-decoration: none; background: rgba(var(--accent-rgb), .12); }
-  .work__all { display: flex; justify-content: center; margin-top: 34px; }
+  /* A big, unmistakable card instead of a link easy to scroll past — extra top margin and a
+     fade of the section's own background above it, so there's real space to notice it in. */
+  .work__more { position: relative; margin-top: clamp(-8px, -1vw, 8px); display: flex; justify-content: center; }
+  .work__all-btn {
+    position: relative; z-index: 1; display: flex; align-items: center; gap: 18px;
+    width: min(620px, 100%); padding: 22px 26px; border-radius: 22px;
+    background: var(--surface); border: 1px solid var(--border-strong);
+    text-decoration: none; color: var(--fg);
+    box-shadow: var(--shadow-card);
+    transition: transform .4s var(--ease), border-color .4s var(--ease), box-shadow .4s var(--ease), background .4s var(--ease);
+  }
+  .work__all-btn:hover {
+    text-decoration: none; transform: translateY(-4px) scale(1.015);
+    border-color: rgba(var(--accent-rgb), .55); box-shadow: var(--shadow-card), var(--shadow-glow); background: var(--surface-2);
+  }
+  .work__all-ico {
+    flex: none; width: 52px; height: 52px; border-radius: 16px; display: grid; place-items: center;
+    background: var(--grad); color: #fff; font-size: 1.25rem; box-shadow: var(--shadow-glow);
+    animation: workAllPulse 2.6s var(--ease) infinite;
+  }
+  @keyframes workAllPulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+  .work__all-text { flex: 1; min-width: 0; display: grid; gap: 3px; }
+  .work__all-text strong { font-family: var(--font-display); font-size: 1.2rem; letter-spacing: -.01em; }
+  .work__all-text small { color: var(--muted); font-size: .86rem; line-height: 1.4; display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .work__all-go {
+    flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center;
+    color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .3); background: rgba(var(--accent-rgb), .08);
+    transition: transform .4s var(--ease), background .3s;
+  }
+  .work__all-btn:hover .work__all-go { transform: translateX(5px); background: rgba(var(--accent-rgb), .16); }
+  @media (max-width: 640px) {
+    .work__all-btn { padding: 18px 18px; gap: 14px; }
+    .work__all-text small { white-space: normal; }
+    .work__all-ico { width: 44px; height: 44px; font-size: 1.05rem; }
+  }
   @media (max-width: 1000px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) { .pgrid { grid-template-columns: 1fr; } }
 </style>

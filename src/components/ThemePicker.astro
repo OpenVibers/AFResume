@@ -3,10 +3,12 @@
 // palette button Nav.astro renders next to the light/dark toggle. The actual color math
 // (hex → HSL → derived accent/violet/ember/mint) lives once, in Base.astro's pre-paint script,
 // as window.__ovApplyAccent — this component only has to persist a choice and call it.
-const PRESETS = [
-  "#4f7cff", "#8b5cf6", "#ec4899", "#ef4444", "#f97316", "#f59e0b",
-  "#eab308", "#84cc16", "#22c55e", "#14b8a6", "#06b6d4", "#6366f1",
-];
+//
+// The preset list is also resume/build_resume_themed.py's input for pre-building one PDF per
+// color server-side, so it lives in one JSON file both sides read rather than two hardcoded
+// copies that could drift.
+import PRESETS_DATA from "../data/theme-presets.json";
+const PRESETS = PRESETS_DATA.map((p) => p.hex);
 ---
 <div class="tp-modal" id="tp-modal" hidden aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="tp-title">
   <div class="tp-backdrop" data-tp-close aria-hidden="true"></div>
@@ -16,15 +18,20 @@ const PRESETS = [
     <h2 id="tp-title">What's your favorite color?</h2>
     <p class="tp-lead">I'll theme the whole site around it. Swap it anytime from the palette icon in the nav.</p>
 
+    <div class="tp-mode" role="group" aria-label="Dark or light theme">
+      <button type="button" class="tp-mode-btn" data-mode="dark"><i class="fa-solid fa-moon"></i> Dark</button>
+      <button type="button" class="tp-mode-btn" data-mode="light"><i class="fa-solid fa-sun"></i> Light</button>
+    </div>
+
     <div class="tp-swatches" role="group" aria-label="Preset colors">
-      {PRESETS.map((hex) => (
-        <button type="button" class="tp-swatch" data-hex={hex} style={`--sw:${hex}`} aria-label={`Use ${hex}`}></button>
+      {PRESETS_DATA.map((p) => (
+        <button type="button" class="tp-swatch" data-hex={p.hex} style={`--sw:${p.hex}`} aria-label={`Use ${p.label}`} title={p.label}></button>
       ))}
     </div>
 
     <label class="tp-custom">
       <input type="color" id="tp-color-input" value="#4f7cff" aria-label="Pick a custom color" />
-      <span>Or pick any color at all</span>
+      <span>Custom color</span>
     </label>
 
     <div class="tp-actions">
@@ -55,14 +62,29 @@ const PRESETS = [
     background: var(--grad); color: #fff; font-size: 1.3rem; box-shadow: var(--shadow-glow);
   }
   .tp-panel h2 { font-size: 1.4rem; margin: 0 0 8px; }
-  .tp-lead { color: var(--muted); font-size: .92rem; margin: 0 0 20px; line-height: 1.6; }
+  .tp-lead { color: var(--muted); font-size: .92rem; margin: 0 0 18px; line-height: 1.6; }
+
+  .tp-mode { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 18px; }
+  .tp-mode-btn {
+    display: flex; align-items: center; justify-content: center; gap: 8px; padding: 10px; border-radius: 12px;
+    border: 1px solid var(--border-strong); background: var(--surface); color: var(--muted);
+    font: 600 .88rem var(--font-body); cursor: pointer; transition: all .25s var(--ease);
+  }
+  .tp-mode-btn:hover { color: var(--fg); border-color: var(--accent); }
+  .tp-mode-btn.is-active { background: var(--grad); color: #fff; border-color: transparent; box-shadow: var(--shadow-glow); }
+
   .tp-swatches { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-bottom: 18px; }
   .tp-swatch {
-    aspect-ratio: 1; border-radius: 50%; background: var(--sw); border: 2px solid transparent;
+    position: relative; aspect-ratio: 1; border-radius: 50%; background: var(--sw); border: 2px solid transparent;
     box-shadow: inset 0 0 0 1px rgba(0,0,0,.08); cursor: pointer; transition: transform .2s var(--ease), box-shadow .2s var(--ease);
     padding: 0;
   }
   .tp-swatch:hover, .tp-swatch:focus-visible { transform: scale(1.14); box-shadow: 0 0 0 3px color-mix(in oklab, var(--sw) 55%, transparent); outline: none; }
+  .tp-swatch.is-active { transform: scale(1.1); box-shadow: 0 0 0 3px var(--surface-solid), 0 0 0 5px var(--sw); }
+  .tp-swatch.is-active::after {
+    content: "\f00c"; font: 900 .8rem "Font Awesome 7 Free", "Font Awesome 5 Free"; color: #fff;
+    position: absolute; inset: 0; display: grid; place-items: center; text-shadow: 0 1px 3px rgba(0,0,0,.5);
+  }
   .tp-custom {
     display: flex; align-items: center; gap: 12px; padding: 10px 12px; margin-bottom: 20px;
     border-radius: 12px; border: 1px dashed var(--border-strong); cursor: pointer; color: var(--muted); font-size: .88rem;
@@ -81,9 +103,28 @@ const PRESETS = [
   const COLOR_KEY = 'ov_fav_color';
   const applyAccent = (hex: string) => { (window as any).__ovApplyAccent?.(hex); };
 
+  const MODE_KEY = 'afnet-theme';
+  const setMode = (mode: 'dark' | 'light') => {
+    document.documentElement.dataset.theme = mode;
+    try { localStorage.setItem(MODE_KEY, mode); } catch { /* */ }
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', mode === 'light' ? '#f4f6fb' : '#07090f');
+    syncModeButtons();
+  };
+  const syncModeButtons = () => {
+    const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
+    modal.querySelectorAll<HTMLButtonElement>('.tp-mode-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.mode === current));
+  };
+  const syncActiveSwatch = (hex: string | null) => {
+    modal.querySelectorAll<HTMLButtonElement>('.tp-swatch').forEach((sw) => sw.classList.toggle('is-active', !!hex && sw.dataset.hex!.toLowerCase() === hex.toLowerCase()));
+  };
+
   const open = (prefill?: string) => {
     const input = document.getElementById('tp-color-input') as HTMLInputElement;
-    try { input.value = prefill || localStorage.getItem(COLOR_KEY) || '#4f7cff'; } catch { /* */ }
+    let current: string | null = null;
+    try { current = prefill || localStorage.getItem(COLOR_KEY); } catch { /* */ }
+    input.value = current || '#4f7cff';
+    syncActiveSwatch(current);
+    syncModeButtons();
     modal.hidden = false;
     modal.setAttribute('aria-hidden', 'false');
     requestAnimationFrame(() => modal.classList.add('is-open'));
@@ -104,7 +145,10 @@ const PRESETS = [
   };
 
   modal.querySelectorAll<HTMLButtonElement>('.tp-swatch').forEach((sw) => {
-    sw.addEventListener('click', () => choose(sw.dataset.hex!));
+    sw.addEventListener('click', () => { syncActiveSwatch(sw.dataset.hex!); choose(sw.dataset.hex!); });
+  });
+  modal.querySelectorAll<HTMLButtonElement>('.tp-mode-btn').forEach((b) => {
+    b.addEventListener('click', () => setMode(b.dataset.mode as 'dark' | 'light'));
   });
   document.getElementById('tp-random')?.addEventListener('click', () => {
     const hue = Math.floor(Math.random() * 360);
@@ -118,7 +162,7 @@ const PRESETS = [
   document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && !modal.hidden) dismiss(); });
 
   const colorInput = document.getElementById('tp-color-input') as HTMLInputElement;
-  colorInput?.addEventListener('input', () => applyAccent(colorInput.value)); // live preview while dragging
+  colorInput?.addEventListener('input', () => { applyAccent(colorInput.value); syncActiveSwatch(colorInput.value); }); // live preview while dragging
   colorInput?.addEventListener('change', () => choose(colorInput.value)); // native picker closed = decided
 
   function hslToHexLocal(h: number, s: number, l: number): string {

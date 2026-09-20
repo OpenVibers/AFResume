@@ -374,17 +374,17 @@ def icon_circle(c, cx: float, cy: float, r: float, glyph: str, fg, bg, font_size
     c.restoreState()
 
 
-def hairline(c, x0: float, y: float, x1: float, color=BORDER, width: float = 0.6) -> None:
+def hairline(c, x0: float, y: float, x1: float, color=None, width: float = 0.6) -> None:
     c.saveState()
-    c.setStrokeColor(color)
+    c.setStrokeColor(BORDER if color is None else color)
     c.setLineWidth(width)
     c.line(x0, y, x1, y)
     c.restoreState()
 
 
-def vline(c, x: float, y0: float, y1: float, color=BORDER, width: float = 0.6) -> None:
+def vline(c, x: float, y0: float, y1: float, color=None, width: float = 0.6) -> None:
     c.saveState()
-    c.setStrokeColor(color)
+    c.setStrokeColor(BORDER if color is None else color)
     c.setLineWidth(width)
     c.line(x, y0, x, y1)
     c.restoreState()
@@ -393,12 +393,18 @@ def vline(c, x: float, y0: float, y1: float, color=BORDER, width: float = 0.6) -
 SHADOW = HexColor("#c5cce3")
 
 
-def card(c, x: float, y_top: float, w: float, h: float, radius: float = 8.0, fill=CARD, stroke=BORDER,
+def card(c, x: float, y_top: float, w: float, h: float, radius: float = 8.0, fill=None, stroke=None,
          shadow: bool = True) -> None:
     """A rounded card with a real drop shadow and a visibly darker border than the page
     background — the earlier version's near-white-on-near-white fill made every card
     disappear at normal viewing size. This one is meant to read as a distinct card even on a
-    phone screen, not just at full zoom."""
+    phone screen, not just at full zoom.
+
+    fill/stroke default to None (resolved to the *current* CARD/BORDER globals here, not at
+    def-time) so build_themed_pdfs.py can repoint the whole palette per call to configure_palette()
+    and every already-defined function picks it up on its next call."""
+    fill = CARD if fill is None else fill
+    stroke = BORDER if stroke is None else stroke
     c.saveState()
     if shadow:
         c.setFillColor(SHADOW)
@@ -411,8 +417,11 @@ def card(c, x: float, y_top: float, w: float, h: float, radius: float = 8.0, fil
 
 
 def chip(c, x: float, y_base: float, text: str, st: ParagraphStyle, glyph: str | None = None,
-         fg=BLUE_DARK, bg=ICON_BG, border=None) -> float:
-    """A small rounded pill — used for the header's role chips. Returns the width consumed."""
+         fg=None, bg=None, border=None) -> float:
+    """A small rounded pill. Currently unused by block_header (which draws its chips inline so
+    it can lay them out on the banner itself), kept for any future inline-pill need."""
+    fg = BLUE_DARK if fg is None else fg
+    bg = ICON_BG if bg is None else bg
     isize = st.fontSize + 0.4
     iw = (pdfmetrics.stringWidth(glyph, "FA", isize) + 5) if glyph else 0
     tw = pdfmetrics.stringWidth(text, st.fontName, st.fontSize)
@@ -496,13 +505,32 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
         ("phone", profile.get("phoneDisplay") or profile.get("phone"), f"tel:{profile['phone']}" if profile.get("phone") else None),
         ("site", profile.get("siteDisplay"), profile.get("site")),
         ("linkedin", profile.get("linkedinDisplay"), profile.get("linkedin")),
+        ("location", profile.get("locationShort") or profile.get("location"), None),
     ]
     items = [it for it in items if it[1]]
-    panel_w = 168.0
+    panel_w = 178.0
     row_h = 13.0
     panel_h = pad * 0.5 + len(items) * row_h
 
-    banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + pad
+    # Role chips, wrapped into rows against the space left of the contact panel — computed once,
+    # geometrically, and reused for both the height calc and the draw pass, so (unlike the
+    # feature cards above) there is no separate "measure" vs "draw" width that could disagree.
+    roles = (profile.get("roles") or [])[:6]
+    chip_font, chip_size, chip_pad_x, chip_gap = FONT["bold"], 7.6, 20.0, 7.0
+    chips_w = w - pad * 2 - panel_w - 14
+    chip_rows: list[list[tuple[str, float]]] = [[]]
+    cx = 0.0
+    for r in roles:
+        cw = pdfmetrics.stringWidth(r, chip_font, chip_size) + chip_pad_x
+        if cx > 0 and cx + cw > chips_w:
+            chip_rows.append([])
+            cx = 0.0
+        chip_rows[-1].append((r, cw))
+        cx += cw + chip_gap
+    chip_h = chip_size + 10
+    chips_total_h = len(chip_rows) * chip_h + max(0, len(chip_rows) - 1) * 5
+
+    banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + 12 + chips_total_h + pad
     banner_h = max(banner_h, pad * 1.6 + panel_h)
 
     if draw:
@@ -527,6 +555,23 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
         c.setFillColor(HexColor("#dbe4ff"))
         c.setFont(FONT["regular"], tag_size)
         c.drawString(x + pad, ty - tag_size * 0.78, profile["tagline"])
+    ty -= tag_size * 0.78 + 12
+
+    if draw:
+        row_top = ty
+        for row in chip_rows:
+            cx2 = x + pad
+            for text, cw in row:
+                c.saveState()
+                c.setFillColor(BLUE_SOFT)
+                c.setFillAlpha(0.4)
+                c.roundRect(cx2, row_top - chip_h, cw, chip_h, chip_h / 2, stroke=0, fill=1)
+                c.restoreState()
+                c.setFillColor(white)
+                c.setFont(chip_font, chip_size)
+                c.drawString(cx2 + chip_pad_x / 2, row_top - chip_h / 2 - chip_size * 0.36, text)
+                cx2 += cw + chip_gap
+            row_top -= chip_h + 5
 
     px = x + w - panel_w - pad
     py_top = y_top - (banner_h - panel_h) / 2
@@ -545,21 +590,22 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
             if url:
                 c.linkURL(url, (px, base - 4, px + panel_w, base + 10), relative=0, thickness=0)
             base -= row_h
-        loc = profile.get("locationShort") or profile.get("location")
-        if loc:
-            icon_circle(c, px + 12, base + 2.4, 7.6, ICON["location"], white, HexColor("#5578e8"), 6.8)
-            c.setFillColor(white)
-            c.setFont(FONT["regular"], 7.6)
-            c.drawString(px + 24, base, loc)
 
     return banner_h
 
 
 def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: bool) -> float:
     """Four bordered cards, one per profile.json `seeking` entry: an icon circle, a bold
-    two-line title, a divider, and its detail sentence as a bullet — the exact shape the
-    earlier resume PDF used for "Analytics/Data · Robotics/AFM · Sales/Leadership ·
-    Product/Engineering", now driven by the same list Now.astro renders on the site."""
+    one-line title (truncated with an ellipsis if it doesn't fit — the full label is never
+    hidden, since it also has its own place on the site's Now.astro section), a divider, and
+    its detail sentence as a bullet.
+
+    Titles here are deliberately capped to a single line rather than left to wrap: with four
+    cards forced to a shared height, letting one label wrap to 2-3 lines either stretched every
+    other card into wasted blank space or — when the wrap was measured against one width and
+    room was tighter at draw time — let the detail text collide with the title's last line.
+    A fixed one-line title makes every card's height the same simple sum, with no dependency on
+    how long any one label happens to be."""
     n = max(1, len(seeking))
     gap = 8.0
     w = (CONTENT_W - gap * (n - 1)) / n
@@ -567,27 +613,31 @@ def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: 
     icon_r = 11.0
     inner_w = w - 2 * pad
     title_w = inner_w - icon_r * 2 - 8
-    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.6, leading=10.8, textColor=INK)
+    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.2, leading=1, textColor=INK)
     detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.4, leading=9.0, textColor=MUTED,
                                 bulletFontName=FONT["regular"], bulletFontSize=7.4, bulletColor=BLUE)
     prepared = []
     for s in seeking:
-        title_p = para(esc(s["label"]), title_st)
+        title_text = s["label"]
+        while pdfmetrics.stringWidth(title_text, title_st.fontName, title_st.fontSize) > title_w and len(title_text) > 4:
+            title_text = title_text[:-2].rstrip(",;: —–-") + "…"
         detail_text, _ = truncate_to_lines(s.get("detail", ""), detail_st, inner_w, 3)
         detail_p = para(esc(detail_text), detail_st, bullet="•")
-        prepared.append((title_p, detail_p))
-    title_h = max(para_height(p, title_w) for p, _ in prepared)
+        prepared.append((title_text, detail_p))
+    title_row_h = max(icon_r * 2, title_st.fontSize * 1.2)
     detail_h = max(para_height(p, inner_w) for _, p in prepared)
-    top_row_h = max(icon_r * 2, title_h)
-    h = pad + top_row_h + 8 + detail_h + pad
+    h = pad + title_row_h + 8 + detail_h + pad
     if draw:
-        for i, ((s, (title_p, detail_p))) in enumerate(zip(seeking, prepared)):
+        for i, (s, (title_text, detail_p)) in enumerate(zip(seeking, prepared)):
             x = MARGIN + i * (w + gap)
             card(c, x, y_top, w, h, radius=10)
             top = y_top - pad
-            icon_circle(c, x + pad + icon_r, top - icon_r, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 9.6)
-            draw_para(c, title_p, x + pad + icon_r * 2 + 8, top - (top_row_h - title_h) / 2, title_w)
-            rule_y = top - top_row_h - 5
+            icon_cy = top - title_row_h / 2
+            icon_circle(c, x + pad + icon_r, icon_cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 9.6)
+            c.setFillColor(INK)
+            c.setFont(title_st.fontName, title_st.fontSize)
+            c.drawString(x + pad + icon_r * 2 + 8, icon_cy - title_st.fontSize * 0.36, title_text)
+            rule_y = top - title_row_h - 5
             hairline(c, x + pad, rule_y, x + w - pad)
             draw_para(c, detail_p, x + pad, rule_y - 7, inner_w)
     return h
@@ -880,10 +930,110 @@ MONTHS = {"jan": "January", "feb": "February", "mar": "March", "apr": "April", "
 
 
 def updated_label(pdf_name: str) -> str:
-    m = re.search(r"_([A-Za-z]{3})_(\d{4})\.pdf$", pdf_name)
-    if m and m.group(1).lower() in MONTHS:
-        return f"{MONTHS[m.group(1).lower()]} {m.group(2)}"
     return _dt.date.today().strftime("%B %Y")
+
+
+def content_hash(data: dict) -> str:
+    """Eight hex chars of the résumé content's own hash — not the rendered PDF's bytes, which
+    would change on every run just from reportlab's embedded creation timestamp. The filename
+    only changes when the content actually does, so a stale cached or downloaded copy is always
+    a *different* filename from the current one instead of the same name silently going stale."""
+    import hashlib
+    blob = json.dumps(data, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.sha256(blob).hexdigest()[:8]
+
+
+def sync_resume_pdf_path(new_rel: str) -> None:
+    """Point src/data/profile.json's resumePdf at the freshly built file, in place — a targeted
+    line replace, not a full json.dump round-trip, so the rest of the file's formatting doesn't
+    move around in the diff."""
+    path = ROOT / "src/data/profile.json"
+    text = path.read_text(encoding="utf-8")
+    new_text = re.sub(r'"resumePdf":\s*"[^"]*"', f'"resumePdf": "{new_rel}"', text, count=1)
+    if new_text != text:
+        path.write_text(new_text, encoding="utf-8")
+
+
+def clean_old_files(pattern: str, keep: set[Path]) -> None:
+    """Remove previously built files matching `pattern` other than the ones just built, so
+    hashed filenames from old content (or an old preset list) don't pile up on disk and stay
+    reachable to be confused with the current ones."""
+    keep_resolved = {p.resolve() for p in keep}
+    for f in (ROOT / "public").glob(pattern):
+        if f.resolve() not in keep_resolved:
+            f.unlink()
+
+
+# --------------------------------------------------------------------------
+# Theme colors — hex → HSL → derived accent/violet/ember/mint, the same math
+# Base.astro's pre-paint script uses client-side, ported here so a pre-built themed PDF and the
+# live site's picked color are the same family of colors, not just two unrelated blues.
+# --------------------------------------------------------------------------
+
+def hex_to_hsl(hex_str: str) -> tuple[float, float, float]:
+    hex_str = hex_str.lstrip("#")
+    r, g, b = (int(hex_str[i:i + 2], 16) / 255 for i in (0, 2, 4))
+    mx, mn = max(r, g, b), min(r, g, b)
+    l = (mx + mn) / 2
+    if mx == mn:
+        h = s = 0.0
+    else:
+        d = mx - mn
+        s = d / (2 - mx - mn) if l > 0.5 else d / (mx + mn)
+        if mx == r:
+            h = (g - b) / d + (6 if g < b else 0)
+        elif mx == g:
+            h = (b - r) / d + 2
+        else:
+            h = (r - g) / d + 4
+        h /= 6
+    return h * 360, s * 100, l * 100
+
+
+def hsl_to_hex(h: float, s: float, l: float) -> str:
+    h = h % 360
+    s, l = s / 100, l / 100
+    c = (1 - abs(2 * l - 1)) * s
+    x = c * (1 - abs((h / 60) % 2 - 1))
+    m = l - c / 2
+    if h < 60:
+        r, g, b = c, x, 0.0
+    elif h < 120:
+        r, g, b = x, c, 0.0
+    elif h < 180:
+        r, g, b = 0.0, c, x
+    elif h < 240:
+        r, g, b = 0.0, x, c
+    elif h < 300:
+        r, g, b = x, 0.0, c
+    else:
+        r, g, b = c, 0.0, x
+    return "#{:02x}{:02x}{:02x}".format(round((r + m) * 255), round((g + m) * 255), round((b + m) * 255))
+
+
+def configure_palette(base_hex: str) -> None:
+    """Repoint every palette global at a derivative of `base_hex`. Called once per preset color
+    before re-running build(); every drawing function reads these globals at call time (see the
+    None-sentinel defaults on card()/hairline()/vline()/chip() above), so nothing needs to be
+    threaded through as a parameter."""
+    global PAPER, CARD, CARD_TINT, BORDER, BLUE, BLUE_DARK, BLUE_SOFT, VIOLET, CORAL, MINT, ICON_BG, SHADOW
+    # Monochromatic on purpose: tints and shades of one hue, never a complementary jump. A full
+    # complementary (hue+180) is fine as a small dot on a dark UI but reads as a clash on white
+    # paper once it's the color of large bold numbers — every accent role here stays in the same
+    # hue family so the sheet can never look like two unrelated colors fighting each other.
+    h, s, l = hex_to_hsl(base_hex)
+    accent = hsl_to_hex(h, max(55.0, min(s, 90.0)), max(48.0, min(l, 68.0)))
+    BLUE = HexColor(accent)
+    VIOLET = HexColor(hsl_to_hex(h, max(s - 8, 45), min(l + 6, 72)))     # a touch lighter — "Experience"
+    CORAL = HexColor(hsl_to_hex(h, min(s + 12, 95), max(l - 20, 32)))     # deeper, richer — big numbers
+    MINT = HexColor(hsl_to_hex(h, max(s - 18, 35), min(l + 16, 78)))      # softer — "Skills"
+    BLUE_DARK = HexColor(hsl_to_hex(h, min(s + 10, 95), max(l - 30, 16)))
+    BLUE_SOFT = HexColor(hsl_to_hex(h, max(s - 10, 40), min(l + 12, 78)))
+    ICON_BG = HexColor(hsl_to_hex(h, 55, 91))
+    CARD_TINT = HexColor(hsl_to_hex(h, 30, 96))
+    BORDER = HexColor(hsl_to_hex(h, 35, 84))
+    PAPER = HexColor(hsl_to_hex(h, 22, 97))
+    SHADOW = HexColor(hsl_to_hex(h, 20, 80))
 
 
 def build(out_path: Path) -> dict:
@@ -957,22 +1107,55 @@ def build(out_path: Path) -> dict:
     return report
 
 
-def main() -> None:
-    register_fonts()
-    profile = json.loads((ROOT / "src/data/profile.json").read_text(encoding="utf-8"))
-    rel = profile.get("resumePdf", "/Alex_Frison_Resume.pdf").lstrip("/")
+def build_one(rel: str, warnings_out: list[str]) -> Path:
     out = ROOT / "public" / rel
     out.parent.mkdir(parents=True, exist_ok=True)
     report = build(out)
     size_kb = out.stat().st_size / 1024
-    print(f"wrote {out} ({size_kb:.1f} KB)")
-    print(f"text font: {FONT['label']}; icons: Font Awesome 4")
-    print(f"page 1 bottom gap: {report['page1_bottom_gap']:.1f}pt; page 2 bottom gap: {report['page2_bottom_gap']:.1f}pt")
+    print(f"  wrote {rel} ({size_kb:.1f} KB) — page gaps {report['page1_bottom_gap']:.1f}pt / {report['page2_bottom_gap']:.1f}pt")
     if report["truncated"]:
-        print("truncated project summaries: " + ", ".join(report["truncated"]))
-    for w in report["warnings"]:
+        print("  truncated project summaries: " + ", ".join(report["truncated"]))
+    warnings_out.extend(report["warnings"])
+    return out
+
+
+def main() -> None:
+    register_fonts()
+    data = load_content()
+    h = content_hash(data)
+    month_tag = _dt.date.today().strftime("%b_%Y")
+    warnings: list[str] = []
+    keep: set[Path] = set()
+
+    # The canonical PDF: the one every "Download PDF" link points at, no color choice involved.
+    print("canonical:")
+    rel = f"Alex_Frison_Resume_{month_tag}_{h}.pdf"
+    out = build_one(rel, warnings)
+    keep.add(out)
+    sync_resume_pdf_path(f"/{rel}")
+
+    # One PDF per preset accent color — pre-built here so the "themed PDF" download on the site
+    # is a plain static link, never a client-side jsPDF render. src/data/theme-presets.json is
+    # the same list ThemePicker.astro reads, so the swatches you can pick from the site and the
+    # colors you can download in are always the same set.
+    presets = json.loads((ROOT / "src/data/theme-presets.json").read_text(encoding="utf-8"))
+    manifest = {"default": f"/{rel}"}
+    print("themed:")
+    for p in presets:
+        configure_palette(p["hex"])
+        t_rel = f"Alex_Frison_Resume_Themed_{p['name']}_{h}.pdf"
+        t_out = build_one(t_rel, warnings)
+        keep.add(t_out)
+        manifest[p["name"]] = f"/{t_rel}"
+    (ROOT / "src/data/theme-pdf-manifest.json").write_text(
+        json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
+
+    clean_old_files("Alex_Frison_Resume_*.pdf", keep)
+    print(f"\ncontent hash: {h} (filenames only change when the résumé content does)")
+    print(f"text font: {FONT['label']}; icons: Font Awesome 4")
+    for w in warnings:
         print("WARNING: " + w)
-    if report["warnings"]:
+    if warnings:
         sys.exit(1)
 
 

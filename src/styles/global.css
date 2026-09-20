@@ -34,8 +34,16 @@ body::before {
     linear-gradient(to right, rgba(160,180,255,.045) 1px, transparent 1px),
     linear-gradient(to bottom, rgba(160,180,255,.045) 1px, transparent 1px);
   background-size: 64px 64px;
-  mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 70%);
-  -webkit-mask-image: radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 70%);
+  /* Two masks, intersected: the radial one fades the grid out toward the edges, the linear one
+     keeps the strip right under the fixed nav completely clear. Without it, the radial mask is
+     fully opaque at its own origin (top-center) and the first grid line at y=64px reads as a
+     stray solid rule right under the nav pill. */
+  mask-image: linear-gradient(to bottom, transparent 0, transparent 130px, #000 220px),
+    radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 70%);
+  mask-composite: intersect;
+  -webkit-mask-image: -webkit-linear-gradient(top, transparent 0, transparent 130px, #000 220px),
+    -webkit-radial-gradient(ellipse 70% 60% at 50% 0%, #000 0%, transparent 70%);
+  -webkit-mask-composite: source-in, source-over;
 }
 body::after {
   content: "";

@@ -1,0 +1,14 @@
+[
+  { "name": "blue", "label": "Blue", "hex": "#4f7cff" },
+  { "name": "violet", "label": "Violet", "hex": "#8b5cf6" },
+  { "name": "pink", "label": "Pink", "hex": "#ec4899" },
+  { "name": "red", "label": "Red", "hex": "#ef4444" },
+  { "name": "orange", "label": "Orange", "hex": "#f97316" },
+  { "name": "amber", "label": "Amber", "hex": "#f59e0b" },
+  { "name": "yellow", "label": "Yellow", "hex": "#eab308" },
+  { "name": "lime", "label": "Lime", "hex": "#84cc16" },
+  { "name": "green", "label": "Green", "hex": "#22c55e" },
+  { "name": "teal", "label": "Teal", "hex": "#14b8a6" },
+  { "name": "cyan", "label": "Cyan", "hex": "#06b6d4" },
+  { "name": "indigo", "label": "Indigo", "hex": "#6366f1" }
+]

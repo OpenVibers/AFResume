@@ -2,7 +2,7 @@
   "name": "Alex Frison",
   "tagline": "Software engineer, platform architect and founder of the OpenVibe network.",
   "headline": "I build the whole stack, then run it.",
-  "roles": ["Software Engineer", "Platform Architect", "Founder of OpenVibe", "Streaming Infrastructure Builder", "AI Tooling Engineer", "Data Analyst"],
+  "roles": ["Software Engineer", "AI Agent Builder", "Founder of OpenVibe", "Automation Engineer", "Platform Architect", "Idea-to-Business Builder"],
   "location": "Arlington · Seattle · Pacific Northwest",
   "locationShort": "Seattle / Arlington, WA",
   "email": "alex@alexfrison.net",
@@ -15,7 +15,7 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Sep_2026.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Sep_2026_c7e32af5.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
