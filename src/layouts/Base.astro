@@ -383,7 +383,13 @@ const imageUrl = new URL(image, site).toString();
       const keyFor = (a: HTMLAnchorElement) => {
         try {
           const u = new URL(a.href, location.href);
-          if (u.origin === location.origin) { const p = u.pathname.replace(/\/$/, '') || '/'; return previews['path:' + p] ? 'path:' + p : null; }
+          if (u.origin === location.origin) {
+            const p = u.pathname.replace(/\/$/, '') || '/';
+            const h = u.hash.replace(/^#/, '');
+            if (h && previews['path:' + p + '#' + h]) return 'path:' + p + '#' + h;
+            if (h && p === (location.pathname.replace(/\/$/, '') || '/')) return null; // same-page anchor with no shot: nothing useful to show
+            return previews['path:' + p] ? 'path:' + p : null;
+          }
           const h = u.host.replace(/^www\./, '');
           return previews[h] ? h : (h.includes('linkedin') ? 'linkedin.com' : null);
         } catch { return null; }
