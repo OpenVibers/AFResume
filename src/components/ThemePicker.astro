@@ -101,18 +101,22 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
   const modal = document.getElementById('tp-modal')!;
   const ASKED_KEY = 'ov_theme_asked';
   const COLOR_KEY = 'ov_fav_color';
-  const applyAccent = (hex: string) => {
-    (window as any).__ovApplyAccent?.(hex);
+  const applyAccent = (hex: string, animate = false) => {
+    (window as any).__ovApplyAccent?.(hex, animate);
     (window as any).__ovApplyResumeLinks?.(hex);
   };
 
   const MODE_KEY = 'afnet-theme';
   const setMode = (mode: 'dark' | 'light') => {
-    document.documentElement.dataset.theme = mode;
-    try { localStorage.setItem(MODE_KEY, mode); } catch { /* */ }
-    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', mode === 'light' ? '#f4f6fb' : '#07090f');
+    const setter = (window as any).__ovSetTheme;
+    if (setter) setter(mode);
+    else {
+      document.documentElement.dataset.theme = mode;
+      try { localStorage.setItem(MODE_KEY, mode); } catch { /* */ }
+    }
     syncModeButtons();
   };
+  document.addEventListener('ov:theme', () => syncModeButtons());
   const syncModeButtons = () => {
     const current = document.documentElement.dataset.theme === 'light' ? 'light' : 'dark';
     modal.querySelectorAll<HTMLButtonElement>('.tp-mode-btn').forEach((b) => b.classList.toggle('is-active', b.dataset.mode === current));
@@ -138,7 +142,7 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
     setTimeout(() => { modal.hidden = true; }, 350);
   };
   const choose = (hex: string) => {
-    applyAccent(hex);
+    applyAccent(hex, true);
     try { localStorage.setItem(COLOR_KEY, hex); localStorage.setItem(ASKED_KEY, '1'); } catch { /* */ }
     close();
   };

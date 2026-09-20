@@ -73,11 +73,21 @@ const path = Astro.url.pathname;
         </a>
       </li>
       <li style={`--i:${links.length + 2}`}>
-        <button type="button" class="nav__drawer-link" data-theme-toggle>
-          <span class="nav__drawer-ico"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></span>
-          <span class="nav__drawer-text">Light / dark theme</span>
+        <button type="button" class="nav__drawer-link" data-open-themes>
+          <span class="nav__drawer-ico"><i class="fa-solid fa-palette" aria-hidden="true"></i></span>
+          <span class="nav__drawer-text">Themes</span>
+          <span class="nav__drawer-swatch" id="nav-drawer-swatch" aria-hidden="true"></span>
           <i class="fa-solid fa-chevron-right nav__drawer-go" aria-hidden="true"></i>
         </button>
+      </li>
+      <li style={`--i:${links.length + 3}`} data-keep-open>
+        <div class="nav__drawer-link nav__drawer-link--row">
+          <span class="nav__drawer-ico"><i class="fa-solid fa-circle-half-stroke" aria-hidden="true"></i></span>
+          <span class="nav__drawer-text">Dark mode</span>
+          <button type="button" class="nav__switch" role="switch" aria-checked="true" data-theme-toggle aria-label="Toggle dark mode">
+            <span class="nav__switch-knob"><i class="fa-solid fa-moon" aria-hidden="true"></i><i class="fa-solid fa-sun" aria-hidden="true"></i></span>
+          </button>
+        </div>
       </li>
     </ul>
   </div>
@@ -177,7 +187,7 @@ const path = Astro.url.pathname;
     backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
     max-height: 0; transition: max-height .45s var(--ease), border-color .3s;
   }
-  .nav__drawer.is-open { max-height: 620px; border-color: var(--border); }
+  .nav__drawer.is-open { max-height: 700px; border-color: var(--border); }
   .nav__drawer ul { list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 3px; }
   .nav__drawer li { opacity: 0; transform: translateY(8px); transition: opacity .4s var(--ease), transform .4s var(--ease); transition-delay: calc(var(--i) * 40ms); }
   .nav__drawer.is-open li { opacity: 1; transform: none; }
@@ -200,6 +210,27 @@ const path = Astro.url.pathname;
   .nav__drawer-go { flex: none; font-size: .72rem; color: var(--dim); opacity: 0; transform: translateX(-3px); transition: opacity .2s var(--ease), transform .2s var(--ease); }
   .nav__drawer-link:hover .nav__drawer-go { opacity: 1; transform: none; }
 
+  .nav__drawer-link--row { cursor: default; }
+  .nav__drawer-link--row:hover { transform: none; }
+  .nav__drawer-swatch { width: 14px; height: 14px; border-radius: 50%; flex: none; background: var(--accent); box-shadow: 0 0 0 2px var(--surface-solid), 0 0 0 3px var(--border-strong), 0 0 12px rgba(var(--accent-rgb), .6); margin-right: 4px; }
+  .nav__switch {
+    position: relative; flex: none; width: 46px; height: 26px; border-radius: 999px; padding: 0; cursor: pointer;
+    background: var(--surface-2); border: 1px solid var(--border-strong);
+    transition: background .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+  }
+  .nav__switch[aria-checked="true"] { background: var(--grad); border-color: transparent; box-shadow: 0 6px 16px -8px rgba(var(--accent-rgb), .8); }
+  .nav__switch-knob {
+    position: absolute; top: 2px; left: 2px; width: 20px; height: 20px; border-radius: 50%; background: #fff;
+    display: grid; place-items: center; color: var(--accent); font-size: .68rem;
+    transition: transform .4s cubic-bezier(.34,1.56,.64,1), color .35s;
+    box-shadow: 0 2px 6px rgba(0,0,0,.3);
+  }
+  .nav__switch-knob i { grid-area: 1 / 1; transition: opacity .3s var(--ease), transform .4s var(--ease); }
+  .nav__switch-knob .fa-sun { opacity: 0; transform: rotate(-90deg) scale(.6); color: #f59e0b; }
+  .nav__switch[aria-checked="true"] .nav__switch-knob { transform: translateX(20px); }
+  .nav__switch[aria-checked="false"] .nav__switch-knob .fa-moon { opacity: 0; transform: rotate(90deg) scale(.6); }
+  .nav__switch[aria-checked="false"] .nav__switch-knob .fa-sun { opacity: 1; transform: none; }
+  .nav__switch:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
   .nav__drawer-link--cta { background: var(--grad); color: #fff; }
   .nav__drawer-link--cta:hover { background: var(--grad); filter: brightness(1.08); transform: translateX(2px); }
   .nav__drawer-ico--cta { background: rgba(255,255,255,.2); color: #fff; border-color: rgba(255,255,255,.3); }
@@ -225,7 +256,20 @@ const path = Astro.url.pathname;
     drawer.setAttribute('aria-hidden', String(!open));
   };
   burger.addEventListener('click', () => setOpen(!drawer.classList.contains('is-open')));
-  drawer.querySelectorAll('a, button').forEach((el) => el.addEventListener('click', () => setOpen(false)));
+  // Every drawer link/button closes the drawer, except rows that opt out with data-keep-open —
+  // the dark-mode switch lives in one, so you can flip it back and forth without the menu
+  // collapsing on every tap.
+  drawer.querySelectorAll<HTMLElement>('a, button').forEach((el) => {
+    if (el.closest('[data-keep-open]')) return;
+    el.addEventListener('click', () => setOpen(false));
+  });
+  drawer.querySelector('[data-open-themes]')?.addEventListener('click', () => (window as any).__ovOpenThemePicker?.());
+
+  // The drawer's switch mirrors whatever the document's theme is, however it was changed.
+  const themeSwitch = drawer.querySelector<HTMLButtonElement>('.nav__switch');
+  const syncSwitch = () => themeSwitch?.setAttribute('aria-checked', String(document.documentElement.dataset.theme !== 'light'));
+  syncSwitch();
+  new MutationObserver(syncSwitch).observe(document.documentElement, { attributes: true, attributeFilter: ['data-theme'] });
 
   // Any open panel — this drawer or another site dropdown that opts in with data-dismiss-outside
   // — closes when a click lands outside both its trigger and its own box, so nothing lingers
@@ -240,7 +284,12 @@ const path = Astro.url.pathname;
 
   // A little dot on the palette icon confirms the chosen accent took, without opening anything.
   const dot = document.getElementById('nav-color-dot');
-  const syncDot = () => { if (dot) dot.style.background = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim(); };
+  const drawerSwatch = document.getElementById('nav-drawer-swatch');
+  const syncDot = () => {
+    const accent = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim();
+    if (dot) dot.style.background = accent;
+    if (drawerSwatch) drawerSwatch.style.background = accent;
+  };
   syncDot();
   new MutationObserver(syncDot).observe(document.documentElement, { attributes: true, attributeFilter: ['style'] });
 

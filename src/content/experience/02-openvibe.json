@@ -9,11 +9,11 @@
   "featured": true,
   "current": true,
   "order": 2,
-  "summary": "An open, community-run live-streaming and tools network. Started in 2022 as a streaming site, re-architected in 2026 into seven services behind one identity provider. I design, build, deploy and operate all of it.",
+  "summary": "An open, community-run live-streaming network I own end to end. Started in 2022 as a single streaming site; by 2026 it had grown into seven connected apps sharing one login, and I'm still the only engineer on it.",
   "bullets": [
-    "Architected the network as seven Node services with formal inter-service contracts: OpenVibe.Live (streaming), .Network (OIDC/OAuth2 identity, OpenCoins wallet, notifications, themes), .Media (multi-tenant media API), .Tools (169-tool suite), .Games (Scraplandia), .Community (pastes) and .Sites (13 front-page domains). About 363k lines, 900+ HTTP routes, one operator.",
-    "Built the streaming core: RTMP, WHIP and WebRTC-SFU ingest (mediasoup, werift), ffmpeg restream to Twitch, YouTube, Kick and SRT, VOD and clip pipelines with local → Backblaze B2 → Cloudflare R2 tiering, chat and moderation, a three-currency economy, PowerChat and RobotStreamer integrations, local whisper.cpp captions with LLM translation in about 21 languages, and AI clip and moment jobs on a provider-agnostic, budget-metered LLM client.",
-    "Ran it like a product team: systemd socket-activated zero-downtime deploys (measured 90 of 90 requests served through a restart), a deploy script that classifies each change and supports rollback, a headless-Chrome performance harness with interleaved A/B runs (home page CLS 0.83 → 0.03, warm FCP 1066 → 550 ms), and a dry-run migration suite plus cutover runbook that moved users, coins and 22 concurrent players with no downtime."
+    "Designed and built an entire network of seven apps that work together under one account: live streaming, sign-in and a virtual-currency wallet, media storage, a 169-tool toolbox, a browser game and a community hub. About 363,000 lines of code and 900+ web endpoints — all built, deployed and kept running by me alone.",
+    "Built the live-streaming engine from the ground up: anyone can broadcast from a browser or an app, and it automatically re-broadcasts to Twitch, YouTube, Kick and more at the same time, saves the recording and auto-generates short clips. It also produces live captions and translates them into about 21 languages in real time, and uses AI to spot and label the best moments in every stream.",
+    "Ran it like a real product: I built a deploy pipeline that updates the live site with zero downtime viewers ever notice, cut the homepage's load time roughly in half and eliminated the jarring layout jumps it used to have, and — when it came time to move everything to new infrastructure — moved every user, every account balance and every active player over with zero downtime and zero data loss."
   ],
   "stack": [
     "Node.js",

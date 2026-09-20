@@ -52,7 +52,7 @@ SELECTED_PROJECTS = [
 ]
 # Metrics strip: pick by a keyword found in the label, in this order.
 # Falls back to the first four metrics if fewer than four match.
-METRIC_KEYWORDS = ["services", "routes", "payment processors", "irdrs", "years"]
+METRIC_KEYWORDS = ["shipped", "lines of production", "payment processors", "sox compliance", "years running"]
 FULL_ROLES = 2            # PowerChat + OpenVibe get full treatment on page 1
 COMPACT_BULLETS = 2       # bullets per role on page 2
 
@@ -190,9 +190,11 @@ def metric_icon(css_class: str) -> str:
 # profile.json `roles[]` (the header chip row) → icon, matched by keyword; falls back to
 # the generic "engineer" glyph so an unrecognized role degrades instead of going icon-less.
 ROLE_ICON_KEYWORDS = [
-    ("idea", "\uf0eb"), ("business", "\uf0eb"), ("automat", "\uf085"),
+    ("idea", "\uf0eb"), ("business", "\uf0b1"), ("owner", "\uf0b1"), ("automat", "\uf085"),
     ("platform", "\uf233"), ("architect", "\uf233"), ("founder", "\uf135"),
-    ("ai ", "\uf2db"), ("engineer", "\uf121"),
+    ("analyst", "\uf201"), ("data", "\uf201"), ("ai ", "\uf2db"), ("product", "\uf1b2"),
+    ("team", "\uf0c0"), ("leader", "\uf0c0"), ("problem", "\uf0ad"), ("full-stack", "\uf0ac"),
+    ("developer", "\uf121"), ("engineer", "\uf121"),
 ]
 DEFAULT_ROLE_ICON = "\uf121"  # code
 
@@ -330,7 +332,7 @@ class Styles:
         self.proj_title = style("ptitle", 8.5, 10.2, INK, FONT["bold"])
         self.proj_summary = style("psum", 7.5, 9.0, BODY)
         self.proj_link = style("plink", 7.3, 8.8, BLUE)
-        self.skill_items = style("skills", 8.3, 10.1, BODY)
+        self.skill_items = style("skills", 8.2, 9.7, BODY)
         self.edu = style("edu", 8.3, 10.1, BODY)
         self.chip = style("chip", 7.6, 9.2, BLUE_DARK, FONT["bold"])
         self.hero_line = style("heroline", 8.6, 11.2, white)
@@ -510,47 +512,75 @@ def section_header(c, x: float, y_top: float, text: str, width: float, glyph: st
 # --------------------------------------------------------------------------
 
 def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> float:
-    """A full-width blue banner: name + tagline on the left, a contact panel on the
-    right — the site's hero, compressed onto paper. Compact on purpose: the feature-card
-    row right under it (block_feature_cards) is where the "what I do" chips live now."""
+    """A full-width colored banner: name + tagline, then two chip rows spanning the whole
+    width — "what I do" (role chips) and "how to reach me" (contact chips) — instead of
+    squeezing contact info into a narrow right-side column, which is cramped, is stuck a
+    fixed height regardless of how much text wraps, and had a hardcoded icon-circle color
+    that didn't move with the chosen theme. One wrap/draw helper serves both rows, so
+    neither can disagree between its measured and drawn width."""
     x = MARGIN
     w = CONTENT_W
     name_size, tag_size = 20.0, 9.2
-    pad = 12.0
+    pad = 10.5
+    inner_w = w - pad * 2
 
-    items = [
-        ("email", profile.get("emailDisplay") or profile.get("email"), f"mailto:{profile['email']}" if profile.get("email") else None),
-        ("phone", profile.get("phoneDisplay") or profile.get("phone"), f"tel:{profile['phone']}" if profile.get("phone") else None),
-        ("site", profile.get("siteDisplay"), profile.get("site")),
-        ("linkedin", profile.get("linkedinDisplay"), profile.get("linkedin")),
-        ("location", profile.get("locationShort") or profile.get("location"), None),
+    def wrap(items, font, size, icon_w, pad_x, gap):
+        rows: list[list[tuple[dict, float]]] = [[]]
+        cx = 0.0
+        for it in items:
+            cw = pdfmetrics.stringWidth(it["text"], font, size) + pad_x + icon_w
+            if cx > 0 and cx + cw > inner_w:
+                rows.append([])
+                cx = 0.0
+            rows[-1].append((it, cw))
+            cx += cw + gap
+        return rows
+
+    def draw_rows(rows, row_top, chip_h, font, size, icon_w, pad_x, gap, bg, bg_alpha, fg, glyph_of):
+        for row in rows:
+            cx2 = x + pad
+            for it, cw in row:
+                c.saveState()
+                c.setFillColor(bg)
+                c.setFillAlpha(bg_alpha)
+                c.roundRect(cx2, row_top - chip_h, cw, chip_h, chip_h / 2, stroke=0, fill=1)
+                c.restoreState()
+                ty2 = row_top - chip_h / 2 - size * 0.36
+                glyph = glyph_of(it)
+                tx = cx2 + pad_x / 2
+                if glyph:
+                    icon(c, tx, ty2, glyph, size, fg)
+                    tx += icon_w
+                c.setFillColor(fg)
+                c.setFont(font, size)
+                c.drawString(tx, ty2, it["text"])
+                if it.get("url"):
+                    c.linkURL(it["url"], (cx2, row_top - chip_h, cx2 + cw, row_top), relative=0, thickness=0)
+                cx2 += cw + gap
+            row_top -= chip_h + 5
+        return row_top
+
+    roles = [{"text": r, "url": None} for r in (profile.get("roles") or [])[:6]]
+    role_font, role_size, role_pad_x, role_icon_w, role_gap = FONT["bold"], 7.6, 20.0, 13.0, 7.0
+    role_rows = wrap(roles, role_font, role_size, role_icon_w, role_pad_x, role_gap)
+    role_h = role_size + 6.5
+    role_total_h = len(role_rows) * role_h + max(0, len(role_rows) - 1) * 5
+
+    contact_items = [
+        {"text": profile.get("emailDisplay") or profile.get("email"), "icon": "email", "url": f"mailto:{profile['email']}" if profile.get("email") else None},
+        {"text": profile.get("phoneDisplay") or profile.get("phone"), "icon": "phone", "url": f"tel:{profile['phone']}" if profile.get("phone") else None},
+        {"text": profile.get("siteDisplay"), "icon": "site", "url": profile.get("site")},
+        {"text": profile.get("linkedinDisplay"), "icon": "linkedin", "url": profile.get("linkedin")},
+        {"text": profile.get("locationShort") or profile.get("location"), "icon": "location", "url": None},
     ]
-    items = [it for it in items if it[1]]
-    panel_w = 178.0
-    row_h = 13.0
-    panel_h = pad * 0.5 + len(items) * row_h
+    contact_items = [it for it in contact_items if it["text"]]
+    contact_font, contact_size, contact_pad_x, contact_icon_w, contact_gap = FONT["regular"], 8.6, 18.0, 15.0, 8.0
+    contact_rows = wrap(contact_items, contact_font, contact_size, contact_icon_w, contact_pad_x, contact_gap)
+    contact_h = contact_size + 7
+    contact_total_h = len(contact_rows) * contact_h + max(0, len(contact_rows) - 1) * 6
 
-    # Role chips, wrapped into rows against the space left of the contact panel — computed once,
-    # geometrically, and reused for both the height calc and the draw pass, so (unlike the
-    # feature cards above) there is no separate "measure" vs "draw" width that could disagree.
-    roles = (profile.get("roles") or [])[:6]
-    chip_font, chip_size, chip_pad_x, chip_gap = FONT["bold"], 7.6, 20.0, 7.0
-    chip_icon_w = 13.0  # icon glyph + gap before the label
-    chips_w = w - pad * 2 - panel_w - 14
-    chip_rows: list[list[tuple[str, float]]] = [[]]
-    cx = 0.0
-    for r in roles:
-        cw = pdfmetrics.stringWidth(r, chip_font, chip_size) + chip_pad_x + chip_icon_w
-        if cx > 0 and cx + cw > chips_w:
-            chip_rows.append([])
-            cx = 0.0
-        chip_rows[-1].append((r, cw))
-        cx += cw + chip_gap
-    chip_h = chip_size + 8
-    chips_total_h = len(chip_rows) * chip_h + max(0, len(chip_rows) - 1) * 4
-
-    banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + 12 + chips_total_h + pad
-    banner_h = max(banner_h, pad * 1.6 + panel_h)
+    group_gap = 6.0
+    banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + 13 + role_total_h + group_gap + contact_total_h + pad
 
     if draw:
         c.saveState()
@@ -574,42 +604,14 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
         c.setFillColor(HexColor("#dbe4ff"))
         c.setFont(FONT["regular"], tag_size)
         c.drawString(x + pad, ty - tag_size * 0.78, profile["tagline"])
-    ty -= tag_size * 0.78 + 12
+    ty -= tag_size * 0.78 + 10
 
     if draw:
-        row_top = ty
-        for row in chip_rows:
-            cx2 = x + pad
-            for text, cw in row:
-                c.saveState()
-                c.setFillColor(BLUE_SOFT)
-                c.setFillAlpha(0.4)
-                c.roundRect(cx2, row_top - chip_h, cw, chip_h, chip_h / 2, stroke=0, fill=1)
-                c.restoreState()
-                icon(c, cx2 + chip_pad_x / 2, row_top - chip_h / 2 - chip_size * 0.36, role_icon(text), chip_size, white)
-                c.setFillColor(white)
-                c.setFont(chip_font, chip_size)
-                c.drawString(cx2 + chip_pad_x / 2 + chip_icon_w, row_top - chip_h / 2 - chip_size * 0.36, text)
-                cx2 += cw + chip_gap
-            row_top -= chip_h + 5
-
-    px = x + w - panel_w - pad
-    py_top = y_top - (banner_h - panel_h) / 2
-    if draw:
-        c.saveState()
-        c.setFillColor(white)
-        c.setFillAlpha(0.14)
-        c.roundRect(px, py_top - panel_h, panel_w, panel_h, 9, stroke=0, fill=1)
-        c.restoreState()
-        base = py_top - row_h * 0.72
-        for key, text, url in items:
-            icon_circle(c, px + 12, base + 2.4, 7.6, ICON[key], white, HexColor("#5578e8"), 6.8)
-            c.setFillColor(white)
-            c.setFont(FONT["regular"], 7.6)
-            c.drawString(px + 24, base, text)
-            if url:
-                c.linkURL(url, (px, base - 4, px + panel_w, base + 10), relative=0, thickness=0)
-            base -= row_h
+        ty = draw_rows(role_rows, ty, role_h, role_font, role_size, role_icon_w, role_pad_x, role_gap,
+                        BLUE_SOFT, 0.4, white, lambda it: role_icon(it["text"]))
+        ty -= group_gap - 5
+        draw_rows(contact_rows, ty, contact_h, contact_font, contact_size, contact_icon_w, contact_pad_x, contact_gap,
+                  white, 0.16, white, lambda it: ICON[it["icon"]])
 
     return banner_h
 
@@ -628,7 +630,7 @@ def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: 
     rows = [seeking[i:i + cols] for i in range(0, n, cols)]
     gap = 8.0
     w = (CONTENT_W - gap * (cols - 1)) / cols
-    pad = 9.0
+    pad = 8.5
     icon_r = 11.0
     inner_w = w - 2 * pad
     title_w = inner_w - icon_r * 2 - 10
@@ -682,9 +684,9 @@ def block_metrics(c, metrics: list[dict], st: Styles, y_top: float, draw: bool) 
     icon_r = 11.0
     num_size = 15.0
     pad = 10.0
-    label_st = ParagraphStyle("mlabel2", fontName=FONT["regular"], fontSize=6.9, leading=8.2, textColor=MUTED)
+    label_st = ParagraphStyle("mlabel2", fontName=FONT["regular"], fontSize=7.1, leading=8.5, textColor=MUTED)
     text_w = col_w - pad - icon_r * 2 - 8 - 6
-    label_paras = [para(esc(m["label"]), label_st) for m in metrics]
+    label_paras = [para(esc(m.get("short") or m["label"]), label_st) for m in metrics]
     label_h = max(para_height(p, text_w) for p in label_paras)
     h = max(icon_r * 2 + 12, num_size + label_h + 6) + 12
     if draw:
@@ -752,6 +754,13 @@ def role_header(c, role: dict, st: Styles, x: float, w: float, y_top: float, dra
         c.drawString(x + icon_col, base, role["company"])
         cw = pdfmetrics.stringWidth(role["company"], FONT["bold"], meta_size)
         if role.get("link"):
+            # A thin underline is the only cue a static PDF has for "this text is a live
+            # link" — plain bold-blue looks identical to every other (non-linked) company name.
+            c.saveState()
+            c.setStrokeColor(BLUE)
+            c.setLineWidth(0.6)
+            c.line(x + icon_col, base - 1.4, x + icon_col + cw, base - 1.4)
+            c.restoreState()
             c.linkURL(role["link"], (x + icon_col, base - 2, x + icon_col + cw, base + meta_size), relative=0, thickness=0)
         if role.get("location"):
             c.setFillColor(MUTED)
@@ -813,7 +822,7 @@ def block_experience(c, roles: list[dict], st: Styles, y_top: float, label: str,
         section_header(c, x, y, label, w, "")
     y -= SECTION_PILL_H + SECTION_GAP
     fn = block_role_compact if compact else block_role_full
-    sep = 3.0 if compact else 4.0
+    sep = 2.5 if compact else 4.0
     for i, role in enumerate(roles):
         if i:
             if draw:
@@ -834,7 +843,7 @@ def block_projects(c, projects: list[dict], st: Styles, y_top: float, draw: bool
     if draw:
         section_header(c, MARGIN, y, "Selected work", CONTENT_W, ICON["link"])
     y -= SECTION_PILL_H + SECTION_GAP
-    cols, gap, pad = 3, 8.0, 8.0
+    cols, gap, pad = 3, 7.0, 8.0
     cw = (CONTENT_W - gap * (cols - 1)) / cols
     icon_col = 20.0
     link_badge = 16.0
@@ -884,23 +893,55 @@ def block_projects(c, projects: list[dict], st: Styles, y_top: float, draw: bool
 
 
 def block_skills(c, skills: list[dict], st: Styles, y_top: float, draw: bool) -> float:
+    """A two-column matrix — each group still gets its own label line above its item list
+    (a clear break, not one run-on paragraph with the label inlined at the front), but two
+    columns roughly halve the section's height versus stacking every group in one column,
+    and read like an actual skills matrix instead of a long scroll of text."""
     x, w = MARGIN + CARD_PAD, CONTENT_W - 2 * CARD_PAD
     y = y_top - CARD_PAD
     if draw:
         section_header(c, x, y, "Skills", w, "")
     y -= SECTION_PILL_H + SECTION_GAP
-    row_gap = 2.6
-    for i, g in enumerate(skills):
-        items = [it["name"] for it in g.get("items", []) if it.get("name")]
-        label = f'<font name="{FONT["bold"]}" size="6.8" color="#22399c">{esc(g["group"].upper())}</font>'
-        p = para(f"{label}&nbsp;&nbsp;&nbsp;{esc(' · '.join(items))}", st.skill_items)
-        h = para_height(p, w)
-        if draw:
+    label_size = 7.2
+    label_gap = 2.0
+    group_gap = 6.0
+    col_gap = 20.0
+    col_w = (w - col_gap) / 2
+    mid = (len(skills) + 1) // 2
+    columns = [skills[:mid], skills[mid:]]
+
+    def col_height(groups: list[dict]) -> float:
+        ch = 0.0
+        for i, g in enumerate(groups):
             if i:
-                hairline(c, x, y + row_gap / 2 + 0.5, x + w, BORDER, 0.4)
-            draw_para(c, p, x, y, w)
-        y -= h + row_gap
-    y -= CARD_PAD - row_gap
+                ch += group_gap
+            items = [it["name"] for it in g.get("items", []) if it.get("name")]
+            ch += label_size * 0.78 + label_gap
+            ch += para_height(para(esc(" · ".join(items)), st.skill_items), col_w)
+        return ch
+
+    heights = [col_height(g) for g in columns]
+    total_h = max(heights) if heights else 0.0
+
+    if draw:
+        for ci, groups in enumerate(columns):
+            cx = x + ci * (col_w + col_gap)
+            cy = y
+            for i, g in enumerate(groups):
+                if i:
+                    cy -= group_gap
+                items = [it["name"] for it in g.get("items", []) if it.get("name")]
+                c.setFillColor(BLUE_DARK)
+                c.setFont(FONT["bold"], label_size)
+                c.drawString(cx, cy - label_size * 0.78, g["group"].upper())
+                cy -= label_size * 0.78 + label_gap
+                p = para(esc(" · ".join(items)), st.skill_items)
+                ph = para_height(p, col_w)
+                draw_para(c, p, cx, cy, col_w)
+                cy -= ph
+        if len(columns) > 1 and columns[1]:
+            vline(c, x + col_w + col_gap / 2, y - total_h, y, BORDER, 0.5)
+    y -= total_h + CARD_PAD
     return y_top - y
 
 
@@ -908,34 +949,45 @@ def block_education(c, profile: dict, st: Styles, y_top: float, draw: bool) -> f
     x, w = MARGIN + CARD_PAD, CONTENT_W - 2 * CARD_PAD
     y = y_top - CARD_PAD
     if draw:
-        section_header(c, x, y, "Education & links", w, "")
+        section_header(c, x, y, "Education", w, ICON["education"])
     y -= SECTION_PILL_H + SECTION_GAP
     p = para(esc(profile.get("education", "")), st.edu)
     h = para_height(p, w)
     if draw:
         draw_para(c, p, x, y, w)
-    y -= h + 4
+    y -= h + CARD_PAD - 3
+    return y_top - y
+
+
+def block_links(c, profile: dict, st: Styles, y_top: float, draw: bool) -> float:
+    """Site, GitHub, LinkedIn and email as a row of their own — pulled out of Education,
+    which they had nothing to do with beyond both being "stuff at the bottom of the page"."""
+    x, w = MARGIN + CARD_PAD, CONTENT_W - 2 * CARD_PAD
+    y = y_top - CARD_PAD
+    if draw:
+        section_header(c, x, y, "Links", w, ICON["link"])
+    y -= SECTION_PILL_H + SECTION_GAP
     links = [
         ("site", profile.get("siteDisplay"), profile.get("site")),
         ("github", profile.get("githubDisplay"), profile.get("github")),
         ("linkedin", profile.get("linkedinDisplay"), profile.get("linkedin")),
         ("email", profile.get("emailDisplay"), f"mailto:{profile['email']}" if profile.get("email") else None),
     ]
-    size, isize = 8.1, 7.6
+    links = [l for l in links if l[1] and l[2]]
+    size = 8.6
     base = y - size * 0.78
-    cx = x
+    n = max(len(links), 1)
+    col_w = w / n
     if draw:
-        for key, text, url in links:
-            if not (text and url):
-                continue
-            icon_circle(c, cx + 6.5, base + 3.0, 7.0, ICON[key], BLUE, ICON_BG, 7.0)
+        for i, (key, text, url) in enumerate(links):
+            cx = x + i * col_w
+            icon_circle(c, cx + 7.5, base + 3.2, 8.0, ICON[key], BLUE, ICON_BG, 7.6)
             c.setFillColor(BLUE)
             c.setFont(FONT["regular"], size)
-            c.drawString(cx + 15, base, text)
-            tw = 15 + pdfmetrics.stringWidth(text, FONT["regular"], size)
-            c.linkURL(url, (cx, base - 2, cx + tw, base + size), relative=0, thickness=0)
-            cx += tw + 16
-    y = base - 2 - CARD_PAD
+            c.drawString(cx + 18, base, text)
+            tw = 18 + pdfmetrics.stringWidth(text, FONT["regular"], size)
+            c.linkURL(url, (cx, base - 3, cx + tw, base + size + 2), relative=0, thickness=0)
+    y = base - 3 - CARD_PAD + 5
     return y_top - y
 
 
@@ -973,7 +1025,11 @@ def content_hash(data: dict) -> str:
     only changes when the content actually does, so a stale cached or downloaded copy is always
     a *different* filename from the current one instead of the same name silently going stale."""
     import hashlib
-    blob = json.dumps(data, sort_keys=True, default=str).encode("utf-8")
+    # profile.resumePdf is *written* by this script (sync_resume_pdf_path) and names the previous
+    # build's hash, so it must not feed the next one — otherwise every run gets a new filename.
+    hashed = dict(data)
+    hashed["profile"] = {k: v for k, v in data["profile"].items() if k != "resumePdf"}
+    blob = json.dumps(hashed, sort_keys=True, default=str).encode("utf-8")
     return hashlib.sha256(blob).hexdigest()[:8]
 
 
@@ -1132,8 +1188,12 @@ def build(out_path: Path) -> dict:
     h, drawer = measured(block_education, profile, st, y)
     card(c, MARGIN, y, CONTENT_W, h)
     drawer()
+    y -= h + 2
+    h, drawer = measured(block_links, profile, st, y)
+    card(c, MARGIN, y, CONTENT_W, h)
+    drawer()
     y -= h
-    check(y, "page 2 education")
+    check(y, "page 2 links")
     report["page2_bottom_gap"] = y - BOTTOM
     footer(c, profile, 2, 2, updated)
     c.showPage()

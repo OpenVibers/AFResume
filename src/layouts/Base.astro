@@ -121,8 +121,23 @@ const imageUrl = new URL(image, site).toString();
         hex = hex.replace('#', '');
         return parseInt(hex.substr(0, 2), 16) + ', ' + parseInt(hex.substr(2, 2), 16) + ', ' + parseInt(hex.substr(4, 2), 16);
       }
-      function applyAccent(hex) {
+      // Any palette change — accent or light/dark — briefly puts the document in a state
+      // where every color-ish property transitions, so the swap reads as a smooth wash across
+      // the page instead of a hard cut. The class is removed after the transition window.
+      var themingTimer = 0;
+      function withThemeTransition(fn) {
+        try {
+          if (matchMedia('(prefers-reduced-motion: reduce)').matches) { fn(); return; }
+        } catch (e) {}
+        d.classList.add('is-theming');
+        fn();
+        clearTimeout(themingTimer);
+        themingTimer = setTimeout(function () { d.classList.remove('is-theming'); }, 720);
+      }
+      window.__ovWithThemeTransition = withThemeTransition;
+      function applyAccent(hex, animate) {
         if (!/^#[0-9a-f]{6}$/i.test(hex)) return;
+        if (animate) { withThemeTransition(function () { applyAccent(hex, false); }); return; }
         var hsl = hexToHsl(hex), h = hsl[0];
         // Clamp saturation/lightness so a very dark or very pale pick still reads as an accent
         // (not black text or an invisible near-white) in both themes.
@@ -194,8 +209,10 @@ const imageUrl = new URL(image, site).toString();
     lenisScript.onload = () => {
       // @ts-ignore
       const L = window.Lenis;
-      if (!L || matchMedia('(pointer: coarse)').matches) return;
-      const lenis = new L({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true });
+      if (!L) return;
+      // syncTouch keeps native-feeling touch scrolling but runs it through the same lerp, so
+      // phones get the same eased scroll as trackpads instead of an entirely different feel.
+      const lenis = new L({ lerp: 0.11, wheelMultiplier: 0.95, smoothWheel: true, syncTouch: true, touchMultiplier: 1.15 });
       // @ts-ignore
       window.__lenis = lenis;
       const raf = (t: number) => { lenis.raf(t); requestAnimationFrame(raf); };
@@ -313,16 +330,96 @@ const imageUrl = new URL(image, site).toString();
       });
     }
 
-    // ---- Theme toggle --------------------------------------------------------
+    // ---- Theme (light/dark) ---------------------------------------------------
+    // One entry point for every light/dark switch on the page (nav icon, drawer switch, the
+    // picker's mode buttons). Uses the View Transitions API for a real cross-fade of the whole
+    // page where available, and the .is-theming property transitions everywhere else.
+    const setTheme = (next: 'light' | 'dark') => {
+      const root = document.documentElement;
+      if (root.dataset.theme === next) return;
+      const apply = () => {
+        root.dataset.theme = next;
+        try { localStorage.setItem('afnet-theme', next); } catch {}
+        document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f4f6fb' : '#07090f');
+        document.dispatchEvent(new CustomEvent('ov:theme', { detail: { theme: next } }));
+      };
+      const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+      const svt = (document as any).startViewTransition;
+      if (!reduced && typeof svt === 'function') {
+        root.classList.add('is-theme-vt');
+        const vt = svt.call(document, apply);
+        vt.finished.finally(() => root.classList.remove('is-theme-vt'));
+      } else {
+        (window as any).__ovWithThemeTransition ? (window as any).__ovWithThemeTransition(apply) : apply();
+      }
+    };
+    (window as any).__ovSetTheme = setTheme;
     document.addEventListener('click', (e) => {
       const t = (e.target as HTMLElement).closest('[data-theme-toggle]');
       if (!t) return;
-      const root = document.documentElement;
-      const next = root.dataset.theme === 'light' ? 'dark' : 'light';
-      root.dataset.theme = next;
-      try { localStorage.setItem('afnet-theme', next); } catch {}
-      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', next === 'light' ? '#f4f6fb' : '#07090f');
+      setTheme(document.documentElement.dataset.theme === 'light' ? 'dark' : 'light');
     });
+
+    // ---- Floating scrollbar ---------------------------------------------------
+    // The native sbar is hidden (global.css); this overlay one floats above the content, takes no
+    // layout space, shows itself while you scroll or approach the right edge, and fades out
+    // once input goes quiet. Drag the thumb or click the track like a normal scrollbar.
+    const sbar = document.createElement('div');
+    sbar.className = 'ovbar';
+    sbar.setAttribute('aria-hidden', 'true');
+    sbar.innerHTML = '<div class="ovbar__track"><div class="ovbar__thumb"></div></div>';
+    document.body.appendChild(sbar);
+    const track = sbar.firstElementChild as HTMLElement;
+    const thumb = track.firstElementChild as HTMLElement;
+    let hideTimer = 0, dragging = false, dragOffset = 0;
+    const docH = () => document.documentElement.scrollHeight;
+    const layout = () => {
+      const vh = innerHeight, dh = docH();
+      if (dh <= vh + 2) { sbar.classList.add('is-unneeded'); return; }
+      sbar.classList.remove('is-unneeded');
+      const th = track.clientHeight;
+      const size = Math.max(36, (vh / dh) * th);
+      const y = (scrollY / (dh - vh)) * (th - size);
+      thumb.style.height = `${size}px`;
+      thumb.style.transform = `translateY(${Math.min(Math.max(y, 0), th - size)}px)`;
+    };
+    const show = () => {
+      sbar.classList.add('is-on');
+      clearTimeout(hideTimer);
+      if (!dragging) hideTimer = setTimeout(() => sbar.classList.remove('is-on'), 1200);
+    };
+    const scrollToRatio = (r: number, smooth: boolean) => {
+      const target = r * (docH() - innerHeight);
+      const lenis = (window as any).__lenis;
+      if (lenis) lenis.scrollTo(target, { immediate: !smooth, duration: 0.6 });
+      else scrollTo({ top: target, behavior: smooth ? 'smooth' : 'auto' });
+    };
+    addEventListener('scroll', () => { layout(); show(); }, { passive: true });
+    addEventListener('resize', layout);
+    addEventListener('pointermove', (e) => { if (e.pointerType === 'mouse' && innerWidth - e.clientX < 40) show(); }, { passive: true });
+    addEventListener('touchstart', show, { passive: true });
+    thumb.addEventListener('pointerdown', (e) => {
+      dragging = true; sbar.classList.add('is-dragging');
+      dragOffset = e.clientY - thumb.getBoundingClientRect().top;
+      thumb.setPointerCapture(e.pointerId);
+      e.preventDefault();
+    });
+    thumb.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const tr = track.getBoundingClientRect();
+      const range = tr.height - thumb.offsetHeight;
+      scrollToRatio(Math.min(Math.max((e.clientY - tr.top - dragOffset) / range, 0), 1), false);
+    });
+    const endDrag = () => { if (!dragging) return; dragging = false; sbar.classList.remove('is-dragging'); show(); };
+    thumb.addEventListener('pointerup', endDrag);
+    thumb.addEventListener('pointercancel', endDrag);
+    track.addEventListener('pointerdown', (e) => {
+      if (e.target === thumb) return;
+      const tr = track.getBoundingClientRect();
+      scrollToRatio(Math.min(Math.max((e.clientY - tr.top - thumb.offsetHeight / 2) / (tr.height - thumb.offsetHeight), 0), 1), true);
+    });
+    new ResizeObserver(layout).observe(document.body);
+    layout();
   </script>
 </body>
 </html>

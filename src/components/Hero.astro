@@ -11,8 +11,9 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
   <div class="container hero__grid">
     <div class="hero__copy">
       <p class="hero__status hero__in" style="--d:0ms">
-        <span class="live-dot" aria-hidden="true"></span>
-        <span>Now: contract engineer at <a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a> · building <a href="#network">OpenVibe</a></span>
+        <span class="hero__status-seg hero__status-seg--now"><span class="live-dot" aria-hidden="true"></span>Now</span>
+        <span class="hero__status-seg">contract engineer at <a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a></span>
+        <span class="hero__status-seg">building <a href="#network">OpenVibe</a></span>
       </p>
 
       <h1 class="hero__title" id="hero-title" aria-label={name}>
@@ -28,12 +29,12 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
       </h1>
 
       <p class="hero__role" aria-live="polite">
-        <span class="hero__role-static">I'm a</span>
+        <span class="hero__role-static" id="rotator-article">I'm a</span>
         <span class="hero__rotator" id="rotator" data-roles={JSON.stringify(profile.roles)}>{profile.roles[0]}</span>
       </p>
 
       <p class="hero__lead hero__in" style="--d:650ms">
-        {profile.headline} I build autonomous AI agents and automation that actually ship — time on an Amazon robotics floor taught me how real systems break, and I've been building the software and the agents to fix that ever since. Bring me a rough idea and I can turn it into a product, or a business: I founded and run the <strong><a href="https://openvibe.network" target="_blank" rel="noopener">OpenVibe network</a></strong> solo — seven services, 20+ domains — and I'm currently rebuilding <strong><a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a></strong>'s developer platform and payments.
+        {profile.headline} I build autonomous AI agents and automation that actually ship — my time at Amazon, first keeping an automated robotics floor running and then as an ICQA data analyst chasing inventory discrepancies for SOX compliance, taught me how real systems break, and I've been building the software and the agents to fix that ever since. Bring me a rough idea and I can turn it into a product, or a business: I founded and run the <strong><a href="https://openvibe.network" target="_blank" rel="noopener">OpenVibe network</a></strong> solo — seven services, 20+ domains — and I'm currently rebuilding <strong><a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a></strong>'s developer platform and payments.
       </p>
 
       <div class="hero__cta hero__in" style="--d:800ms">
@@ -53,16 +54,18 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
     </div>
 
     <div class="hero__visual hero__in hero__in--scale" style="--d:300ms">
-      <div class="portrait" data-tilt>
+      <div class="portrait" data-tilt id="portrait">
+        <div class="portrait__halo" aria-hidden="true"></div>
         <div class="portrait__ring portrait__ring--a" aria-hidden="true"></div>
         <div class="portrait__ring portrait__ring--b" aria-hidden="true"></div>
         <div class="portrait__orbit" aria-hidden="true"><span></span></div>
-        <div class="portrait__frame">
+        <div class="portrait__plinth" aria-hidden="true"><span class="portrait__grid"></span><span class="portrait__glint"></span><span class="portrait__scan"></span></div>
+        <canvas class="portrait__fx" id="portrait-fx" aria-hidden="true"></canvas>
+        <div class="portrait__shots">
           <img src="/assets/img/me-cut1.png" alt="Portrait of Alex Frison" class="portrait__img is-on" id="portrait-a" width="889" height="1177" fetchpriority="high" />
           <img src="/assets/img/me-cut2.png" alt="" class="portrait__img" id="portrait-b" width="829" height="1074" loading="lazy" />
-          <div class="portrait__scan" aria-hidden="true"></div>
         </div>
-        <div class="portrait__tag portrait__tag--tl" aria-hidden="true"><i class="fa-solid fa-location-dot"></i> {profile.locationShort}</div>
+        <div class="portrait__tag portrait__tag--tl" aria-hidden="true"><i class="fa-solid fa-location-dot"></i> <span class="portrait__tag-l">{profile.locationShort}</span><span class="portrait__tag-s">{profile.locationShort.split(" / ")[0]}, {profile.locationShort.split(", ").pop()}</span></div>
         <div class="portrait__tag portrait__tag--br" aria-hidden="true"><span class="live-dot"></span> Open to just about anything</div>
       </div>
     </div>
@@ -94,12 +97,15 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
   .hero__copy { min-width: 0; }
 
   .hero__status {
-    display: inline-flex; align-items: center; gap: 10px; margin: 0 0 22px;
-    padding: 8px 14px 8px 12px; border-radius: 999px;
-    background: var(--surface); border: 1px solid var(--border);
-    font-family: var(--font-mono); font-size: .78rem; color: var(--muted); letter-spacing: .01em;
-    backdrop-filter: blur(10px);
+    display: inline-flex; flex-wrap: wrap; align-items: center; gap: 6px; margin: 0 0 22px;
+    padding: 0; font-family: var(--font-mono); font-size: .76rem; color: var(--muted); letter-spacing: .01em;
   }
+  .hero__status-seg {
+    display: inline-flex; align-items: center; gap: 9px; padding: 7px 13px; border-radius: 999px;
+    background: var(--surface); border: 1px solid var(--border); backdrop-filter: blur(10px); -webkit-backdrop-filter: blur(10px);
+    white-space: nowrap; line-height: 1.2;
+  }
+  .hero__status-seg--now { color: var(--fg); font-weight: 600; letter-spacing: .08em; text-transform: uppercase; font-size: .68rem; border-color: rgba(var(--accent-3-rgb), .4); }
   .hero__status a { color: var(--fg); }
 
   .hero__title {
@@ -144,24 +150,59 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
 
   /* Portrait */
   .hero__visual { display: grid; place-items: center; min-width: 0; }
-  .portrait { position: relative; width: min(400px, 78vw); aspect-ratio: 4 / 5; transition: transform .5s var(--ease); transform-style: preserve-3d; }
-  .portrait__frame {
-    position: absolute; inset: 0; border-radius: 34% 34% 28px 28px / 26% 26% 28px 28px;
-    overflow: hidden; background: var(--grad-soft); border: 1px solid var(--border-strong);
-    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.08);
+  /* The portrait is a cut-out PNG, so nothing here is a rectangle around it: a glass plinth
+     sits behind the lower body, the head rises above it, and a canvas (see script) draws a
+     gradient contour + glow that hugs the actual alpha edge of the photo, sends silhouette-
+     shaped ripples outward, and follows the site's accent live. */
+  .portrait { position: relative; width: min(400px, 78vw); aspect-ratio: 4 / 5; transition: transform .5s var(--ease); transform-style: preserve-3d; --px: 0; --py: 0; }
+  .portrait__halo {
+    position: absolute; inset: 8% -6% -8%; z-index: -1; border-radius: 50%; pointer-events: none;
+    background: radial-gradient(50% 42% at 50% 62%, rgba(var(--accent-rgb), .55), rgba(var(--violet-rgb, var(--accent-rgb)), .25) 45%, transparent 72%);
+    filter: blur(28px); animation: haloBreathe 9s ease-in-out infinite;
   }
-  .portrait__frame::before {
-    content: ""; position: absolute; inset: 0; z-index: 0;
-    background: radial-gradient(70% 60% at 50% 100%, rgba(var(--accent-rgb), .35), transparent 70%);
+  @keyframes haloBreathe { 50% { transform: scale(1.08) translateY(2%); opacity: .8; } }
+  .portrait__plinth {
+    position: absolute; left: 3%; right: 3%; top: 24%; bottom: 0; z-index: 0; overflow: hidden;
+    border-radius: 30px; background: var(--grad-soft); border: 1px solid var(--border-strong);
+    box-shadow: var(--shadow-card), inset 0 1px 0 rgba(255,255,255,.1), inset 0 -40px 60px -40px rgba(var(--accent-rgb), .35);
+    transform: translate(calc(var(--px) * -5px), calc(var(--py) * -4px)); transition: transform .4s var(--ease);
   }
-  .portrait__img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: top center; opacity: 0; transition: opacity 1s var(--ease); z-index: 1; }
+  .portrait__plinth::before {
+    content: ""; position: absolute; inset: 0;
+    background: radial-gradient(75% 55% at 50% 100%, rgba(var(--accent-rgb), .38), transparent 70%);
+  }
+  .portrait__grid {
+    position: absolute; inset: 0; opacity: .35;
+    background-image: linear-gradient(rgba(var(--accent-rgb), .18) 1px, transparent 1px), linear-gradient(90deg, rgba(var(--accent-rgb), .18) 1px, transparent 1px);
+    background-size: 26px 26px; background-position: center bottom;
+    mask-image: radial-gradient(80% 90% at 50% 100%, #000 20%, transparent 80%); -webkit-mask-image: radial-gradient(80% 90% at 50% 100%, #000 20%, transparent 80%);
+  }
+  .portrait__glint {
+    position: absolute; top: 0; bottom: 0; width: 40%; left: -60%;
+    background: linear-gradient(100deg, transparent 0%, rgba(255,255,255,.10) 45%, rgba(255,255,255,.18) 50%, rgba(255,255,255,.10) 55%, transparent 100%);
+    transform: skewX(-12deg); animation: glint 9s var(--ease-io) infinite;
+  }
+  @keyframes glint { 0%, 55% { left: -60%; } 85%, 100% { left: 130%; } }
+  .portrait__fx { position: absolute; inset: -9%; width: 118%; height: 118%; z-index: 1; pointer-events: none;
+    mask-image: linear-gradient(to bottom, #000 80%, transparent 96%); -webkit-mask-image: linear-gradient(to bottom, #000 80%, transparent 96%); }
+  .portrait__shots {
+    position: absolute; inset: 0; z-index: 2; pointer-events: none;
+    transform: translate(calc(var(--px) * 7px), calc(var(--py) * 5px)); transition: transform .4s var(--ease);
+    mask-image: linear-gradient(to bottom, #000 78%, transparent 99%); -webkit-mask-image: linear-gradient(to bottom, #000 78%, transparent 99%);
+  }
+  .portrait__img {
+    position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; object-position: bottom center;
+    opacity: 0; transition: opacity 1.2s var(--ease);
+    filter: drop-shadow(0 22px 26px rgba(0,0,0,.45)) drop-shadow(0 0 1px rgba(var(--accent-rgb), .35));
+  }
   .portrait__img.is-on { opacity: 1; }
   .portrait__scan {
-    position: absolute; left: -10%; right: -10%; top: -20%; height: 18%; z-index: 2; pointer-events: none;
+    position: absolute; left: 0; right: 0; top: -20%; height: 16%; pointer-events: none;
     background: linear-gradient(180deg, transparent, rgba(var(--accent-3-rgb), .16), transparent);
-    animation: scan 7s var(--ease-io) infinite;
+    animation: scan 8s var(--ease-io) infinite;
   }
-  @keyframes scan { 0%, 20% { top: -20%; } 60%, 100% { top: 110%; } }
+  .portrait__tag-s { display: none; }
+  @keyframes scan { 0%, 25% { top: -20%; } 65%, 100% { top: 110%; } }
   .portrait__ring { position: absolute; inset: -8%; border-radius: 50%; border: 1px solid rgba(var(--accent-rgb), .25); z-index: -1; }
   .portrait__ring--a { animation: spin 26s linear infinite; border-style: dashed; }
   .portrait__ring--b { inset: -16%; border-color: rgba(var(--accent-2-rgb), .18); animation: spin 40s linear infinite reverse; }
@@ -178,7 +219,7 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
     animation: floaty 7s ease-in-out infinite;
   }
   .portrait__tag i { color: var(--accent-2); }
-  .portrait__tag--tl { top: 6%; left: -10%; }
+  .portrait__tag--tl { top: 30%; left: -14%; }
   .portrait__tag--br { bottom: 7%; right: -8%; animation-delay: -3.5s; }
   @keyframes floaty { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
 
@@ -198,9 +239,11 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
     .hero { min-height: auto; padding-top: calc(var(--nav-h) + 30px); }
     .hero__grid { grid-template-columns: 1fr; }
     .hero__visual { order: -1; }
-    .portrait { width: min(280px, 70vw); }
-    .portrait__tag--tl { left: -4%; }
-    .portrait__tag--br { right: -4%; }
+    .portrait { width: min(290px, 72vw); margin-top: 10px; }
+    /* On narrow screens the tags hang off the plinth's edges instead of sitting over the face. */
+    .portrait__tag--tl { top: 25%; left: -6%; font-size: .66rem; padding: 6px 10px; }
+    .portrait__tag-l { display: none; } .portrait__tag-s { display: inline; }
+    .portrait__tag--br { bottom: 4%; right: -6%; font-size: .66rem; padding: 6px 10px; }
     .hero__scroll { display: none; }
     .hero__title { font-size: clamp(3rem, 15vw, 5rem); }
   }
@@ -267,16 +310,144 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
       };
       step();
     });
+    const article = document.getElementById('rotator-article');
+    const setArticle = (role: string) => { if (article) article.textContent = /^[aeiou]/i.test(role) ? "I'm an" : "I'm a"; };
+    setArticle(roles[0] || '');
     setInterval(async () => {
       if (busy || document.hidden) return;
       busy = true; i = (i + 1) % roles.length;
+      setArticle(roles[i]);
       await scramble(roles[i]); busy = false;
     }, 2800);
   }
 
-  // ---- Portrait crossfade ---------------------------------------------------
-  const a = document.getElementById('portrait-a'), b = document.getElementById('portrait-b');
-  if (a && b) { let on = true; setInterval(() => { on = !on; a.classList.toggle('is-on', on); b.classList.toggle('is-on', !on); }, 7000); }
+  // ---- Portrait: crossfade + edge-hugging contour FX -------------------------
+  // The contour is computed from the PNG's real alpha: the silhouette is stamped around a small
+  // circle to dilate it, the original is punched back out, and what's left is a ring that hugs
+  // every edge of the cut-out. Each frame that ring is filled with a slowly turning conic
+  // gradient (accent → violet → ember → mint, plus one bright "comet" sector) and a blurred copy
+  // becomes the glow. Silhouette-shaped ripples expand outward every few seconds and on hover.
+  const a = document.getElementById('portrait-a') as HTMLImageElement | null;
+  const b = document.getElementById('portrait-b') as HTMLImageElement | null;
+  const fx = document.getElementById('portrait-fx') as HTMLCanvasElement | null;
+  const portrait = document.getElementById('portrait') as HTMLElement | null;
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let onA = true;
+  if (a && b) setInterval(() => { onA = !onA; a.classList.toggle('is-on', onA); b.classList.toggle('is-on', !onA); }, 8000);
+
+  if (fx && portrait && a && b) {
+    const ctx = fx.getContext('2d')!;
+    type Ring = { sharp: HTMLCanvasElement; glow: HTMLCanvasElement };
+    let rings: (Ring | null)[] = [null, null];
+    let W = 0, H = 0, weightA = 1;
+    const dpr = Math.min(devicePixelRatio || 1, 1.5);
+    const tmp = document.createElement('canvas'), tctx = tmp.getContext('2d')!;
+    const echoes: number[] = [];
+    let colors = { accent: '#4f7cff', violet: '#8b5cf6', ember: '#f97316', mint: '#22c55e' };
+    const readColors = () => {
+      const cs = getComputedStyle(document.documentElement);
+      const v = (n: string, fb: string) => (cs.getPropertyValue(n).trim() || fb);
+      colors = { accent: v('--accent', colors.accent), violet: v('--violet', colors.violet), ember: v('--accent-2', colors.ember), mint: v('--accent-3', colors.mint) };
+    };
+    readColors();
+    new MutationObserver(readColors).observe(document.documentElement, { attributes: true, attributeFilter: ['style', 'data-theme'] });
+
+    // Where the <img> (object-fit: contain, bottom center) lands inside the portrait box, in canvas px.
+    const imgRect = (img: HTMLImageElement) => {
+      const pr = portrait.getBoundingClientRect(), fr = fx.getBoundingClientRect();
+      const bw = pr.width, bh = pr.height;
+      const sc = Math.min(bw / img.naturalWidth, bh / img.naturalHeight);
+      const dw = img.naturalWidth * sc, dh = img.naturalHeight * sc;
+      const x = (pr.left - fr.left) + (bw - dw) / 2, y = (pr.top - fr.top) + (bh - dh);
+      return { x: x * dpr, y: y * dpr, w: dw * dpr, h: dh * dpr };
+    };
+    const buildRing = (img: HTMLImageElement): Ring => {
+      const r = imgRect(img);
+      const rad = Math.max(2, W * 0.011);
+      const sharp = document.createElement('canvas'); sharp.width = W; sharp.height = H;
+      const sctx = sharp.getContext('2d')!;
+      for (let k = 0; k < 24; k++) {
+        const ang = (k / 24) * Math.PI * 2;
+        sctx.drawImage(img, r.x + Math.cos(ang) * rad, r.y + Math.sin(ang) * rad, r.w, r.h);
+      }
+      sctx.globalCompositeOperation = 'destination-out';
+      sctx.drawImage(img, r.x, r.y, r.w, r.h);
+      const glow = document.createElement('canvas'); glow.width = W; glow.height = H;
+      const gctx = glow.getContext('2d')!;
+      gctx.filter = `blur(${Math.max(6, W * 0.028)}px)`;
+      gctx.drawImage(sharp, 0, 0);
+      gctx.filter = 'none';
+      gctx.drawImage(sharp, 0, 0);
+      return { sharp, glow };
+    };
+    const rebuild = () => {
+      const fr = fx.getBoundingClientRect();
+      W = Math.round(fr.width * dpr); H = Math.round(fr.height * dpr);
+      if (!W || !H) return;
+      fx.width = W; fx.height = H; tmp.width = W; tmp.height = H;
+      rings = [a, b].map((img) => (img.complete && img.naturalWidth ? buildRing(img) : null));
+    };
+    const fillRing = (ring: HTMLCanvasElement, angle: number, alpha: number, cx: number, cy: number) => {
+      tctx.globalCompositeOperation = 'source-over';
+      tctx.clearRect(0, 0, W, H);
+      const g = tctx.createConicGradient(angle, cx, cy);
+      g.addColorStop(0, colors.accent); g.addColorStop(.22, colors.violet); g.addColorStop(.45, colors.ember);
+      g.addColorStop(.62, '#ffffff'); g.addColorStop(.66, colors.mint); g.addColorStop(.85, colors.accent); g.addColorStop(1, colors.accent);
+      tctx.fillStyle = g; tctx.fillRect(0, 0, W, H);
+      tctx.globalCompositeOperation = 'destination-in';
+      tctx.drawImage(ring, 0, 0);
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(tmp, 0, 0);
+      ctx.globalAlpha = 1;
+    };
+    let last = 0, nextEcho = performance.now() + 2500, visible = true, raf = 0;
+    const frame = (t: number) => {
+      raf = requestAnimationFrame(frame);
+      if (!visible || document.hidden || !W) return;
+      if (t - last < 1000 / 45) return; // ~45fps is plenty for a slow sweep
+      last = t;
+      weightA += ((onA ? 1 : 0) - weightA) * 0.06;
+      ctx.clearRect(0, 0, W, H);
+      const cx = W / 2, cy = H * 0.55, ang = (t / 9000) * Math.PI * 2;
+      if (t > nextEcho) { echoes.push(t); nextEcho = t + 6500 + Math.random() * 2500; }
+      rings.forEach((ring, i) => {
+        if (!ring) return;
+        const w = i === 0 ? weightA : 1 - weightA;
+        if (w < 0.02) return;
+        fillRing(ring.glow, ang, 0.55 * w, cx, cy);
+        fillRing(ring.sharp, ang, 0.95 * w, cx, cy);
+        for (let e = echoes.length - 1; e >= 0; e--) {
+          const p = (t - echoes[e]) / 1600;
+          if (p >= 1) { echoes.splice(e, 1); continue; }
+          const sc = 1 + p * 0.16, k = (1 - p) * (1 - p) * 0.5 * w;
+          ctx.save(); ctx.globalAlpha = k; ctx.translate(cx, cy * 1.35); ctx.scale(sc, sc); ctx.translate(-cx, -cy * 1.35);
+          ctx.drawImage(tmp, 0, 0); ctx.restore();
+        }
+      });
+    };
+    const start = async () => {
+      await Promise.all([a, b].map((img) => (img.complete ? Promise.resolve() : new Promise<void>((res) => { img.onload = () => res(); img.onerror = () => res(); }))));
+      rebuild();
+      if (reduced) { frame(performance.now()); cancelAnimationFrame(raf); return; }
+      raf = requestAnimationFrame(frame);
+    };
+    start();
+    let rt = 0;
+    addEventListener('resize', () => { clearTimeout(rt); rt = setTimeout(rebuild, 150); });
+    new IntersectionObserver((en) => { visible = en[0]?.isIntersecting ?? true; }).observe(fx);
+    portrait.addEventListener('pointerenter', () => { echoes.push(performance.now()); nextEcho = performance.now() + 7000; });
+    portrait.addEventListener('pointerdown', () => echoes.push(performance.now()));
+
+    // Depth: photo and plinth drift in opposite directions under the pointer (desktop only).
+    if (matchMedia('(pointer: fine)').matches) {
+      portrait.addEventListener('pointermove', (e) => {
+        const r = portrait.getBoundingClientRect();
+        portrait.style.setProperty('--px', String(((e.clientX - r.left) / r.width - 0.5) * 2));
+        portrait.style.setProperty('--py', String(((e.clientY - r.top) / r.height - 0.5) * 2));
+      });
+      portrait.addEventListener('pointerleave', () => { portrait.style.setProperty('--px', '0'); portrait.style.setProperty('--py', '0'); });
+    }
+  }
 </script>
 
 <style is:global>

@@ -1,8 +1,15 @@
 {
   "name": "Alex Frison",
-  "tagline": "Software engineer, platform architect and founder of the OpenVibe network.",
+  "tagline": "Software engineer, data analyst and founder of OpenVibe.",
   "headline": "I build the whole stack, then run it.",
-  "roles": ["Software Engineer", "AI Agent Builder", "Founder of OpenVibe", "Automation Engineer", "Platform Architect", "Idea-to-Business Builder"],
+  "highlights": [
+    { "icon": "fa-solid fa-layer-group", "title": "Ships the whole product", "text": "Design, code, infrastructure, deployment and support, with no hand-off in between." },
+    { "icon": "fa-solid fa-credit-card", "title": "Moves money safely", "text": "Rebuilt PowerChat's payments across five processors, with ledgers that make double-charging impossible." },
+    { "icon": "fa-solid fa-robot", "title": "Builds AI that does real work", "text": "Autonomous agents that researched and wrote compliance reports Amazon analysts used every day." },
+    { "icon": "fa-solid fa-server", "title": "Runs it in production", "text": "25+ sites and services with zero-downtime deploys, operated by one person." },
+    { "icon": "fa-solid fa-handshake", "title": "Understands the business side", "text": "Ten years running my own company and three years leading a retail sales team." }
+  ],
+  "roles": ["Software Engineer", "Full-Stack Developer", "AI Agent Builder", "Data Analyst", "Business Owner", "Automation Engineer", "Platform Architect", "Product Builder", "Team Leader", "Problem Solver"],
   "location": "Arlington · Seattle · Pacific Northwest",
   "locationShort": "Seattle / Arlington, WA",
   "email": "alex@alexfrison.net",
@@ -15,30 +22,30 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Sep_2026_4a270599.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Sep_2026_fde01332.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
     "also": "Founder and sole engineer of OpenVibe: seven services, 20+ domains, one operator."
   },
-  "pitch": "Full-stack engineer with 10+ years shipping production systems and a habit of owning them end to end. I designed and run OpenVibe, an open live-streaming and tools network of seven Node services behind one identity provider. At PowerChat I turned the product into an OAuth2 platform and rebuilt its payments across five processors. Before that I ran SOX-compliance analytics at Amazon, shipped autonomous research agents analysts used daily, and spent three years in sales at Verizon Wireless — district top performer, promoted to Assistant Manager, coaching 4-8 reps. I've also run my own company, GameServerStats, for 10+ years. I'm genuinely open to where that combination fits: engineering, platform, analytics, ops or something in between.",
+  "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other analysts used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
   "seeking": [
     { "label": "Honestly, open to anything", "detail": "Title and level are negotiable — the team and the problem matter more" },
     { "label": "Software engineering", "detail": "Full-stack, platform, streaming or realtime systems work" },
     { "label": "Data & analytics", "detail": "SQL, reporting and compliance tooling people act on" },
     { "label": "Ops, support, sales — whatever fits", "detail": "Ten years of sales and running my own company" }
   ],
-  "foundedOrg": "GameServerStats, LLC",
+  "foundedOrg": "Own company, LLC",
   "lastRole": "PowerChat — Software Engineer (Contract)",
   "metrics": [
-    { "num": 7, "suffix": "", "label": "OpenVibe services designed, built and operated solo", "icon": "fa-solid fa-cubes-stacked" },
-    { "num": 900, "suffix": "+", "label": "HTTP routes across the OpenVibe network", "icon": "fa-solid fa-route" },
-    { "num": 363, "suffix": "k", "label": "Lines of code in the OpenVibe repos", "icon": "fa-solid fa-code" },
-    { "num": 169, "suffix": "", "label": "Tools catalogued on OpenVibe.Tools", "icon": "fa-solid fa-toolbox" },
-    { "num": 5, "suffix": "", "label": "Payment processors unified at PowerChat", "icon": "fa-solid fa-credit-card" },
-    { "num": 1000, "suffix": "+", "label": "SOX-compliance IRDRs researched at Amazon", "icon": "fa-solid fa-magnifying-glass-chart" },
-    { "num": 200, "suffix": "k+", "label": "Live game servers tracked by GameServerStats", "icon": "fa-solid fa-tower-broadcast" },
-    { "num": 10, "suffix": "+", "label": "Years running my own company", "icon": "fa-solid fa-building-flag" }
+    { "num": 25, "suffix": "+", "label": "Websites, apps and services designed, built and shipped end to end", "short": "Sites, apps and services shipped end to end", "icon": "fa-solid fa-cubes-stacked" },
+    { "num": 500, "suffix": "k+", "label": "Lines of production code written and maintained", "short": "Lines of production code", "icon": "fa-solid fa-code" },
+    { "num": 900, "suffix": "+", "label": "API endpoints and pages running in production, all built solo", "short": "Endpoints and pages live in production", "icon": "fa-solid fa-route" },
+    { "num": 169, "suffix": "", "label": "Free web tools built and published for anyone to use", "short": "Free web tools published", "icon": "fa-solid fa-toolbox" },
+    { "num": 5, "suffix": "", "label": "Payment processors merged into one billing system that can't double-charge", "short": "Payment processors unified into one billing system", "icon": "fa-solid fa-credit-card" },
+    { "num": 1000, "suffix": "+", "label": "Inventory discrepancies investigated and closed for SOX compliance at Amazon", "short": "SOX-compliance inventory cases closed at Amazon", "icon": "fa-solid fa-magnifying-glass-chart" },
+    { "num": 200, "suffix": "k+", "label": "Live game servers tracked by a platform I ran for a decade", "short": "Live game servers tracked by my platform", "icon": "fa-solid fa-tower-broadcast" },
+    { "num": 10, "suffix": "+", "label": "Years running my own company, from the code to the taxes", "short": "Years running my own company", "icon": "fa-solid fa-building-flag" }
   ],
   "network": [
     { "key": "live", "name": "OpenVibe.Live", "url": "https://openvibe.live", "role": "Live streaming", "blurb": "RTMP, WHIP and WebRTC ingest, multi-destination restream, VODs, clips, chat, live captions and translation.", "stat": "529 routes · 179k LOC", "image": "/assets/img/sites/live.webp" },

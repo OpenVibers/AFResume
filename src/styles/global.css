@@ -214,3 +214,35 @@ strong { color: var(--fg); font-weight: 600; }
   body::before, body::after, .progress, .cursor, .nav, .foot, .marquee { display: none !important; }
   [data-reveal] { opacity: 1 !important; transform: none !important; }
 }
+
+/* ---- Theme transitions -------------------------------------------------- */
+/* Set by Base.astro for ~700ms around any accent or light/dark change. */
+html.is-theming, html.is-theming *, html.is-theming *::before, html.is-theming *::after {
+  transition: background-color .6s ease, color .6s ease, border-color .6s ease, box-shadow .6s ease,
+    fill .6s ease, stroke .6s ease, outline-color .6s ease, opacity .6s ease !important;
+}
+::view-transition-old(root), ::view-transition-new(root) { animation-duration: .55s; animation-timing-function: cubic-bezier(.22,1,.36,1); }
+
+/* ---- Floating scrollbar --------------------------------------------------- */
+html { scrollbar-width: none; }
+html::-webkit-scrollbar { display: none; width: 0; height: 0; }
+.ovbar {
+  position: fixed; top: 10px; right: 5px; bottom: 10px; width: 14px; z-index: 140;
+  opacity: 0; transition: opacity .45s var(--ease); pointer-events: none;
+}
+.ovbar.is-on { opacity: 1; pointer-events: auto; }
+.ovbar.is-unneeded { display: none; }
+.ovbar__track {
+  position: absolute; inset: 0 3px; border-radius: 999px;
+  background: rgba(var(--accent-rgb), .08);
+  transition: inset .25s var(--ease), background .25s var(--ease);
+}
+.ovbar:hover .ovbar__track, .ovbar.is-dragging .ovbar__track { inset: 0 1px; background: rgba(var(--accent-rgb), .14); }
+.ovbar__thumb {
+  position: absolute; left: 0; right: 0; top: 0; border-radius: 999px; cursor: grab; touch-action: none;
+  background: var(--grad); box-shadow: 0 0 0 1px rgba(255,255,255,.08), 0 6px 18px -6px rgba(var(--accent-rgb), .7);
+  will-change: transform;
+}
+.ovbar.is-dragging .ovbar__thumb { cursor: grabbing; filter: brightness(1.12); }
+@media (pointer: coarse) { .ovbar { width: 8px; right: 3px; } .ovbar__track { inset: 0 1px; } }
+@media (prefers-reduced-motion: reduce) { .ovbar { transition: none; } }
