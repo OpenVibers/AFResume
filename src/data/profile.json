@@ -36,7 +36,7 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Sep_2026_1c4cdbb2.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Sep_2026_76413598.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
@@ -44,22 +44,22 @@
   },
   "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other analysts used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
   "seeking": [
-    { "label": "Honestly, open to anything", "detail": "Title and level are negotiable — the team and the problem matter more" },
-    { "label": "Software engineering", "detail": "Full-stack, platform, streaming or realtime systems work" },
-    { "label": "Data & analytics", "detail": "SQL, reporting and compliance tooling people act on" },
-    { "label": "Ops, support, sales — whatever fits", "detail": "Ten years of sales and running my own company" }
+    { "label": "Honestly, open to anything", "detail": "Title and level are negotiable. The team, the problem and the chance to own something matter more than the label." },
+    { "label": "Software engineering", "detail": "Full-stack web apps, platforms, APIs, payments, streaming and realtime systems, designed, shipped and kept running in production." },
+    { "label": "Data & analytics", "detail": "SQL, Excel and Power Query, dashboards and compliance reporting people actually act on, plus automation that removes the busywork." },
+    { "label": "Ops, support, sales — whatever fits", "detail": "Ten years running my own company and three leading a retail sales team: I can talk to customers as comfortably as to servers." }
   ],
   "foundedOrg": "Own company, LLC",
   "lastRole": "PowerChat — Software Engineer (Contract)",
   "metrics": [
-    { "num": 25, "suffix": "+", "label": "Websites, apps and services designed, built and shipped end to end", "short": "Sites, apps and services shipped end to end", "icon": "fa-solid fa-cubes-stacked" },
+    { "num": 25, "suffix": "+", "label": "Websites, apps and services designed, built and shipped end to end", "short": "Sites and services shipped", "icon": "fa-solid fa-cubes-stacked" },
     { "num": 500, "suffix": "k+", "label": "Lines of production code written and maintained", "short": "Lines of production code", "icon": "fa-solid fa-code" },
-    { "num": 900, "suffix": "+", "label": "API endpoints and pages running in production, all built solo", "short": "Endpoints and pages live in production", "icon": "fa-solid fa-route" },
+    { "num": 900, "suffix": "+", "label": "API endpoints and pages running in production, all built solo", "short": "Endpoints live in production", "icon": "fa-solid fa-route" },
     { "num": 169, "suffix": "", "label": "Free web tools built and published for anyone to use", "short": "Free web tools published", "icon": "fa-solid fa-toolbox" },
-    { "num": 5, "suffix": "", "label": "Payment processors merged into one billing system that can't double-charge", "short": "Payment processors unified into one billing system", "icon": "fa-solid fa-credit-card" },
-    { "num": 1000, "suffix": "+", "label": "Inventory discrepancies investigated and closed for SOX compliance at Amazon", "short": "SOX-compliance inventory cases closed at Amazon", "icon": "fa-solid fa-magnifying-glass-chart" },
-    { "num": 200, "suffix": "k+", "label": "Live game servers tracked by a platform I ran for a decade", "short": "Live game servers tracked by my platform", "icon": "fa-solid fa-tower-broadcast" },
-    { "num": 10, "suffix": "+", "label": "Years running my own company, from the code to the taxes", "short": "Years running my own company", "icon": "fa-solid fa-building-flag" }
+    { "num": 5, "suffix": "", "label": "Payment processors merged into one billing system that can't double-charge", "short": "Payment processors unified", "icon": "fa-solid fa-credit-card" },
+    { "num": 1000, "suffix": "+", "label": "Inventory discrepancies investigated and closed for SOX compliance at Amazon", "short": "SOX inventory cases closed", "icon": "fa-solid fa-magnifying-glass-chart" },
+    { "num": 200, "suffix": "k+", "label": "Live game servers tracked by a platform I ran for a decade", "short": "Game servers tracked live", "icon": "fa-solid fa-tower-broadcast" },
+    { "num": 10, "suffix": "+", "label": "Years running my own company, from the code to the taxes", "short": "Years running my company", "icon": "fa-solid fa-building-flag" }
   ],
   "network": [
     { "key": "live", "name": "OpenVibe.Live", "url": "https://openvibe.live", "role": "Live streaming", "blurb": "RTMP, WHIP and WebRTC ingest, multi-destination restream, VODs, clips, chat, live captions and translation.", "stat": "529 routes · 179k LOC", "image": "/assets/img/sites/live.webp" },

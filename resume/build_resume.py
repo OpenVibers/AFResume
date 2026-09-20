@@ -321,19 +321,19 @@ def style(name: str, size: float, leading: float, color, font: str | None = None
 
 class Styles:
     def __init__(self) -> None:
-        self.body = style("body", 8.7, 10.8, BODY)
-        self.summary = style("summary", 8.1, 9.8, MUTED, FONT["italic"])
-        self.bullet = style("bullet", 8.2, 9.9, BODY, leftIndent=9, bulletIndent=0,
+        self.body = style("body", 9.1, 11.4, BODY)
+        self.summary = style("summary", 8.4, 10.3, MUTED, FONT["italic"])
+        self.bullet = style("bullet", 8.8, 10.9, BODY, leftIndent=9, bulletIndent=0,
                             bulletFontName=FONT["regular"], bulletFontSize=8.2, bulletColor=BLUE)
-        self.bullet_compact = style("bulletc", 8.2, 10.0, BODY, leftIndent=9, bulletIndent=0,
+        self.bullet_compact = style("bulletc", 8.6, 10.7, BODY, leftIndent=9, bulletIndent=0,
                                     bulletFontName=FONT["regular"], bulletFontSize=8.2, bulletColor=BLUE)
         self.stack = style("stack", 6.9, 8.3, MUTED)
         self.metric_label = style("mlabel", 7.0, 8.5, MUTED)
         self.proj_title = style("ptitle", 8.5, 10.2, INK, FONT["bold"])
-        self.proj_summary = style("psum", 7.5, 9.0, BODY)
+        self.proj_summary = style("psum", 7.9, 9.6, BODY)
         self.proj_link = style("plink", 7.3, 8.8, BLUE)
-        self.skill_items = style("skills", 8.2, 9.7, BODY)
-        self.edu = style("edu", 8.3, 10.1, BODY)
+        self.skill_items = style("skills", 8.5, 10.3, BODY)
+        self.edu = style("edu", 8.7, 10.8, BODY)
         self.chip = style("chip", 7.6, 9.2, BLUE_DARK, FONT["bold"])
         self.hero_line = style("heroline", 8.6, 11.2, white)
 
@@ -536,11 +536,15 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
             cx += cw + gap
         return rows
 
-    def draw_rows(rows, row_top, chip_h, font, size, icon_w, pad_x, gap, bg, bg_alpha, fg, glyph_of):
+    def draw_rows(rows, row_top, chip_h, font, size, icon_w, pad_x, gap, bg, bg_alpha, fg, glyph_of, icon_fg=None, shadow=False):
         for row in rows:
             cx2 = x + pad
             for it, cw in row:
                 c.saveState()
+                if shadow:
+                    c.setFillColor(BLUE_DARK)
+                    c.setFillAlpha(0.22)
+                    c.roundRect(cx2, row_top - chip_h - 1.6, cw, chip_h, chip_h / 2, stroke=0, fill=1)
                 c.setFillColor(bg)
                 c.setFillAlpha(bg_alpha)
                 c.roundRect(cx2, row_top - chip_h, cw, chip_h, chip_h / 2, stroke=0, fill=1)
@@ -549,7 +553,7 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
                 glyph = glyph_of(it)
                 tx = cx2 + pad_x / 2
                 if glyph:
-                    icon(c, tx, ty2, glyph, size, fg)
+                    icon(c, tx, ty2, glyph, size, icon_fg or fg)
                     tx += icon_w
                 c.setFillColor(fg)
                 c.setFont(font, size)
@@ -560,7 +564,7 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
             row_top -= chip_h + 5
         return row_top
 
-    roles = [{"text": r, "url": None} for r in (profile.get("roles") or [])[:6]]
+    roles = [{"text": r, "url": None} for r in (profile.get("roles") or [])]
     role_font, role_size, role_pad_x, role_icon_w, role_gap = FONT["bold"], 7.6, 20.0, 13.0, 7.0
     role_rows = wrap(roles, role_font, role_size, role_icon_w, role_pad_x, role_gap)
     role_h = role_size + 6.5
@@ -574,13 +578,18 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
         {"text": profile.get("locationShort") or profile.get("location"), "icon": "location", "url": None},
     ]
     contact_items = [it for it in contact_items if it["text"]]
-    contact_font, contact_size, contact_pad_x, contact_icon_w, contact_gap = FONT["regular"], 8.6, 18.0, 15.0, 8.0
+    contact_font, contact_size, contact_pad_x, contact_icon_w, contact_gap = FONT["bold"], 8.4, 18.0, 15.0, 8.0
     contact_rows = wrap(contact_items, contact_font, contact_size, contact_icon_w, contact_pad_x, contact_gap)
-    contact_h = contact_size + 7
+    contact_h = contact_size + 8
     contact_total_h = len(contact_rows) * contact_h + max(0, len(contact_rows) - 1) * 6
 
-    group_gap = 6.0
-    banner_h = pad + name_size * 0.78 + 5 + tag_size * 0.78 + 13 + role_total_h + group_gap + contact_total_h + pad
+    # The contact row sits in its own darker band along the bottom of the banner, as white
+    # pills with dark text — the inverse of the translucent role chips above it, so the two rows
+    # read as "what I am" and "how to reach me" instead of one undifferentiated pile of pills.
+    band_pad = 8.0
+    band_h = contact_total_h + band_pad * 2
+    group_gap = 9.0
+    banner_h = pad + name_size * 0.78 + 10 + role_total_h + group_gap + band_h
 
     if draw:
         c.saveState()
@@ -596,22 +605,33 @@ def block_header(c, profile: dict, st: Styles, y_top: float, draw: bool) -> floa
 
     ty = y_top - pad
     if draw:
+        # Name and tagline share one line; both get a soft offset shadow (reportlab has no blur,
+        # so a translucent dark copy one point down-right is the closest thing).
+        base = ty - name_size * 0.78
+        name_w = pdfmetrics.stringWidth(profile["name"], FONT["bold"], name_size)
+        c.saveState()
+        c.setFillColor(BLUE_DARK); c.setFillAlpha(0.45)
+        c.setFont(FONT["bold"], name_size); c.drawString(x + pad + 1.2, base - 1.4, profile["name"])
+        c.setFont(FONT["regular"], tag_size); c.drawString(x + pad + name_w + 14 + 0.8, base + 0.6 - 1.0, profile["tagline"])
+        c.restoreState()
         c.setFillColor(white)
         c.setFont(FONT["bold"], name_size)
-        c.drawString(x + pad, ty - name_size * 0.78, profile["name"])
-    ty -= name_size * 0.78 + 5
-    if draw:
-        c.setFillColor(HexColor("#dbe4ff"))
+        c.drawString(x + pad, base, profile["name"])
+        c.setFillColor(HexColor("#e4eaff"))
         c.setFont(FONT["regular"], tag_size)
-        c.drawString(x + pad, ty - tag_size * 0.78, profile["tagline"])
-    ty -= tag_size * 0.78 + 10
+        c.drawString(x + pad + name_w + 14, base + 0.6, profile["tagline"])
+    ty -= name_size * 0.78 + 10
 
     if draw:
         ty = draw_rows(role_rows, ty, role_h, role_font, role_size, role_icon_w, role_pad_x, role_gap,
                         BLUE_SOFT, 0.4, white, lambda it: role_icon(it["text"]))
-        ty -= group_gap - 5
-        draw_rows(contact_rows, ty, contact_h, contact_font, contact_size, contact_icon_w, contact_pad_x, contact_gap,
-                  white, 0.16, white, lambda it: ICON[it["icon"]])
+        c.saveState()
+        p = c.beginPath(); p.roundRect(x, y_top - banner_h, w, banner_h, 12); c.clipPath(p, stroke=0, fill=0)
+        c.setFillColor(BLUE_DARK); c.setFillAlpha(0.22)
+        c.rect(x, y_top - banner_h, w, band_h, stroke=0, fill=1)
+        c.restoreState()
+        draw_rows(contact_rows, y_top - banner_h + band_h - band_pad, contact_h, contact_font, contact_size, contact_icon_w, contact_pad_x, contact_gap,
+                  white, 0.94, BLUE_DARK, lambda it: ICON[it["icon"]], icon_fg=BLUE, shadow=True)
 
     return banner_h
 
@@ -630,13 +650,13 @@ def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: 
     rows = [seeking[i:i + cols] for i in range(0, n, cols)]
     gap = 8.0
     w = (CONTENT_W - gap * (cols - 1)) / cols
-    pad = 8.5
-    icon_r = 11.0
+    pad = 6.5
+    icon_r = 8.5
     inner_w = w - 2 * pad
-    title_w = inner_w - icon_r * 2 - 10
-    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.6, leading=1, textColor=INK)
-    detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.6, leading=9.4, textColor=MUTED,
-                                bulletFontName=FONT["regular"], bulletFontSize=7.6, bulletColor=BLUE)
+    title_w = inner_w - icon_r * 2 - 8
+    title_st = ParagraphStyle("fctitle", fontName=FONT["bold"], fontSize=9.4, leading=1, textColor=INK)
+    detail_st = ParagraphStyle("fcdetail", fontName=FONT["regular"], fontSize=7.8, leading=9.6, textColor=BODY,
+                                bulletFontName=FONT["regular"], bulletFontSize=7.8, bulletColor=BLUE)
     prepared = []
     for s in seeking:
         title_text = s["label"]
@@ -645,12 +665,12 @@ def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: 
         detail_p = para(esc(s.get("detail", "")), detail_st, bullet="•")
         prepared.append((title_text, detail_p))
     title_row_h = max(icon_r * 2, title_st.fontSize * 1.2)
-    row_gap = 7.0
+    row_gap = 6.0
     row_heights = []
     for r in range(len(rows)):
         chunk = prepared[r * cols:(r + 1) * cols]
         detail_h = max(para_height(p, inner_w) for _, p in chunk)
-        row_heights.append(pad + title_row_h + 9 + detail_h + pad)
+        row_heights.append(pad + title_row_h + 7 + detail_h + pad)
     h = sum(row_heights) + row_gap * (len(rows) - 1)
     if draw:
         row_top = y_top
@@ -664,13 +684,13 @@ def block_feature_cards(c, seeking: list[dict], st: Styles, y_top: float, draw: 
                 card(c, x, row_top, w, rh, radius=12)
                 top = row_top - pad
                 icon_cy = top - title_row_h / 2
-                icon_circle(c, x + pad + icon_r, icon_cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 10.6)
+                icon_circle(c, x + pad + icon_r, icon_cy, icon_r, seeking_icon(s["label"]), BLUE, ICON_BG, 8.6)
                 c.setFillColor(INK)
                 c.setFont(title_st.fontName, title_st.fontSize)
-                c.drawString(x + pad + icon_r * 2 + 10, icon_cy - title_st.fontSize * 0.36, title_text)
-                rule_y = top - title_row_h - 6
+                c.drawString(x + pad + icon_r * 2 + 8, icon_cy - title_st.fontSize * 0.36, title_text)
+                rule_y = top - title_row_h - 4
                 hairline(c, x + pad, rule_y, x + w - pad)
-                draw_para(c, detail_p, x + pad, rule_y - 8, inner_w)
+                draw_para(c, detail_p, x + pad, rule_y - 4, inner_w)
             row_top -= rh + row_gap
     return h
 
@@ -681,14 +701,14 @@ def block_metrics(c, metrics: list[dict], st: Styles, y_top: float, draw: bool) 
     separate boxed cards."""
     n = len(metrics)
     col_w = CONTENT_W / n
-    icon_r = 11.0
-    num_size = 15.0
-    pad = 10.0
-    label_st = ParagraphStyle("mlabel2", fontName=FONT["regular"], fontSize=7.1, leading=8.5, textColor=MUTED)
+    icon_r = 9.5
+    num_size = 12.5
+    pad = 9.0
+    label_st = ParagraphStyle("mlabel2", fontName=FONT["regular"], fontSize=7.5, leading=8.9, textColor=BODY)
     text_w = col_w - pad - icon_r * 2 - 8 - 6
     label_paras = [para(esc(m.get("short") or m["label"]), label_st) for m in metrics]
     label_h = max(para_height(p, text_w) for p in label_paras)
-    h = max(icon_r * 2 + 12, num_size + label_h + 6) + 12
+    h = max(icon_r * 2 + 10, num_size + label_h + 4) + 10
     if draw:
         card(c, MARGIN, y_top, CONTENT_W, h, radius=12)
         cy = y_top - h / 2
@@ -734,6 +754,13 @@ def role_header(c, role: dict, st: Styles, x: float, w: float, y_top: float, dra
     dates = f"{role.get('start', '')} – {role.get('end', '')}".strip(" –")
     dw = pdfmetrics.stringWidth(dates, FONT["regular"], date_size)
     base = y - title_size * 0.78
+    title_w = pdfmetrics.stringWidth(role["role"], FONT["bold"], title_size)
+    company_w = pdfmetrics.stringWidth(role["company"], FONT["bold"], meta_size)
+    loc = f"  ·  {role['location']}" if role.get("location") else ""
+    loc_w = pdfmetrics.stringWidth(loc, FONT["regular"], meta_size)
+    # Company (and location) join the title line when there's room; otherwise they take a
+    # second line as before. Saves a line per role on most of the sheet.
+    inline = x + icon_col + title_w + 10 + company_w + loc_w < x + w - dw - 14
     if draw:
         glyph = KIND_ICON.get(role.get("kind"), DEFAULT_ICON)
         icon_circle(c, x + 6, base + title_size * 0.28, 7.4, glyph, BLUE, ICON_BG, 7.2)
@@ -746,13 +773,20 @@ def role_header(c, role: dict, st: Styles, x: float, w: float, y_top: float, dra
         if role.get("current") or str(role.get("end", "")).lower() == "present":
             c.setFillColor(MINT)
             c.circle(x + w - dw - 7.5, base + 3.4, 2.1, stroke=0, fill=1)
-    y = base - 2.6
-    base = y - meta_size * 0.78
+    if inline:
+        cx0 = x + icon_col + title_w + 10
+        meta_base = base + 0.4
+    else:
+        y = base - 2.6
+        meta_base = y - meta_size * 0.78
+        cx0 = x + icon_col
+    base = meta_base
     if draw:
         c.setFillColor(BLUE)
         c.setFont(FONT["bold"], meta_size)
-        c.drawString(x + icon_col, base, role["company"])
-        cw = pdfmetrics.stringWidth(role["company"], FONT["bold"], meta_size)
+        c.drawString(cx0, base, role["company"])
+        cw = company_w
+        x_save, x = x, cx0 - icon_col  # keep the link/underline math below relative to cx0
         if role.get("link"):
             # A thin underline is the only cue a static PDF has for "this text is a live
             # link" — plain bold-blue looks identical to every other (non-linked) company name.
@@ -766,7 +800,8 @@ def role_header(c, role: dict, st: Styles, x: float, w: float, y_top: float, dra
             c.setFillColor(MUTED)
             c.setFont(FONT["regular"], meta_size)
             c.drawString(x + icon_col + cw, base, f"  ·  {role['location']}")
-    y = base - 2.0
+        x = x_save
+    y = base - (2.0 if not inline else 3.0)
     return y_top - y
 
 

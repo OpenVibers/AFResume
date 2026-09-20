@@ -166,13 +166,21 @@ const path = Astro.url.pathname;
   }
 
   .nav__end { margin-left: auto; display: flex; align-items: center; gap: 6px; }
+  /* Glass pill tinted by the accent, with the page's own text color on top — readable on any
+     accent (a solid bright pink with white text was not) and it re-tints itself as the theme changes. */
   .nav__cta {
-    display: inline-flex; align-items: center; gap: 7px; padding: 8px 14px; border-radius: 999px;
-    background: var(--accent); color: var(--on-accent); font: 600 .82rem var(--font-body); text-decoration: none;
-    box-shadow: 0 8px 22px -10px rgba(var(--accent-rgb), .9);
-    transition: transform .3s var(--ease), box-shadow .3s var(--ease), filter .3s;
+    position: relative; display: inline-flex; align-items: center; gap: 8px; padding: 9px 15px 9px 12px; border-radius: 999px;
+    background: linear-gradient(180deg, rgba(var(--accent-rgb), .30), rgba(var(--accent-rgb), .16));
+    border: 1px solid rgba(var(--accent-rgb), .6); color: var(--fg);
+    font: 700 .8rem var(--font-body); letter-spacing: .02em; text-decoration: none;
+    backdrop-filter: blur(10px) saturate(140%); -webkit-backdrop-filter: blur(10px) saturate(140%);
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.22), inset 0 -1px 0 rgba(0,0,0,.15), 0 0 0 3px rgba(var(--accent-rgb), .10), 0 10px 24px -12px rgba(var(--accent-rgb), .8);
+    transition: transform .3s var(--ease), box-shadow .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
   }
-  .nav__cta:hover { text-decoration: none; transform: translateY(-1px); filter: brightness(1.08); }
+  .nav__cta i { color: var(--accent); filter: brightness(1.25) saturate(1.1); font-size: .85rem; transition: transform .3s var(--ease); }
+  .nav__cta:hover { text-decoration: none; transform: translateY(-1px); border-color: rgba(var(--accent-rgb), .9); background: linear-gradient(180deg, rgba(var(--accent-rgb), .42), rgba(var(--accent-rgb), .22)); box-shadow: inset 0 1px 0 rgba(255,255,255,.28), 0 0 0 4px rgba(var(--accent-rgb), .14), 0 12px 28px -12px rgba(var(--accent-rgb), .95); }
+  .nav__cta:hover i { transform: translateY(2px); }
+  :root[data-theme="light"] .nav__cta { background: linear-gradient(180deg, rgba(var(--accent-rgb), .22), rgba(var(--accent-rgb), .12)); }
   .nav__icon {
     position: relative; width: 40px; height: 40px; border-radius: 50%; display: inline-grid; place-items: center;
     background: transparent; border: 1px solid var(--border); color: var(--muted); cursor: pointer;
@@ -200,11 +208,14 @@ const path = Astro.url.pathname;
     max-width: var(--container); margin: 8px auto 0;
     border-radius: var(--radius-lg); overflow: hidden;
     background: color-mix(in oklab, var(--bg) 84%, transparent);
-    border: 1px solid transparent;
+    border: 1px solid transparent; background-clip: padding-box;
     backdrop-filter: blur(22px); -webkit-backdrop-filter: blur(22px);
-    max-height: 0; transition: max-height .45s var(--ease), border-color .3s;
+    /* Fully hidden when closed: at max-height 0 the 1px transparent border still let the dark
+       background show through as a 2px line under the nav. */
+    max-height: 0; visibility: hidden;
+    transition: max-height .45s var(--ease), border-color .3s, visibility 0s .45s;
   }
-  .nav__drawer.is-open { max-height: 700px; border-color: var(--border); }
+  .nav__drawer.is-open { max-height: 700px; border-color: var(--border); visibility: visible; transition: max-height .45s var(--ease), border-color .3s, visibility 0s; }
   .nav__drawer ul { list-style: none; margin: 0; padding: 10px; display: flex; flex-direction: column; gap: 3px; }
   .nav__drawer li { opacity: 0; transform: translateY(8px); transition: opacity .4s var(--ease), transform .4s var(--ease); transition-delay: calc(var(--i) * 40ms); }
   .nav__drawer.is-open li { opacity: 1; transform: none; }
