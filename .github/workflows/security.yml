@@ -1,0 +1,12 @@
+name: security
+# Secret scan (gitleaks) and dependency audit, shared by every OpenVibers repo (Track Q).
+# Kept apart from deploy.yml so a finding never blocks a Pages deploy.
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  security:
+    uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@83c998b65424fb97e6f6de55ad9cc5981767e89c
+    with:
+      audit-fail-level: none   # report only until fixed: astro has a critical advisory whose fix is a semver-major (astro 7)
