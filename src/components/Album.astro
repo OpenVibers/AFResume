@@ -24,7 +24,7 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
     <div class="album__head">
       <div class="eyebrow"><i class="fa-solid fa-hat-cowboy" aria-hidden="true"></i> You found the hat link</div>
       <h2 class="sec-title album__title" id="album-title">{album.title.split(":")[0]}: <em>the album</em></h2>
-      <p class="sec-lead album__lead">Nine parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then scroll down for the grown-up part of the site.</p>
+      <p class="sec-lead album__lead">Nine parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then keep scrolling for the grown-up part of the site.</p>
     </div>
 
     <div class="album__grid">
@@ -35,30 +35,34 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
             <span class="album__big-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
           </button>
         </div>
-        <div class="album__now">
-          <div>
-            <div class="eyebrow">Now playing</div>
-            <strong class="album__now-title" data-album-now>{first.title}</strong>
-          </div>
+      </div>
+
+      <div class="album__side">
+        <div class="card album__now">
+          <div class="eyebrow">Now playing</div>
+          <strong class="album__now-title" data-album-now>{first.title}</strong>
           <div class="album__actions">
             <button type="button" class="btn btn--primary" data-album-all><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Play the whole album</button>
             <a class="btn btn--ghost" href={album.channel} target="_blank" rel="noopener"><i class="fa-brands fa-youtube" aria-hidden="true"></i> FCMenu on YouTube</a>
           </div>
         </div>
-      </div>
 
-      <ol class="card album__tracks" aria-label="Track list">
-        {album.tracks.map((t, i) => (
-          <li>
-            <button type="button" class="album__track" data-album-play={t.id} data-title={t.title} aria-current={i === 0 ? "true" : undefined}>
-              <span class="album__no">{String(i + 1).padStart(2, "0")}</span>
-              <img src={thumb(t.id)} alt="" loading="lazy" decoding="async" width="96" height="72" />
-              <span class="album__name">{t.title}</span>
-              <i class="fa-solid fa-play album__track-play" aria-hidden="true"></i>
-            </button>
-          </li>
-        ))}
-      </ol>
+        <div class="card album__list">
+          <div class="album__list-head"><span class="eyebrow">Tracklist</span><span class="album__count">{album.tracks.length} songs · scroll for more</span></div>
+          <ol class="album__tracks" aria-label="Track list" data-album-scroll tabindex="0">
+            {album.tracks.map((t, i) => (
+              <li>
+                <button type="button" class="album__track" data-album-play={t.id} data-title={t.title} aria-current={i === 0 ? "true" : undefined}>
+                  <span class="album__no">{String(i + 1).padStart(2, "0")}</span>
+                  <img src={thumb(t.id)} alt="" loading="lazy" decoding="async" width="96" height="72" />
+                  <span class="album__name">{t.title}</span>
+                  <i class="fa-solid fa-play album__track-play" aria-hidden="true"></i>
+                </button>
+              </li>
+            ))}
+          </ol>
+        </div>
+      </div>
     </div>
     <p class="album__fine">Parody, made by me for fun. Not affiliated with or endorsed by any employer.</p>
   </div>
@@ -70,10 +74,35 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
     if (!root || !document.documentElement.classList.contains("pae2")) return;
     var player = root.querySelector("[data-album-player]");
     var now = root.querySelector("[data-album-now]");
-    var all = album();
-    function album() {
-      return [player.getAttribute("data-first")].concat((player.getAttribute("data-rest") || "").split(",").filter(Boolean));
+    var list = root.querySelector("[data-album-scroll]");
+    var all = [player.getAttribute("data-first")].concat((player.getAttribute("data-rest") || "").split(",").filter(Boolean));
+
+    // The list shows three tracks and a sliver of the fourth, fading out; the fade leaves the edge
+    // that has nothing more to scroll to.
+    function cap() {
+      var rows = list.querySelectorAll("li");
+      if (rows.length <= 3) { list.style.removeProperty("--album-cap"); return; }
+      var top = list.getBoundingClientRect().top - list.scrollTop;
+      var third = rows[2].getBoundingClientRect(), fourth = rows[3].getBoundingClientRect();
+      var px = Math.round(third.bottom - top + fourth.height * 0.45);
+      if (px > 0) list.style.setProperty("--album-cap", px + "px");
+      fades();
     }
+    function fades() {
+      var more = list.scrollHeight - list.clientHeight;
+      list.classList.toggle("is-top", list.scrollTop > 2);
+      list.classList.toggle("is-end", list.scrollTop >= more - 2);
+    }
+    function reveal(btn) {
+      var li = btn.parentElement;
+      var over = li.getBoundingClientRect().top - list.getBoundingClientRect().top + list.scrollTop;
+      if (over < list.scrollTop || over + li.offsetHeight > list.scrollTop + list.clientHeight) list.scrollTo({ top: Math.max(0, over - 8), behavior: "smooth" });
+    }
+    list.addEventListener("scroll", fades, { passive: true });
+    window.addEventListener("resize", cap);
+    cap();
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(cap);
+
     function load(id, queue) {
       var src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0&playsinline=1" + (queue ? "&playlist=" + queue.map(encodeURIComponent).join(",") : "");
       var f = document.createElement("iframe");
@@ -84,14 +113,20 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
       f.referrerPolicy = "strict-origin-when-cross-origin";
       player.replaceChildren(f);
       root.querySelectorAll(".album__track").forEach(function (b) {
-        var on = b.getAttribute("data-album-play") === id;
-        if (on) { b.setAttribute("aria-current", "true"); if (now) now.textContent = b.getAttribute("data-title"); }
-        else b.removeAttribute("aria-current");
+        if (b.getAttribute("data-album-play") === id) {
+          b.setAttribute("aria-current", "true");
+          if (now) now.textContent = b.getAttribute("data-title");
+          reveal(b);
+        } else b.removeAttribute("aria-current");
       });
     }
     root.addEventListener("click", function (e) {
       var t = e.target.closest("[data-album-play]");
-      if (t) { load(t.getAttribute("data-album-play")); if (t.classList.contains("album__track") && window.innerWidth < 900) player.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      if (t) {
+        load(t.getAttribute("data-album-play"));
+        if (t.classList.contains("album__track") && window.innerWidth < 900) player.scrollIntoView({ behavior: "smooth", block: "center" });
+        return;
+      }
       if (e.target.closest("[data-album-all]")) load(all[0], all.slice(1));
     });
   })();
@@ -99,7 +134,7 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
 
 <style>
   .album { display: none; }
-  :global(html.pae2) .album { display: block; padding-top: calc(var(--nav-h) + 2rem); }
+  :global(html.pae2) .album { display: block; }
   .album__head { max-width: 760px; margin-bottom: 1.75rem; }
   .album__head .eyebrow i { margin-right: .35rem; }
   .album__title em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
@@ -114,10 +149,24 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
   .album__big-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; border-radius: 50%;
     display: grid; place-items: center; background: var(--accent); color: var(--on-accent); font-size: 1.6rem; box-shadow: var(--shadow-glow); }
   .album__big-play i { margin-left: 4px; }
-  .album__now { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.25rem 1.25rem; }
-  .album__now-title { display: block; font-family: var(--font-display); font-size: 1.15rem; margin-top: .15rem; }
+  .album__side { display: grid; gap: 1.25rem; min-width: 0; }
+  .album__now { padding: 1rem 1.25rem 1.25rem; }
+  .album__now-title { display: block; font-family: var(--font-display); font-size: 1.15rem; margin: .15rem 0 .9rem; }
   .album__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
-  .album__tracks { list-style: none; margin: 0; padding: .5rem; display: grid; gap: .25rem; }
+  .album__actions .btn { flex: 1 1 auto; justify-content: center; }
+  .album__list { padding: .75rem .5rem .5rem; }
+  .album__list-head { display: flex; align-items: baseline; justify-content: space-between; gap: .75rem; padding: 0 .6rem .5rem; }
+  .album__count { color: var(--dim); font-size: .8rem; }
+  .album__tracks { list-style: none; margin: 0; padding: 0; display: grid; gap: .25rem;
+    max-height: var(--album-cap, 15.5rem); overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin;
+    -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5rem), transparent);
+            mask-image: linear-gradient(to bottom, #000 calc(100% - 3.5rem), transparent); }
+  .album__tracks.is-top { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2rem, #000 calc(100% - 3.5rem), transparent);
+            mask-image: linear-gradient(to bottom, transparent, #000 2rem, #000 calc(100% - 3.5rem), transparent); }
+  .album__tracks.is-top.is-end { -webkit-mask-image: linear-gradient(to bottom, transparent, #000 2rem);
+            mask-image: linear-gradient(to bottom, transparent, #000 2rem); }
+  .album__tracks.is-end:not(.is-top) { -webkit-mask-image: none; mask-image: none; }
+  .album__tracks:focus-visible { outline: 2px solid rgba(var(--accent-rgb), .6); outline-offset: 2px; border-radius: var(--radius-sm); }
   .album__track { width: 100%; display: grid; grid-template-columns: 2rem 64px minmax(0, 1fr) 1.25rem; gap: .75rem; align-items: center;
     padding: .45rem .6rem; border: 1px solid transparent; border-radius: var(--radius-sm); background: none; color: var(--fg); text-align: left; cursor: pointer; font: inherit; }
   .album__track:hover, .album__track:focus-visible { background: var(--surface-2); border-color: var(--border); }
@@ -131,7 +180,5 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
   @media (max-width: 900px) {
     .album__grid { grid-template-columns: 1fr; }
     .album__now { padding: .9rem 1rem 1rem; }
-    .album__actions { width: 100%; }
-    .album__actions .btn { flex: 1 1 auto; justify-content: center; }
   }
 </style>
