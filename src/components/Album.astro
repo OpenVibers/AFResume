@@ -7,6 +7,9 @@ import album from "../data/fc-album.json";
 const first = album.tracks[0];
 const rest = album.tracks.slice(1).map((t) => t.id).join(",");
 const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+const WORDS = ["Zero", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen", "Twenty"];
+const count = album.tracks.length;
+const countWord = WORDS[count] ?? String(count);
 ---
 <script is:inline>
   (function () {
@@ -24,7 +27,7 @@ const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
     <div class="album__head">
       <div class="eyebrow"><i class="fa-solid fa-hat-cowboy" aria-hidden="true"></i> You found the hat link</div>
       <h2 class="sec-title album__title" id="album-title">{album.title.split(":")[0]}: <em>the album</em></h2>
-      <p class="sec-lead album__lead">Nine parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then keep scrolling for the grown-up part of the site.</p>
+      <p class="sec-lead album__lead">{countWord} parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then keep scrolling for the grown-up part of the site.</p>
     </div>
 
     <div class="album__grid">

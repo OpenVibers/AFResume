@@ -1,16 +1,71 @@
 {
   "title": "FC Menu: the album",
   "channel": "https://www.youtube.com/@FCMenus",
-  "note": "Nine parody music videos about life on the FC floor. Tracks are in upload order (YouTube channel FCMenu, 2026-02-25).",
+  "note": "Parody music videos about life on the FC floor: every public video on YouTube channel FCMenu, in upload order (checked 2026-09-24; unlisted ones are left out).",
   "tracks": [
-    { "id": "bcy49ryROYc", "title": "Why Don't You Meet That Rate?" },
-    { "id": "yLqqn52E6Sg", "title": "No Andons 🚫" },
-    { "id": "bkb_R8Od-oY", "title": "AR Cowboy 🤠" },
-    { "id": "qlH84N6ICQg", "title": "Picked Out" },
-    { "id": "vJnBnp_CQoQ", "title": "Scan Queen" },
-    { "id": "U1TxsWHrqIQ", "title": "FC RESEARCH!" },
-    { "id": "B6paEKdtji8", "title": "FCircles" },
-    { "id": "d06aJCXpHP8", "title": "Ain't No Path For The Wicked" },
-    { "id": "g_JQvqILVNU", "title": "\"A Lot\" - 21 FCs" }
+    {
+      "id": "AnW7aG98vUY",
+      "title": "Stower Stories - Warehouse Warriors"
+    },
+    {
+      "id": "rfWyRbDzfDE",
+      "title": "Working So Well"
+    },
+    {
+      "id": "yLqqn52E6Sg",
+      "title": "No Andons 🚫"
+    },
+    {
+      "id": "bkb_R8Od-oY",
+      "title": "AR Cowboy 🤠"
+    },
+    {
+      "id": "qlH84N6ICQg",
+      "title": "Picked Out"
+    },
+    {
+      "id": "WUnJOuhXZCk",
+      "title": "Bin Flower"
+    },
+    {
+      "id": "6WIwVr0XT5A",
+      "title": "Welcome To PAE2"
+    },
+    {
+      "id": "pTXkEbRv4rM",
+      "title": "Just Two AFMs"
+    },
+    {
+      "id": "zThAD6T46Mo",
+      "title": "Pick to Tote"
+    },
+    {
+      "id": "aQycbtK7ZS4",
+      "title": "Drives Staying Alive"
+    },
+    {
+      "id": "vJnBnp_CQoQ",
+      "title": "Scan Queen"
+    },
+    {
+      "id": "U1TxsWHrqIQ",
+      "title": "FC RESEARCH!"
+    },
+    {
+      "id": "B6paEKdtji8",
+      "title": "FCircles"
+    },
+    {
+      "id": "1WIc8C-0Blk",
+      "title": "Say It Ain't So"
+    },
+    {
+      "id": "d06aJCXpHP8",
+      "title": "Ain't No Path For The Wicked"
+    },
+    {
+      "id": "g_JQvqILVNU",
+      "title": "\"A Lot\" - 21 FCs"
+    }
   ]
 }

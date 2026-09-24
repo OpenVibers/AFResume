@@ -3,6 +3,7 @@ import profile from "../data/profile.json";
 const name = "Alex Frison";
 const words = name.split(" ");
 const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 : 0));
+import fcAlbum from "../data/fc-album.json";
 ---
 <section class="hero" id="top" aria-labelledby="hero-title">
   <canvas class="hero__aurora" id="aurora" aria-hidden="true"></canvas>
@@ -42,10 +43,10 @@ const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 
         <a href={profile.resumePdf} class="btn" data-magnetic data-resume-link><i class="fa-solid fa-file-pdf"></i> Resume PDF</a>
         <a href="#contact" class="btn btn--ghost" data-magnetic><i class="fa-solid fa-paper-plane"></i> Get in touch</a>
         <!-- Only on the FC album visit (?pae2, from the hat): jump straight to the music. -->
-        <a href="#album" class="btn hero__album" data-magnetic aria-label="Jump to the FC album, 9 songs">
+        <a href="#album" class="btn hero__album" data-magnetic aria-label={`Jump to the FC album, ${fcAlbum.tracks.length} songs`}>
           <span class="hero__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
           <span>The FC album</span>
-          <span class="hero__album-badge" aria-hidden="true">9 songs</span>
+          <span class="hero__album-badge" aria-hidden="true">{fcAlbum.tracks.length} songs</span>
           <span class="btn__arrow hero__album-arrow" aria-hidden="true">↓</span>
         </a>
       </div>
