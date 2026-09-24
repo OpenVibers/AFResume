@@ -34,9 +34,11 @@ import fcAlbum from "../data/fc-album.json";
         <span class="hero__rotator" id="rotator" data-roles={JSON.stringify(profile.roles)}>{profile.roles[0]}</span>
       </p>
 
-      <p class="hero__lead hero__in" style="--d:650ms">
-        {profile.headline} That includes AI agents and automation that do real work, not demos. I've been building software since I was a kid, and Amazon showed me how real systems break at scale: first keeping an automated robotics floor running, then as an ICQA data analyst tracking down inventory discrepancies for SOX compliance. Bring me a rough idea and I'll turn it into a working product. I built and run the <strong><a href="https://openvibe.network" target="_blank" rel="noopener">OpenVibe network</a></strong> on my own, and right now I'm rebuilding <strong><a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a></strong>'s developer platform and payments.
-      </p>
+      <div class="hero__lead hero__in" style="--d:650ms">
+        <p>{profile.headline} That includes AI agents and automation that people actually use, not just demos. I've been building software since I was a kid, and Amazon showed me how real systems break at scale: first keeping an automated robotics floor running, then as an ICQA data analyst tracking down inventory discrepancies for SOX compliance.</p>
+        <p>Bring me a rough idea and I'll turn it into a working product.</p>
+        <p>I built and run the <strong><a href="https://openvibe.network" target="_blank" rel="noopener">OpenVibe network</a></strong> on my own, and right now I'm rebuilding <strong><a href="https://powerchat.live" target="_blank" rel="noopener">PowerChat</a></strong>'s developer platform and payments.</p>
+      </div>
 
       <div class="hero__cta hero__in" style="--d:800ms">
         <a href="#work" class="btn btn--primary" data-magnetic><i class="fa-solid fa-layer-group"></i> See what I've built <span class="btn__arrow">→</span></a>
@@ -171,6 +173,8 @@ import fcAlbum from "../data/fc-album.json";
   @keyframes glitchShift { 0% { text-shadow: -1px 0 rgba(0, 220, 255, .55), 1px 0 rgba(255, 60, 120, .55), 0 0 22px rgba(var(--accent-rgb), .35); } 100% { text-shadow: 1px 0 rgba(0, 220, 255, .55), -1px 0 rgba(255, 60, 120, .55), 0 0 22px rgba(var(--accent-rgb), .35); } }
 
   .hero__lead { max-width: 58ch; font-size: clamp(1rem, 1.3vw, 1.12rem); color: var(--muted); }
+  .hero__lead p { margin: 0; }
+  .hero__lead p + p { margin-top: .85em; }
   .hero__cta { display: flex; gap: 12px; flex-wrap: wrap; margin: 1.6rem 0 1.4rem; }
 
   /* The FC album jump (html.pae2 only): a spinning accent ring, a breathing glow, a live equalizer
