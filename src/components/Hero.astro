@@ -43,10 +43,12 @@ import fcAlbum from "../data/fc-album.json";
         <a href={profile.resumePdf} class="btn" data-magnetic data-resume-link><i class="fa-solid fa-file-pdf"></i> Resume PDF</a>
         <a href="#contact" class="btn btn--ghost" data-magnetic><i class="fa-solid fa-paper-plane"></i> Get in touch</a>
         <!-- Only on the FC album visit (?pae2, from the hat): jump straight to the music. -->
-        <a href="#album" class="btn hero__album" data-magnetic aria-label={`Jump to the FC album, ${fcAlbum.tracks.length} songs`}>
+        <a href="#album" class="btn hero__album" data-magnetic aria-label={`Jump to ${fcAlbum.title}, ${fcAlbum.tracks.length} songs`}>
           <span class="hero__eq" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-          <span>The FC album</span>
-          <span class="hero__album-badge" aria-hidden="true">{fcAlbum.tracks.length} songs</span>
+          <span class="hero__album-label">
+            <span class="hero__album-name">{fcAlbum.title}</span>
+            <span class="hero__album-badge" aria-hidden="true">{fcAlbum.tracks.length} songs</span>
+          </span>
           <span class="btn__arrow hero__album-arrow" aria-hidden="true">↓</span>
         </a>
       </div>
@@ -200,6 +202,7 @@ import fcAlbum from "../data/fc-album.json";
   .hero__eq i:nth-child(3) { animation-duration: .8s; animation-delay: -.6s; }
   .hero__eq i:nth-child(4) { animation-duration: 1.2s; animation-delay: -.15s; }
   @keyframes eqBar { 0%, 100% { height: 25%; } 50% { height: 100%; } }
+  .hero__album-label { display: inline-flex; align-items: center; gap: 10px; }
   .hero__album-badge {
     padding: 3px 8px; border-radius: 999px; font: 600 .66rem/1 var(--font-mono); letter-spacing: .08em; text-transform: uppercase;
     background: rgba(var(--accent-rgb), .16); color: var(--accent); border: 1px solid rgba(var(--accent-rgb), .3);
@@ -207,6 +210,13 @@ import fcAlbum from "../data/fc-album.json";
   .hero__album .hero__album-arrow { animation: albumNudge 1.5s ease-in-out infinite; }
   .hero__album:hover .hero__album-arrow { transform: none; }
   @keyframes albumNudge { 0%, 100% { transform: translateY(-1px); } 50% { transform: translateY(3px); } }
+  /* Phones: a full-width button, the song count under the name, and the name free to wrap rather
+     than run off the screen. */
+  @media (max-width: 520px) {
+    :global(html.pae2) .hero__album { width: 100%; padding: 12px 18px; gap: 12px; white-space: normal; line-height: 1.2; text-align: left; }
+    .hero__album-label { flex: 1 1 auto; min-width: 0; flex-direction: column; align-items: flex-start; gap: 5px; }
+    .hero__eq, .hero__album-arrow { flex: none; }
+  }
   @media (prefers-reduced-motion: reduce) {
     :global(html.pae2) .hero__album, .hero__eq i, .hero__album .hero__album-arrow { animation: none; }
     .hero__eq i { height: 70%; }
