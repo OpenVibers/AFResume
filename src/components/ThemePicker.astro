@@ -187,5 +187,7 @@ const PRESETS = PRESETS_DATA.map((p) => p.hex);
 
   let asked = false;
   try { asked = localStorage.getItem(ASKED_KEY) === '1'; } catch { /* */ }
-  if (!asked) setTimeout(() => open(), 1600);
+  // The FC album visit (?pae2, from the hat) is for listening: no first-visit picker over the player.
+  const albumVisit = document.documentElement.classList.contains('pae2');
+  if (!asked && !albumVisit) setTimeout(() => open(), 1600);
 </script>

@@ -1,0 +1,137 @@
+---
+// The secret FC album (alexfrison.net/?pae2, reached from fc.tools on the hat). Hidden on every other
+// visit: the inline script marks <html> before this section paints, and nothing loads from YouTube until
+// a track is played (thumbnails are lazy, the player is a click-to-load facade on youtube-nocookie.com).
+import album from "../data/fc-album.json";
+
+const first = album.tracks[0];
+const rest = album.tracks.slice(1).map((t) => t.id).join(",");
+const thumb = (id: string) => `https://i.ytimg.com/vi/${id}/hqdefault.jpg`;
+---
+<script is:inline>
+  (function () {
+    try {
+      if (/(?:^|[?&])pae2(?:[=&]|$)/.test(location.search)) {
+        document.documentElement.classList.add("pae2");
+        document.title = "FC Menu: the album · Alex Frison";
+      }
+    } catch (e) {}
+  })();
+</script>
+
+<section class="section album" id="album" aria-labelledby="album-title">
+  <div class="container">
+    <div class="album__head">
+      <div class="eyebrow"><i class="fa-solid fa-hat-cowboy" aria-hidden="true"></i> You found the hat link</div>
+      <h2 class="sec-title album__title" id="album-title">{album.title.split(":")[0]}: <em>the album</em></h2>
+      <p class="sec-lead album__lead">Nine parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then scroll down for the grown-up part of the site.</p>
+    </div>
+
+    <div class="album__grid">
+      <div class="card album__stage">
+        <div class="album__player" data-album-player data-first={first.id} data-rest={rest}>
+          <button type="button" class="album__facade" data-album-play={first.id} aria-label={`Play ${first.title}`}>
+            <img src={thumb(first.id)} alt="" loading="lazy" decoding="async" width="480" height="360" />
+            <span class="album__big-play" aria-hidden="true"><i class="fa-solid fa-play"></i></span>
+          </button>
+        </div>
+        <div class="album__now">
+          <div>
+            <div class="eyebrow">Now playing</div>
+            <strong class="album__now-title" data-album-now>{first.title}</strong>
+          </div>
+          <div class="album__actions">
+            <button type="button" class="btn btn--primary" data-album-all><i class="fa-solid fa-list-ol" aria-hidden="true"></i> Play the whole album</button>
+            <a class="btn btn--ghost" href={album.channel} target="_blank" rel="noopener"><i class="fa-brands fa-youtube" aria-hidden="true"></i> FCMenu on YouTube</a>
+          </div>
+        </div>
+      </div>
+
+      <ol class="card album__tracks" aria-label="Track list">
+        {album.tracks.map((t, i) => (
+          <li>
+            <button type="button" class="album__track" data-album-play={t.id} data-title={t.title} aria-current={i === 0 ? "true" : undefined}>
+              <span class="album__no">{String(i + 1).padStart(2, "0")}</span>
+              <img src={thumb(t.id)} alt="" loading="lazy" decoding="async" width="96" height="72" />
+              <span class="album__name">{t.title}</span>
+              <i class="fa-solid fa-play album__track-play" aria-hidden="true"></i>
+            </button>
+          </li>
+        ))}
+      </ol>
+    </div>
+    <p class="album__fine">Parody, made by me for fun. Not affiliated with or endorsed by any employer.</p>
+  </div>
+</section>
+
+<script is:inline>
+  (function () {
+    var root = document.getElementById("album");
+    if (!root || !document.documentElement.classList.contains("pae2")) return;
+    var player = root.querySelector("[data-album-player]");
+    var now = root.querySelector("[data-album-now]");
+    var all = album();
+    function album() {
+      return [player.getAttribute("data-first")].concat((player.getAttribute("data-rest") || "").split(",").filter(Boolean));
+    }
+    function load(id, queue) {
+      var src = "https://www.youtube-nocookie.com/embed/" + encodeURIComponent(id) + "?autoplay=1&rel=0&playsinline=1" + (queue ? "&playlist=" + queue.map(encodeURIComponent).join(",") : "");
+      var f = document.createElement("iframe");
+      f.src = src;
+      f.title = "FC Menu album player";
+      f.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      f.allowFullscreen = true;
+      f.referrerPolicy = "strict-origin-when-cross-origin";
+      player.replaceChildren(f);
+      root.querySelectorAll(".album__track").forEach(function (b) {
+        var on = b.getAttribute("data-album-play") === id;
+        if (on) { b.setAttribute("aria-current", "true"); if (now) now.textContent = b.getAttribute("data-title"); }
+        else b.removeAttribute("aria-current");
+      });
+    }
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest("[data-album-play]");
+      if (t) { load(t.getAttribute("data-album-play")); if (t.classList.contains("album__track") && window.innerWidth < 900) player.scrollIntoView({ behavior: "smooth", block: "center" }); return; }
+      if (e.target.closest("[data-album-all]")) load(all[0], all.slice(1));
+    });
+  })();
+</script>
+
+<style>
+  .album { display: none; }
+  :global(html.pae2) .album { display: block; padding-top: calc(var(--nav-h) + 2rem); }
+  .album__head { max-width: 760px; margin-bottom: 1.75rem; }
+  .album__head .eyebrow i { margin-right: .35rem; }
+  .album__title em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .album__lead { margin-top: .75rem; }
+  .album__grid { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(0, 1fr); gap: 1.25rem; align-items: start; }
+  .album__stage { padding: 0; overflow: hidden; }
+  .album__player { position: relative; aspect-ratio: 16 / 9; background: #000; }
+  .album__player :global(iframe) { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .album__facade { position: absolute; inset: 0; width: 100%; padding: 0; border: 0; background: #000; cursor: pointer; }
+  .album__facade img { width: 100%; height: 100%; object-fit: cover; opacity: .85; transition: opacity .2s var(--ease); }
+  .album__facade:hover img, .album__facade:focus-visible img { opacity: 1; }
+  .album__big-play { position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 76px; height: 76px; border-radius: 50%;
+    display: grid; place-items: center; background: var(--accent); color: var(--on-accent); font-size: 1.6rem; box-shadow: var(--shadow-glow); }
+  .album__big-play i { margin-left: 4px; }
+  .album__now { display: flex; flex-wrap: wrap; gap: 1rem; align-items: center; justify-content: space-between; padding: 1rem 1.25rem 1.25rem; }
+  .album__now-title { display: block; font-family: var(--font-display); font-size: 1.15rem; margin-top: .15rem; }
+  .album__actions { display: flex; flex-wrap: wrap; gap: .6rem; }
+  .album__tracks { list-style: none; margin: 0; padding: .5rem; display: grid; gap: .25rem; }
+  .album__track { width: 100%; display: grid; grid-template-columns: 2rem 64px minmax(0, 1fr) 1.25rem; gap: .75rem; align-items: center;
+    padding: .45rem .6rem; border: 1px solid transparent; border-radius: var(--radius-sm); background: none; color: var(--fg); text-align: left; cursor: pointer; font: inherit; }
+  .album__track:hover, .album__track:focus-visible { background: var(--surface-2); border-color: var(--border); }
+  .album__track[aria-current="true"] { background: rgba(var(--accent-rgb), .12); border-color: rgba(var(--accent-rgb), .35); }
+  .album__no { font-family: var(--font-mono); color: var(--muted); font-size: .85rem; }
+  .album__track img { width: 64px; height: 36px; object-fit: cover; border-radius: 6px; background: var(--bg-3); }
+  .album__name { font-weight: 600; line-height: 1.25; overflow-wrap: anywhere; }
+  .album__track-play { color: var(--muted); font-size: .8rem; }
+  .album__track[aria-current="true"] .album__track-play { color: var(--accent); }
+  .album__fine { margin-top: 1rem; color: var(--dim); font-size: .85rem; }
+  @media (max-width: 900px) {
+    .album__grid { grid-template-columns: 1fr; }
+    .album__now { padding: .9rem 1rem 1rem; }
+    .album__actions { width: 100%; }
+    .album__actions .btn { flex: 1 1 auto; justify-content: center; }
+  }
+</style>
