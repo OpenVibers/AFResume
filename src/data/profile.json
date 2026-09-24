@@ -72,13 +72,9 @@
   ],
   "networkPlanned": [
     { "name": "OpenRe.Stream", "url": "https://openre.stream", "role": "Restreaming" },
-    { "name": "OpenVibe.Chat", "url": "https://openvibe.chat", "role": "Chat & calls" },
     { "name": "OpenVibe.Tips", "url": "https://openvibe.tips", "role": "Creator tips" },
     { "name": "OpenVibe.VIP", "url": "https://openvibe.vip", "role": "Memberships" },
-    { "name": "OpenVibe.Codes", "url": "https://openvibe.codes", "role": "Developer portal" },
     { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting" },
-    { "name": "OpenVibe.Wiki", "url": "https://openvibe.wiki", "role": "Wiki" },
-    { "name": "OpenVibe.Blog", "url": "https://openvibe.blog", "role": "Blogs" },
     { "name": "OpenVibe.News", "url": "https://openvibe.news", "role": "News" },
     { "name": "OpenVibe.Reviews", "url": "https://openvibe.reviews", "role": "Reviews" },
     { "name": "OpenVibe.Deals", "url": "https://openvibe.deals", "role": "Deals" },
