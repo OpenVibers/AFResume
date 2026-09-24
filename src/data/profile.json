@@ -1,7 +1,7 @@
 {
   "name": "Alex Frison",
   "tagline": "Software engineer, data analyst and founder of OpenVibe.",
-  "headline": "I build the whole stack, then run it.",
+  "headline": "I build software from start to finish, then keep it running.",
   "strengths": [
     { "icon": "fa-solid fa-globe", "label": "Websites & web apps" },
     { "icon": "fa-solid fa-plug", "label": "APIs & integrations" },
