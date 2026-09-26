@@ -177,7 +177,11 @@ const edges = [
   .arch__more summary { display: none; }
   @media (max-width: 560px) {
     .bento { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; gap: 8px; }
-    .tile, .tile--big, .tile--community, .tile--sites { grid-column: span 1; min-height: 0; }
+    /* Tiles in a row share its height: content starts at the top (not pushed down by a taller
+       neighbour) and the stat line sits at the bottom, so names and stats line up across the row. */
+    .tile, .tile--big, .tile--community, .tile--sites { grid-column: span 1; min-height: 0; justify-content: flex-start; }
+    .tile__body { flex: 1; }
+    .tile__foot { margin-top: auto; }
     .tile--big { grid-column: 1 / -1; }
     .tile__pre { display: none; }
     .tile__body { padding: 12px 12px 11px; gap: 4px; }
@@ -188,7 +192,6 @@ const edges = [
     .tile--big .tile__name { font-size: 1.35rem; }
     .tile__blurb { display: none; }
     .tile--big .tile__blurb { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .85rem; }
-    .tile__foot { margin-top: 2px; }
     .tile__stat { white-space: normal; line-height: 1.35; font-size: .62rem; }
     .tile__go { display: none; }
     .tile__shot img { opacity: .18; }
