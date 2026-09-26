@@ -123,7 +123,9 @@ const edges = [
   .tile__body { position: relative; z-index: 1; padding: clamp(18px, 2.4vw, 26px); display: flex; flex-direction: column; gap: 8px; }
   .tile__top { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
   .tile__icon { width: 34px; height: 34px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .14); color: var(--accent); font-size: .9rem; border: 1px solid rgba(var(--accent-rgb), .2); }
-  .tile__role { font-family: var(--font-mono); font-size: .7rem; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  /* The tile's role label: body font in small caps, accent-tinted, and allowed to wrap (the mono,
+     widely tracked version looked odd and cut "Identity & spine" off in the phone grid). */
+  .tile__role { font: 600 .7rem/1.25 var(--font-body); letter-spacing: .06em; text-transform: uppercase; color: color-mix(in oklab, var(--accent) 72%, var(--fg)); }
   .tile__foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-top: 6px; }
   .tile__stat { font-size: .7rem; color: var(--dim); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
   .tile__name { margin: 0; font-size: clamp(1.1rem, 1.6vw, 1.45rem); letter-spacing: -.02em; overflow-wrap: anywhere; }
@@ -181,13 +183,13 @@ const edges = [
     .tile__body { padding: 12px 12px 11px; gap: 4px; }
     .tile__top { margin-bottom: 2px; gap: 8px; }
     .tile__icon { width: 28px; height: 28px; border-radius: 8px; font-size: .78rem; }
-    .tile__role { font-size: .6rem; letter-spacing: .08em; }
+    .tile__role { font-size: .64rem; letter-spacing: .04em; }
     .tile__name, .tile--big .tile__name { font-size: 1.05rem; }
     .tile--big .tile__name { font-size: 1.35rem; }
     .tile__blurb { display: none; }
     .tile--big .tile__blurb { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .85rem; }
     .tile__foot { margin-top: 2px; }
-    .tile__stat { white-space: normal; line-height: 1.35; }
+    .tile__stat { white-space: normal; line-height: 1.35; font-size: .62rem; }
     .tile__go { display: none; }
     .tile__shot img { opacity: .18; }
     .arch__more summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none; margin: 4px 0 10px; font: 600 .82rem var(--font-mono); color: var(--accent); }
