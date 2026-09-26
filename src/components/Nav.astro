@@ -144,9 +144,14 @@ const path = Astro.url.pathname;
   @keyframes whereIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: none; } }
   @media (max-width: 920px) { .nav__where { margin-left: auto; } }
   /* Phones: the drawer has its own dark-mode switch, so the standalone toggle goes; the section
-     chip drops its label below 520px so the PDF button, palette and burger always fit. */
+     chip keeps its label (an icon alone reads as a stray button) in smaller type, and shrinks with an
+     ellipsis before it can push the PDF button, palette or burger out. */
   @media (max-width: 560px) { .nav__inner { gap: 8px; padding: 0 8px 0 10px; } .nav__icon[data-theme-toggle] { display: none; } }
-  @media (max-width: 520px) { .nav__where .nav__where-txt { display: none; } .nav__where { padding: 0 10px; } }
+  @media (max-width: 520px) {
+    .nav__where { flex: 0 1 auto; min-width: 0; gap: 6px; padding: 0 10px 0 9px; font-size: .64rem; letter-spacing: .05em; }
+    .nav__where i { flex: none; font-size: .72rem; }
+    .nav__where-txt { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  }
 
   .nav__links { flex: 1; display: flex; justify-content: center; }
   .nav__links ul { position: relative; list-style: none; margin: 0; padding: 4px; display: flex; gap: 2px; border-radius: 999px; }

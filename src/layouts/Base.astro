@@ -254,7 +254,7 @@ const imageUrl = new URL(image, site).toString();
           : kind === 'right' ? { opacity: 0, transform: 'translateX(12px)' }
           : kind === 'scale' ? { opacity: 0, transform: 'scale(.975)' }
           : { opacity: 0, transform: 'translateY(8px) scale(.99)' };
-        el.style.opacity = '1'; el.style.transform = 'none';
+        el.classList.add('is-in');
         el.animate([from, { opacity: 1, transform: 'none' }], { duration: 600, delay, easing: 'cubic-bezier(0.22, 1, 0.36, 1)', fill: 'backwards' });
         io.unobserve(el);
       }

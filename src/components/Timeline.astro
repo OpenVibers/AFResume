@@ -36,7 +36,9 @@ const kindIcon: Record<string, string> = {
               <h3 class="tl__role">{e.data.role}</h3>
               <div class="tl__co">
                 {e.data.link ? <a href={e.data.link} target="_blank" rel="noopener">{e.data.company}</a> : <span>{e.data.company}</span>}
-                {e.data.location && <span class="tl__loc"><i class="fa-solid fa-location-dot"></i> {e.data.location}</span>}
+                {e.data.link
+                  ? <a class="tl__loc tl__site" href={e.data.link} target="_blank" rel="noopener"><i class="fa-solid fa-globe" aria-hidden="true"></i> {e.data.location?.includes(new URL(e.data.link).hostname) ? e.data.location : new URL(e.data.link).hostname}<i class="fa-solid fa-arrow-up-right-from-square tl__site-go" aria-hidden="true"></i></a>
+                  : e.data.location && <span class="tl__loc"><i class="fa-solid fa-location-dot"></i> {e.data.location}</span>}
               </div>
             </header>
             {e.data.summary && <p class="tl__sum">{e.data.summary}</p>}
@@ -75,6 +77,9 @@ const kindIcon: Record<string, string> = {
   .tl__co { display: flex; flex-wrap: wrap; gap: 6px 18px; color: var(--muted); font-size: .95rem; }
   .tl__co a { color: var(--fg); font-weight: 600; }
   .tl__loc { color: var(--dim); font-size: .85rem; display: inline-flex; align-items: center; gap: 6px; }
+  .tl__co a.tl__site { color: var(--accent); font-weight: 500; text-decoration: none; }
+  .tl__co a.tl__site:hover { text-decoration: underline; text-underline-offset: 3px; }
+  .tl__site-go { font-size: .7em; opacity: .75; }
   .tl__sum { font-size: .95rem; color: var(--muted); font-style: italic; border-left: 2px solid rgba(var(--accent-rgb), .4); padding-left: 12px; }
   .tl__bullets { margin: 0; padding: 0 0 0 1.1rem; display: grid; gap: 8px; color: var(--muted); line-height: 1.65; font-size: .95rem; }
   .tl__bullets li::marker { color: var(--accent-2); }

@@ -101,7 +101,10 @@ import fcAlbum from "../data/fc-album.json";
   .hero__veil { position: absolute; inset: 0; z-index: -1; background: linear-gradient(180deg, rgba(7,9,15,.35) 0%, transparent 30%, transparent 55%, var(--bg) 100%), radial-gradient(60% 50% at 30% 45%, rgba(7,9,15,.35), transparent 70%); }
   :root[data-theme="light"] .hero__veil { background: linear-gradient(180deg, transparent 55%, var(--bg) 100%); }
 
-  .hero__in { opacity: 0; animation: heroIn .9s var(--ease) forwards; animation-delay: var(--d, 0ms); }
+  /* Entrances fill backwards: hidden during their delay, then the element's own (visible) style. A
+     forwards fill kept every animated element on its own GPU layer for good, and phones dropped some
+     of those layers' paint (blank square tiles where the first row of tags should be). */
+  .hero__in { animation: heroIn .9s var(--ease) backwards; animation-delay: var(--d, 0ms); }
   .hero__in--scale { animation-name: heroInScale; }
   @keyframes heroIn { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: none; } }
   @keyframes heroInScale { from { opacity: 0; transform: scale(.94); } to { opacity: 1; transform: none; } }
@@ -126,16 +129,14 @@ import fcAlbum from "../data/fc-album.json";
   }
   .hero__word { display: inline-flex; white-space: nowrap; }
   .hero__ch {
-    display: inline-block; opacity: 0;
-    transform: translateY(.6em) rotate(6deg) scale(.9);
-    filter: blur(6px);
-    animation: chIn .9s var(--ease) forwards;
+    display: inline-block;
+    animation: chIn .9s var(--ease) backwards;
     animation-delay: calc(var(--i) * 45ms + 120ms);
     transition: color .3s;
   }
   .hero__ch:hover { color: var(--accent); }
   .hero__ch--last::after { content: "."; display: inline-block; color: transparent; background: var(--grad); -webkit-background-clip: text; background-clip: text; opacity: 0; animation: dotIn .8s var(--ease) forwards 1s; }
-  @keyframes chIn { to { opacity: 1; transform: none; filter: blur(0); } }
+  @keyframes chIn { from { opacity: 0; transform: translateY(.6em) rotate(6deg) scale(.9); filter: blur(6px); } to { opacity: 1; transform: none; filter: blur(0); } }
   @keyframes dotIn { 0% { opacity: 0; transform: scale(0) translateY(.2em); } 60% { transform: scale(1.3); } 100% { opacity: 1; transform: none; } }
 
   .hero__role {
@@ -233,10 +234,11 @@ import fcAlbum from "../data/fc-album.json";
     display: flex; align-items: center; gap: 10px; padding: 8px 10px; border-radius: 12px; min-height: 44px;
     background: var(--surface); border: 1px solid var(--border); color: var(--fg);
     font: 500 .82rem/1.2 var(--font-body); letter-spacing: -.005em;
-    opacity: 0; animation: tagIn .6s var(--ease) forwards; animation-delay: calc(1000ms + var(--i) * 45ms);
+    animation: tagIn .6s var(--ease) backwards; animation-delay: calc(1000ms + var(--i) * 45ms);
     transition: border-color .3s var(--ease), background .3s var(--ease), transform .3s var(--ease);
   }
-  .hero__tag:hover { border-color: rgba(var(--accent-rgb), .5); background: var(--surface-2); transform: translateY(-2px); }
+  .hero__tag:hover { border-color: rgba(var(--accent-rgb), .5); background: var(--surface-2); }
+  @media (hover: hover) and (pointer: fine) { .hero__tag:hover { transform: translateY(-2px); } }
   @keyframes tagIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
   .hero__tag-ico { flex: none; width: 28px; height: 28px; border-radius: 9px; display: inline-grid; place-items: center; font-size: .78rem; background: rgba(var(--accent-rgb), .14); color: var(--accent); }
   .hero__tag:nth-child(3n+2) .hero__tag-ico { background: rgba(var(--accent-2-rgb), .14); color: var(--accent-2); }

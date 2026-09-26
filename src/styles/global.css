@@ -14,6 +14,8 @@ html {
   font-family: var(--font-body);
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
+  /* Cards and buttons give their own press feedback; the browser's square tap flash drew over rounded ones. */
+  -webkit-tap-highlight-color: transparent;
   scroll-padding-top: calc(var(--nav-h) + 12px);
 }
 html:not(.lenis) { scroll-behavior: smooth; }
@@ -211,6 +213,9 @@ main > .section:nth-of-type(even) { background: linear-gradient(180deg, transpar
 [data-reveal="right"] { transform: translateX(30px); }
 [data-reveal="scale"] { transform: scale(.94); }
 .no-js [data-reveal] { opacity: 1; transform: none; }
+/* Revealed: a class, not inline styles, so a card's tilt can clear its own inline transform on
+   pointerleave without the pre-reveal offset above coming back (it dropped cards onto the next one). */
+[data-reveal].is-in { opacity: 1; transform: none; }
 
 /* ---- Utilities ------------------------------------------------------------ */
 .grad-text { background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }
