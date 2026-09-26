@@ -30,7 +30,6 @@ const kindIcon: Record<string, string> = {
           <article class="tl__card card spot">
             <header class="tl__head">
               <div class="tl__when mono">
-                <i class={`${kindIcon[e.data.kind]} tl__kind`} aria-hidden="true"></i>
                 {e.data.current && <span class="live-dot"></span>}
                 <span>{e.data.start} — {e.data.end}</span>
               </div>
@@ -95,12 +94,13 @@ const kindIcon: Record<string, string> = {
     .tl__item.is-featured .tl__card { padding: clamp(24px, 3vw, 34px); }
   }
   .tl__aside { display: none; }
-  .tl__kind { display: none; }
-  /* Phones and tablets: no separate rail or nodes eating the left edge. The card uses the full width,
-     the progress line is built into its left side (filling as you scroll through it) and the job-type
-     icon sits with the dates. */
+  /* Phones and tablets: no separate rail eating the left edge. The card uses the full width, the
+     progress line is built into its left side (filling as you scroll through it), and each job's icon
+     node sits on that line beside the title, half in the page gutter, so it costs the text no width. */
   @media (max-width: 899px) {
-    .tl__rail, .tl__node { display: none; }
+    .tl__rail { display: none; }
+    .tl__node { left: -14px; top: 22px; width: 32px; height: 32px; font-size: .72rem; z-index: 1; }
+    .tl__head { padding-left: 18px; }
     .tl__item { padding-left: 0; }
     .tl__card { overflow: hidden; }
     .tl__card::after {
@@ -108,7 +108,6 @@ const kindIcon: Record<string, string> = {
       background: linear-gradient(180deg, var(--accent), var(--accent-2)) top / 100% calc(var(--p, 0) * 100%) no-repeat, var(--border-strong);
     }
     .tl__item.is-current .tl__card::after { box-shadow: 0 0 12px rgba(var(--accent-rgb), .45); }
-    .tl__kind { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; font-size: .68rem; letter-spacing: 0; background: rgba(var(--accent-rgb), .12); color: var(--accent); }
   }
   @media (min-width: 900px) { .tl__aside { display: grid; } }
   .tl__aside-when { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }

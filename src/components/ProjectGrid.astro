@@ -86,7 +86,6 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
     position: relative; overflow: hidden; display: flex; flex-direction: column;
     border-radius: var(--radius-lg); background: var(--surface); border: 1px solid var(--border);
     transition: transform .5s var(--ease), border-color .35s var(--ease), box-shadow .5s var(--ease), opacity .4s var(--ease);
-    will-change: transform;
   }
   .pcard:hover { border-color: rgba(var(--accent-rgb), .4); box-shadow: var(--shadow-card), var(--shadow-glow); }
   .pcard.is-hidden { display: none; }
@@ -120,6 +119,9 @@ const cats = Array.from(new Set(projects.map((p) => p.data.category)));
   .pcard__ext:hover { color: var(--fg); border-color: var(--accent); text-decoration: none; background: rgba(var(--accent-rgb), .12); }
   @media (max-width: 1000px) { .pgrid { grid-template-columns: repeat(2, 1fr); } }
   @media (max-width: 600px) { .pgrid { grid-template-columns: 1fr; } }
+  /* Phones: a card without a screenshot drops the icon-only placeholder (its icon is already in the
+     card's top row), and screenshots are shorter, so the list is not mostly empty frames. */
+  @media (max-width: 620px) { .pcard__deco { display: none; } .pcard__img { aspect-ratio: 16 / 8; } }
 </style>
 
 <script>

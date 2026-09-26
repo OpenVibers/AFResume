@@ -85,8 +85,8 @@ const catLabel: Record<string, string> = {
   .pp__soon { display: inline-flex; align-items: center; gap: 6px; font-size: .7rem; letter-spacing: .08em; text-transform: uppercase; padding: 4px 10px; border-radius: 999px; color: var(--accent-3); background: rgba(var(--accent-3-rgb), .12); border: 1px solid rgba(var(--accent-3-rgb), .35); }
   .pp__title { font-size: clamp(2.2rem, 5.5vw, 4rem); margin: 0 0 .3em; }
   .pp__lead { font-size: clamp(1.05rem, 1.6vw, 1.3rem); color: var(--fg); max-width: 62ch; line-height: 1.6; }
-  .pp__meta { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 14px; margin: 1.4rem 0; }
-  .pp__meta-wide { grid-column: 1 / -1; }
+  .pp__meta { display: flex; flex-wrap: wrap; gap: 14px 36px; margin: 1.4rem 0; }
+  .pp__meta-wide { flex-basis: 100%; }
   .pp__meta strong { display: block; color: var(--accent); font-family: var(--font-mono); font-size: .72rem; text-transform: uppercase; letter-spacing: .14em; margin-bottom: 6px; }
   .pp__meta span { color: var(--muted); font-size: .94rem; }
   .pp__tech { display: flex; flex-wrap: wrap; gap: 6px; }
@@ -105,5 +105,6 @@ const catLabel: Record<string, string> = {
   .pp__nav-link .mono { font-size: .72rem; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; }
   .pp__nav-link:hover { border-color: rgba(var(--accent-rgb), .5); transform: translateY(-3px); text-decoration: none; }
   .pp__nav-link--next { text-align: right; }
+  @media (max-width: 560px) { .pp { padding-bottom: 48px; } .pp__prose { padding: 18px; } }
   @media (max-width: 820px) { .pp__body { grid-template-columns: 1fr; } .pp__side { position: static; } .pp__nav { grid-template-columns: 1fr; } .pp__nav-link--next { text-align: left; } }
 </style>

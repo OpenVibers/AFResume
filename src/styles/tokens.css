@@ -22,7 +22,7 @@
   --accent-3: #3ee6b0;
   --accent-3-rgb: 62, 230, 176;
   --violet: #8b5cf6;
-  --on-accent: #06091a;
+  --on-accent: #ffffff;
 
   --grad: linear-gradient(95deg, var(--accent) 0%, var(--violet) 48%, var(--accent-2) 100%);
   --grad-soft: linear-gradient(135deg, rgba(var(--accent-rgb), .22), rgba(139, 92, 246, .18) 50%, rgba(var(--accent-2-rgb), .16));

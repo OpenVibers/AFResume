@@ -41,8 +41,9 @@ const lvl = { core: 3, strong: 2, familiar: 1 } as const;
 </section>
 
 <style>
-  .sk-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
-  .sk { padding: 22px; }
+  /* Columns, not a grid: cards of different lengths stack without blank space under the shorter ones. */
+  .sk-grid { columns: 3; column-gap: 14px; }
+  .sk { padding: 22px; break-inside: avoid; margin-bottom: 14px; }
   .sk__head { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 14px; }
   .sk__icon { width: 40px; height: 40px; flex: none; border-radius: 12px; display: inline-grid; place-items: center; background: var(--grad-soft); color: var(--fg); border: 1px solid var(--border); font-size: .95rem; }
   .sk__title { margin: 0 0 3px; font-size: 1.05rem; }
@@ -55,7 +56,6 @@ const lvl = { core: 3, strong: 2, familiar: 1 } as const;
   .sk__bars i { width: 12px; height: 5px; border-radius: 3px; background: var(--surface-2); border: 1px solid var(--border); transition: background .3s, box-shadow .3s; }
   .sk__bars i.on { background: var(--accent); border-color: transparent; box-shadow: 0 0 8px rgba(var(--accent-rgb), .5); }
   .sk__item:hover .sk__bars i.on { background: var(--accent-2); box-shadow: 0 0 8px rgba(var(--accent-2-rgb), .5); }
-  @media (min-width: 1001px) { .sk:last-child { grid-column: 1 / -1; } .sk:last-child .sk__list { grid-template-columns: repeat(3, 1fr); column-gap: 28px; } .sk:last-child .sk__item:nth-child(-n+3) { border-top: 0; } }
-  @media (max-width: 1000px) { .sk-grid { grid-template-columns: repeat(2, 1fr); } }
-  @media (max-width: 620px) { .sk-grid { grid-template-columns: 1fr; } }
+  @media (max-width: 1000px) { .sk-grid { columns: 2; } }
+  @media (max-width: 620px) { .sk-grid { columns: 1; } .sk { padding: 18px; } }
 </style>

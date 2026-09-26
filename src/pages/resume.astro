@@ -116,6 +116,7 @@ const pitchParts = linkify(profile.pitch, LINK_TERMS);
   .resume__contact a:hover { color: var(--accent); text-decoration: none; }
   .resume__contact i { color: var(--accent); width: 14px; }
   .resume__actions { display: flex; gap: 10px; flex-wrap: wrap; padding: 22px 0 6px; }
+  @media (max-width: 560px) { .resume__actions { display: grid; grid-template-columns: 1fr; } .resume__actions > .btn { justify-content: center; } }
   .resume__pdf-note { font-size: .82rem; color: var(--dim); max-width: 62ch; margin: 0 0 8px; }
   .resume__pdf-note strong { color: var(--muted); }
   .themed-pdf-caret { font-size: .68em; transition: transform .3s var(--ease); }

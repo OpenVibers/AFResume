@@ -7,6 +7,8 @@ const icons: Record<string, string> = {
   live: "fa-solid fa-tower-broadcast", network: "fa-solid fa-id-badge", media: "fa-solid fa-photo-film",
   tools: "fa-solid fa-toolbox", games: "fa-solid fa-gamepad", community: "fa-solid fa-comments", sites: "fa-solid fa-globe",
 };
+// "OpenVibe.Live" -> "OpenVibe." + "Live": phones show only the short name (the group already says OpenVibe).
+const short = (n: string) => n.startsWith("OpenVibe.") ? n.slice(9) : null;
 // Architecture diagram geometry (viewBox 800 x 420)
 const hub = { x: 400, y: 210 };
 const nodes = [
@@ -34,7 +36,7 @@ const edges = [
             <span class="tile__icon"><i class={icons[big.key]}></i></span>
             <span class="tile__role">{big.role}</span>
           </div>
-          <h3 class="tile__name">{big.name}</h3>
+          <h3 class="tile__name">{short(big.name) ? <><span class="tile__pre">OpenVibe.</span>{short(big.name)}</> : big.name}</h3>
           <p class="tile__blurb">{big.blurb}</p>
           <div class="tile__foot"><span class="tile__stat mono">{big.stat}</span><span class="tile__go">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div>
         </div>
@@ -48,7 +50,7 @@ const edges = [
               <span class="tile__icon"><i class={icons[s.key]}></i></span>
               <span class="tile__role">{s.role}</span>
             </div>
-            <h3 class="tile__name">{s.name}</h3>
+            <h3 class="tile__name">{short(s.name) ? <><span class="tile__pre">OpenVibe.</span>{short(s.name)}</> : s.name}</h3>
             <p class="tile__blurb">{s.blurb}</p>
             <div class="tile__foot"><span class="tile__stat mono">{s.stat}</span><span class="tile__go">Open <i class="fa-solid fa-arrow-up-right-from-square"></i></span></div>
           </div>
@@ -60,7 +62,10 @@ const edges = [
       <div class="arch__copy">
         <div class="eyebrow"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> How it fits together</div>
         <h3>One login, one wallet, seven products that feel like one.</h3>
+        <details class="arch__more" open>
+        <summary>Read more</summary>
         <p>Sign in once and every OpenVibe site knows who you are, what you own and what you look like. The identity service in the middle handles accounts, security and the shared virtual currency; every other product plugs into it through clear, documented APIs. That's the same playbook I bring to any company: secure single sign-on, payments and APIs designed so new products can be added without breaking the old ones.</p>
+        </details>
         <ul class="arch__facts">
           <li><i class="fa-solid fa-rotate"></i> Updates ship with zero downtime, so users never see an outage</li>
           <li><i class="fa-solid fa-cloud-arrow-up"></i> Media storage tiers automatically from fast local disks to cheap cloud storage</li>
@@ -107,7 +112,6 @@ const edges = [
     min-height: 210px; border-radius: var(--radius-lg); text-decoration: none; color: var(--fg);
     background: var(--surface); border: 1px solid var(--border);
     transition: transform .5s var(--ease), border-color .35s var(--ease), box-shadow .5s var(--ease);
-    will-change: transform;
   }
   .tile:hover { text-decoration: none; border-color: rgba(var(--accent-rgb), .45); box-shadow: var(--shadow-card), var(--shadow-glow); }
   .tile--big { grid-column: span 2; grid-row: span 2; min-height: 440px; }
@@ -131,11 +135,14 @@ const edges = [
   .tile--sites { background: var(--grad-soft); }
   .tile--sites::before { content: ""; position: absolute; inset: 0; background: radial-gradient(60% 60% at 80% 20%, rgba(var(--accent-2-rgb), .25), transparent 70%); }
   @media (max-width: 1024px) { .bento { grid-template-columns: repeat(2, 1fr); } .tile--big { grid-column: span 2; grid-row: span 1; min-height: 360px; } .tile--community, .tile--sites { grid-column: span 1; } }
+  /* The diagram is unreadable at phone width; the facts beside it say the same thing. */
+  @media (max-width: 560px) { .arch__svg { display: none; } .arch { padding: 18px; } }
   @media (max-width: 560px) { .bento { grid-template-columns: 1fr; } .tile--big, .tile--community, .tile--sites { grid-column: span 1; } .tile--big { min-height: 320px; } }
 
   /* Architecture */
   .arch { display: grid; grid-template-columns: .9fr 1.1fr; gap: clamp(20px, 4vw, 48px); align-items: center; padding: clamp(22px, 3.5vw, 40px); margin-top: clamp(16px, 3vw, 28px); }
-  .arch .eyebrow { display: inline-flex; align-items: center; gap: 8px; }
+  .arch .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 10px; }
+  .arch__copy h3 { margin-top: 0; }
   .arch__copy h3 { font-size: clamp(1.3rem, 2.2vw, 1.8rem); margin-bottom: .6em; }
   .arch__facts { list-style: none; margin: 14px 0 0; padding: 0; display: grid; gap: 8px; }
   .arch__facts li { display: flex; gap: 10px; align-items: flex-start; color: var(--muted); font-size: .9rem; }
@@ -162,4 +169,36 @@ const edges = [
   .arch__node:hover .arch__node-box { stroke: var(--accent); }
   .arch__node-t { font: 600 13px var(--font-body); fill: var(--fg); }
   @media (max-width: 900px) { .arch { grid-template-columns: 1fr; } }
+
+  /* Phones: the network as a compact grid (Live across the top, the other six two by two: icon,
+     short name, stat); the explainer paragraph folds behind "Read more". */
+  .arch__more summary { display: none; }
+  @media (max-width: 560px) {
+    .bento { grid-template-columns: 1fr 1fr; grid-auto-rows: auto; gap: 8px; }
+    .tile, .tile--big, .tile--community, .tile--sites { grid-column: span 1; min-height: 0; }
+    .tile--big { grid-column: 1 / -1; }
+    .tile__pre { display: none; }
+    .tile__body { padding: 12px 12px 11px; gap: 4px; }
+    .tile__top { margin-bottom: 2px; gap: 8px; }
+    .tile__icon { width: 28px; height: 28px; border-radius: 8px; font-size: .78rem; }
+    .tile__role { font-size: .6rem; letter-spacing: .08em; }
+    .tile__name, .tile--big .tile__name { font-size: 1.05rem; }
+    .tile--big .tile__name { font-size: 1.35rem; }
+    .tile__blurb { display: none; }
+    .tile--big .tile__blurb { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; font-size: .85rem; }
+    .tile__foot { margin-top: 2px; }
+    .tile__stat { white-space: normal; line-height: 1.35; }
+    .tile__go { display: none; }
+    .tile__shot img { opacity: .18; }
+    .arch__more summary { display: inline-flex; align-items: center; gap: 6px; cursor: pointer; list-style: none; margin: 4px 0 10px; font: 600 .82rem var(--font-mono); color: var(--accent); }
+    .arch__more summary::-webkit-details-marker { display: none; }
+    .arch__more summary::after { content: "▾"; transition: transform .2s; }
+    .arch__more[open] summary::after { transform: rotate(180deg); }
+    .arch__more[open] summary { margin-bottom: 4px; }
+  }
 </style>
+
+<script>
+  // Phones start with the architecture explainer folded; wider screens (and no-JS) show it open.
+  if (matchMedia('(max-width: 560px)').matches) document.querySelectorAll<HTMLDetailsElement>('.arch__more').forEach((d) => { d.open = false; });
+</script>

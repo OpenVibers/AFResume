@@ -24,17 +24,18 @@ const statusAlsoParts = linkify(profile.status.also, LINK_TERMS);
     <div class="now__grid">
       <article class="card spot now__pitch" data-reveal>
         <p class="now__text">{pitchParts.map((p) => typeof p === "string" ? p : <a href={p.href} target={p.external ? "_blank" : undefined} rel={p.external ? "noopener" : undefined}>{p.text}</a>)}</p>
-        <ul class="now__hl" aria-label="What I bring">
-          {profile.highlights.map((h) => (
-            <li><i class={h.icon} aria-hidden="true"></i><div><strong>{h.title}</strong><span>{h.text}</span></div></li>
-          ))}
-        </ul>
         <p class="now__text">Ten years of running my own company taught me to care about the whole loop: the code, the servers, the invoice and the person on the other end. I like small teams, hard problems and software that stays up.</p>
         <div class="now__cta">
           <a href="#experience" class="btn btn--ghost">Experience <span class="btn__arrow">→</span></a>
           <a href="/portfolio" class="btn btn--ghost">All projects <span class="btn__arrow">→</span></a>
         </div>
       </article>
+
+      <ul class="now__hl" aria-label="What I bring" data-stagger>
+        {profile.highlights.map((h) => (
+          <li><i class={h.icon} aria-hidden="true"></i><div><strong>{h.title}</strong><span>{h.text}</span></div></li>
+        ))}
+      </ul>
 
       <aside class="now__side">
         <div class="card spot now__status" data-reveal data-delay="100">
@@ -61,17 +62,22 @@ const statusAlsoParts = linkify(profile.status.also, LINK_TERMS);
 </section>
 
 <style>
-  .now__grid { display: grid; grid-template-columns: 1.35fr 1fr; gap: 18px; align-items: start; }
+  /* The pitch and the side cards share the first row; the five strengths run under both as their own
+     row, so neither column ends far above the other. Phones: pitch, strengths, then the side cards. */
+  .now__grid { display: grid; grid-template-columns: 1.35fr 1fr; grid-template-areas: "pitch side" "hl hl"; gap: 18px; align-items: start; }
+  .now__pitch { grid-area: pitch; } .now__side { grid-area: side; } .now__hl { grid-area: hl; }
   .now__pitch { padding: clamp(24px, 3.5vw, 40px); }
   .now__text { font-size: 1.08rem; line-height: 1.8; color: var(--muted); }
   .now__text:first-child { color: var(--fg); font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 500; line-height: 1.6; letter-spacing: -.005em; }
-  .now__hl { list-style: none; margin: 22px 0 18px; padding: 0; display: grid; gap: 10px; }
+  .now__hl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
   .now__hl li { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); transition: border-color .3s var(--ease), transform .3s var(--ease); }
+  @media (min-width: 901px) { .now__hl li { flex-direction: column; gap: 10px; } }
   .now__hl li:hover { border-color: rgba(var(--accent-rgb), .5); transform: translateX(4px); }
   .now__hl i { flex: none; width: 36px; height: 36px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .12); color: var(--accent); font-size: .95rem; }
   .now__hl strong { display: block; color: var(--fg); font-size: .98rem; margin-bottom: 2px; }
   .now__hl span { color: var(--muted); font-size: .9rem; line-height: 1.55; }
-  .now__cta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 8px; }
+  .now__cta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
+  @media (max-width: 560px) { .now__cta { display: grid; grid-template-columns: 1fr 1fr; } .now__cta .btn { justify-content: center; padding: 12px 14px; } .now__pitch { padding: 20px; } }
   .now__side { display: grid; gap: 18px; }
   .now__status-head { display: flex; align-items: center; gap: 10px; margin-bottom: 14px; }
   .now__status-list, .now__seek { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
@@ -86,5 +92,5 @@ const statusAlsoParts = linkify(profile.status.also, LINK_TERMS);
   .now__seek li:first-child { border-top: 0; padding-top: 0; }
   .now__seek strong { color: var(--fg); font-size: .95rem; }
   .now__seek span { color: var(--muted); font-size: .86rem; }
-  @media (max-width: 900px) { .now__grid { grid-template-columns: 1fr; } }
+  @media (max-width: 900px) { .now__grid { grid-template-columns: 1fr; grid-template-areas: "pitch" "hl" "side"; } }
 </style>

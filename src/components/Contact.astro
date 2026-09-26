@@ -28,7 +28,8 @@ import profile from "../data/profile.json";
 </section>
 
 <style>
-  .ct { overflow: hidden; padding: clamp(28px, 5vw, 60px); }
+  .ct { overflow: hidden; padding: clamp(20px, 4vw, 48px); }
+  @media (max-width: 560px) { .ct__actions { display: grid; grid-template-columns: 1fr; } .ct__actions .btn { justify-content: center; } }
   .ct__glow { position: absolute; inset: -40% -20% auto auto; width: 60%; aspect-ratio: 1; border-radius: 50%; background: radial-gradient(closest-side, rgba(var(--accent-rgb), .35), transparent 70%); filter: blur(30px); animation: breathe 9s ease-in-out infinite; pointer-events: none; }
   @keyframes breathe { 50% { transform: scale(1.15) translate(-6%, 8%); opacity: .7; } }
   .ct__grid { position: relative; display: grid; grid-template-columns: 1.3fr 1fr; gap: clamp(24px, 4vw, 56px); align-items: center; }
