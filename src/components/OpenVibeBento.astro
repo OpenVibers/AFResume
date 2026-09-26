@@ -63,7 +63,7 @@ const edges = [
         <div class="eyebrow"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> How it fits together</div>
         <h3>One login, one wallet, seven products that feel like one.</h3>
         <details class="arch__more" open>
-        <summary>Read more</summary>
+        <summary><span class="arch__more-closed">Read more</span><span class="arch__more-open">Show less</span></summary>
         <p>Sign in once and every OpenVibe site knows who you are, what you own and what you look like. The identity service in the middle handles accounts, security and the shared virtual currency; every other product plugs into it through clear, documented APIs. That's the same playbook I bring to any company: secure single sign-on, payments and APIs designed so new products can be added without breaking the old ones.</p>
         </details>
         <ul class="arch__facts">
@@ -200,6 +200,8 @@ const edges = [
     .arch__more summary::after { content: "▾"; transition: transform .2s; }
     .arch__more[open] summary::after { transform: rotate(180deg); }
     .arch__more[open] summary { margin-bottom: 4px; }
+    .arch__more-open, .arch__more[open] .arch__more-closed { display: none; }
+    .arch__more[open] .arch__more-open { display: inline; }
   }
 </style>
 

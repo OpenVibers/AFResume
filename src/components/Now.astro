@@ -69,13 +69,18 @@ const statusAlsoParts = linkify(profile.status.also, LINK_TERMS);
   .now__pitch { padding: clamp(24px, 3.5vw, 40px); }
   .now__text { font-size: 1.08rem; line-height: 1.8; color: var(--muted); }
   .now__text:first-child { color: var(--fg); font-size: clamp(1.1rem, 1.6vw, 1.3rem); font-weight: 500; line-height: 1.6; letter-spacing: -.005em; }
-  .now__hl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; }
-  .now__hl li { display: flex; gap: 14px; align-items: flex-start; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); transition: border-color .3s var(--ease), transform .3s var(--ease); }
-  @media (min-width: 901px) { .now__hl li { flex-direction: column; gap: 10px; } }
+  /* Strengths: the icon sits on the title line and the text runs the full card width (an icon column
+     beside the text left a strip of empty space and squeezed every line). One per row on phones, two
+     on tablets (the fifth spans the row), five across on wide screens. */
+  .now__hl { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 10px; }
+  @media (min-width: 561px) { .now__hl { grid-template-columns: 1fr 1fr; } .now__hl li:last-child:nth-child(odd) { grid-column: 1 / -1; } }
+  @media (min-width: 1100px) { .now__hl { grid-template-columns: repeat(5, 1fr); } .now__hl li:last-child:nth-child(odd) { grid-column: auto; } }
+  .now__hl li { display: grid; grid-template-columns: auto 1fr; grid-template-areas: "ico title" "text text"; gap: 8px 10px; align-items: center; align-content: start; padding: 12px 14px; border-radius: 14px; background: var(--surface); border: 1px solid var(--border); transition: border-color .3s var(--ease), transform .3s var(--ease); }
   .now__hl li:hover { border-color: rgba(var(--accent-rgb), .5); transform: translateX(4px); }
-  .now__hl i { flex: none; width: 36px; height: 36px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .12); color: var(--accent); font-size: .95rem; }
-  .now__hl strong { display: block; color: var(--fg); font-size: .98rem; margin-bottom: 2px; }
-  .now__hl span { color: var(--muted); font-size: .9rem; line-height: 1.55; }
+  .now__hl li > div { display: contents; }
+  .now__hl i { grid-area: ico; flex: none; width: 30px; height: 30px; border-radius: 10px; display: inline-grid; place-items: center; background: rgba(var(--accent-rgb), .12); color: var(--accent); font-size: .95rem; }
+  .now__hl strong { grid-area: title; display: block; color: var(--fg); font-size: .98rem; line-height: 1.3; }
+  .now__hl span { grid-area: text; color: var(--muted); font-size: .9rem; line-height: 1.55; }
   .now__cta { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 16px; }
   @media (max-width: 560px) { .now__cta { display: grid; grid-template-columns: 1fr 1fr; } .now__cta .btn { justify-content: center; padding: 12px 14px; } .now__pitch { padding: 20px; } }
   .now__side { display: grid; gap: 18px; }

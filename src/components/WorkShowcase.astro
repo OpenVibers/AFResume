@@ -83,7 +83,7 @@ const groups = [
               </ul>
             </div>
           )}
-          <ul class="wk-grid" data-stagger hidden={g.items.length === 0}>
+          <ul class="wk-grid" data-stagger hidden={g.items.length === 0} style={`--cols:${Math.min(Math.max(g.items.length, 1), 4)};--cols-t:${Math.min(Math.max(g.items.length, 1), 2)}`}>
             {g.items.map((it) => (
               <li class={`wk-card ${it.image ? "wk-card--img" : ""} ${it.soon ? "wk-card--soon" : ""}`}>
                 <a href={it.href} class="wk-card__link" target={it.external ? "_blank" : undefined} rel={it.external ? "noopener" : undefined}>
@@ -144,7 +144,9 @@ const groups = [
   .wk-group__all:hover { text-decoration: none; background: rgba(var(--g-rgb), .16); border-color: rgba(var(--g-rgb), .6); transform: translateY(-1px); }
   .wk-group__all:hover .wk-group__arrow { transform: translateX(3px); }
 
-  .wk-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; }
+  /* As many columns as cards, up to four (two on tablets), so a group never ends on a lone card. */
+  .wk-grid { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(var(--cols, 4), 1fr); gap: 10px; }
+  @media (max-width: 1100px) { .wk-grid { grid-template-columns: repeat(var(--cols-t, 2), 1fr); } }
   .wk-card { min-width: 0; }
   .wk-card__link { display: flex; flex-direction: column; height: 100%; border-radius: 16px; overflow: hidden; background: var(--surface); border: 1px solid var(--border); color: var(--fg); text-decoration: none; transition: transform .4s var(--ease), border-color .3s var(--ease), box-shadow .4s var(--ease), background .3s var(--ease); }
   .wk-card__link:hover { text-decoration: none; transform: translateY(-3px); border-color: rgba(var(--g-rgb), .5); background: var(--surface-2); box-shadow: var(--shadow-card), 0 0 0 1px rgba(var(--g-rgb), .12), 0 16px 40px -22px rgba(var(--g-rgb), .7); }
