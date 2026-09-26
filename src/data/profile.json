@@ -19,7 +19,7 @@
   "highlights": [
     { "icon": "fa-solid fa-layer-group", "title": "Ships the whole product", "text": "Design, code, infrastructure, deployment and support, with no hand-off in between." },
     { "icon": "fa-solid fa-credit-card", "title": "Moves money safely", "text": "Rebuilt PowerChat's payments across five processors, with ledgers that make double-charging impossible." },
-    { "icon": "fa-solid fa-robot", "title": "Builds AI that does real work", "text": "Autonomous agents that researched and wrote compliance reports Amazon analysts used every day." },
+    { "icon": "fa-solid fa-robot", "title": "Builds AI that does real work", "text": "Autonomous agents that researched and wrote compliance reports Amazon associates used every day." },
     { "icon": "fa-solid fa-server", "title": "Runs it in production", "text": "25+ sites and services with zero-downtime deploys, operated by one person." },
     { "icon": "fa-solid fa-handshake", "title": "Understands the business side", "text": "Ten years running my own company, three leading a retail sales team, then a year each in Amazon Robotics operations and floor leadership and as an Amazon ICQA data analyst." }
   ],
@@ -42,7 +42,7 @@
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
     "also": "Founder and sole engineer of OpenVibe: seven services, 20+ domains, one operator."
   },
-  "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other analysts used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
+  "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other Amazon associates used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
   "seeking": [
     { "label": "Honestly, open to anything", "detail": "Title and level are negotiable. The team, the problem and the chance to own something matter more than the label." },
     { "label": "Software engineering", "detail": "Full-stack web apps, platforms, APIs, payments, streaming and realtime systems, designed, shipped and kept running in production." },
