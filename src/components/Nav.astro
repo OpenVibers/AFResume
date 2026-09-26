@@ -9,6 +9,11 @@ const links = [
   { href: "/#contact",    label: "Contact",    id: "contact",    icon: "fa-solid fa-paper-plane" },
 ];
 const path = Astro.url.pathname;
+// The section chip's first readout: the page you're on, or on the home page its opening section.
+const here: [string, string] = path.startsWith("/resume") ? ["Resume", "fa-solid fa-file-lines"]
+  : path.startsWith("/portfolio") ? ["Portfolio", "fa-solid fa-layer-group"]
+  : path.startsWith("/404") ? ["Not found", "fa-solid fa-compass"]
+  : ["Summary", "fa-solid fa-id-card"];
 ---
 <header class="nav" id="nav">
   <div class="nav__inner">
@@ -28,7 +33,7 @@ const path = Astro.url.pathname;
       </span>
       <span class="nav__name">Alex Frison</span>
     </a>
-    <span class="nav__where" id="nav-where" aria-live="polite"><i class="fa-solid fa-house" aria-hidden="true"></i><span class="nav__where-txt">Home</span></span>
+    <span class="nav__where" id="nav-where" aria-live="polite"><i class={here[1]} aria-hidden="true"></i><span class="nav__where-txt">{here[0]}</span></span>
 
     <nav class="nav__links" aria-label="Primary">
       <ul>
@@ -338,12 +343,13 @@ const path = Astro.url.pathname;
   const where = document.getElementById('nav-where');
   const whereIcon = where?.querySelector('i'), whereTxt = where?.querySelector('.nav__where-txt');
   // Sections that aren't nav items still get a readout of their own.
-  const extraWhere: Record<string, [string, string]> = { about: ['Profile', 'fa-solid fa-user'], metrics: ['At a glance', 'fa-solid fa-chart-simple'] };
+  // The hero ('top', read as '') is the summary: who, what and the pitch. "Profile" is #about's.
+  const extraWhere: Record<string, [string, string]> = { '': ['Summary', 'fa-solid fa-id-card'], about: ['Profile', 'fa-solid fa-user'], metrics: ['At a glance', 'fa-solid fa-chart-simple'] };
   const setWhere = (id: string) => {
     if (!where || !whereIcon || !whereTxt) return;
     const src = anchors.find((a) => a.dataset.nav === id);
-    const icon = src ? src.querySelector('i')!.className : (extraWhere[id]?.[1] || 'fa-solid fa-house');
-    const label = src ? (src.textContent || '').trim() : (extraWhere[id]?.[0] || 'Home');
+    const icon = src ? src.querySelector('i')!.className : (extraWhere[id]?.[1] || 'fa-solid fa-id-card');
+    const label = src ? (src.textContent || '').trim() : (extraWhere[id]?.[0] || 'Summary');
     if (whereTxt.textContent === label) return;
     whereIcon.className = icon; whereTxt.textContent = label;
     where.classList.remove('is-swap'); void where.offsetWidth; where.classList.add('is-swap');
