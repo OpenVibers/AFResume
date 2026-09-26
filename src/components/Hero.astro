@@ -333,7 +333,8 @@ import fcAlbum from "../data/fc-album.json";
   @keyframes fadeIn { to { opacity: 1; } }
 
   @media (max-width: 920px) {
-    .hero { min-height: auto; padding-top: calc(var(--nav-h) + 30px); }
+    /* Not full-screen here, so no reserve for the scroll cue: the numbers follow the tags closely. */
+    .hero { min-height: auto; padding-top: calc(var(--nav-h) + 30px); padding-bottom: 16px; }
     .hero__grid { grid-template-columns: 1fr; }
     .hero__visual { order: -1; }
     .portrait { width: min(290px, 72vw); margin-top: 10px; }
