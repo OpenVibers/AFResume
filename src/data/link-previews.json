@@ -99,10 +99,6 @@
     "img": "/assets/img/previews/local_portfolio.jpg",
     "label": "alexfrison.net/portfolio"
   },
-  "path:/portfolio/amazon-sql-copilot": {
-    "img": "/assets/img/previews/local_portfolio_amazon-sql-copilot.jpg",
-    "label": "alexfrison.net/portfolio/amazon-sql-copilot"
-  },
   "path:/portfolio/amazon-userscripts": {
     "img": "/assets/img/previews/local_portfolio_amazon-userscripts.jpg",
     "label": "alexfrison.net/portfolio/amazon-userscripts"
@@ -114,10 +110,6 @@
   "path:/portfolio/hartools": {
     "img": "/assets/img/previews/local_portfolio_hartools.jpg",
     "label": "alexfrison.net/portfolio/hartools"
-  },
-  "path:/portfolio/inbound-pull-tool": {
-    "img": "/assets/img/previews/local_portfolio_inbound-pull-tool.jpg",
-    "label": "alexfrison.net/portfolio/inbound-pull-tool"
   },
   "path:/portfolio/irdr-autonomous-bot": {
     "img": "/assets/img/previews/local_portfolio_irdr-autonomous-bot.jpg",
@@ -186,10 +178,6 @@
   "path:/portfolio/pytools-workshop": {
     "img": "/assets/img/previews/local_portfolio_pytools-workshop.jpg",
     "label": "alexfrison.net/portfolio/pytools-workshop"
-  },
-  "path:/portfolio/robotstreamer-toolkit": {
-    "img": "/assets/img/previews/local_portfolio_robotstreamer-toolkit.jpg",
-    "label": "alexfrison.net/portfolio/robotstreamer-toolkit"
   },
   "path:/portfolio/youtube-desktop-client": {
     "img": "/assets/img/previews/local_portfolio_youtube-desktop-client.jpg",

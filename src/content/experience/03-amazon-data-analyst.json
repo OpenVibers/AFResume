@@ -11,7 +11,7 @@
   "bullets": [
     "Owned the SOX-compliance IRDR workflow: personally researched 1,000+ inventory discrepancies and built the data systems and reporting that satisfied Sarbanes-Oxley audit requirements.",
     "Built SQL and Excel reporting for inventory accuracy and defect visibility; delivered dashboards, recurring leadership reports and a network-wide quality recap deck.",
-    "Shipped an Anthropic-powered SQL copilot that indexes every available table, and an autonomous root-cause agent that plans, gathers evidence and writes complete IRDRs, collapsing hours of research per defect into seconds."
+    "Shipped an autonomous root-cause agent that plans, gathers evidence and writes complete IRDRs, collapsing hours of research per defect into seconds."
   ],
   "stack": [
     "SQL",
