@@ -30,6 +30,7 @@ const kindIcon: Record<string, string> = {
           <article class="tl__card card spot">
             <header class="tl__head">
               <div class="tl__when mono">
+                <i class={`${kindIcon[e.data.kind]} tl__kind`} aria-hidden="true"></i>
                 {e.data.current && <span class="live-dot"></span>}
                 <span>{e.data.start} — {e.data.end}</span>
               </div>
@@ -94,6 +95,21 @@ const kindIcon: Record<string, string> = {
     .tl__item.is-featured .tl__card { padding: clamp(24px, 3vw, 34px); }
   }
   .tl__aside { display: none; }
+  .tl__kind { display: none; }
+  /* Phones and tablets: no separate rail or nodes eating the left edge. The card uses the full width,
+     the progress line is built into its left side (filling as you scroll through it) and the job-type
+     icon sits with the dates. */
+  @media (max-width: 899px) {
+    .tl__rail, .tl__node { display: none; }
+    .tl__item { padding-left: 0; }
+    .tl__card { overflow: hidden; }
+    .tl__card::after {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px; pointer-events: none;
+      background: linear-gradient(180deg, var(--accent), var(--accent-2)) top / 100% calc(var(--p, 0) * 100%) no-repeat, var(--border-strong);
+    }
+    .tl__item.is-current .tl__card::after { box-shadow: 0 0 12px rgba(var(--accent-rgb), .45); }
+    .tl__kind { display: inline-grid; place-items: center; width: 24px; height: 24px; border-radius: 7px; font-size: .68rem; letter-spacing: 0; background: rgba(var(--accent-rgb), .12); color: var(--accent); }
+  }
   @media (min-width: 900px) { .tl__aside { display: grid; } }
   .tl__aside-when { font-family: var(--font-mono); font-size: .8rem; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); display: inline-flex; align-items: center; gap: 10px; }
   .tl__aside-co { font-family: var(--font-display); font-weight: 700; font-size: 1.05rem; color: var(--fg); }
@@ -103,6 +119,7 @@ const kindIcon: Record<string, string> = {
 <script>
   const tl = document.getElementById('tl'), fill = document.getElementById('tl-fill');
   if (tl && fill) {
+    const cards = Array.from(tl.querySelectorAll<HTMLElement>('.tl__card'));
     let raf = 0;
     const update = () => {
       raf = 0;
@@ -110,6 +127,11 @@ const kindIcon: Record<string, string> = {
       const start = innerHeight * 0.7;
       const p = Math.min(1, Math.max(0, (start - r.top) / r.height));
       fill.style.height = `${p * 100}%`;
+      // Phones: each card's own edge line fills as you read through that card.
+      for (const card of cards) {
+        const c = card.getBoundingClientRect();
+        card.style.setProperty('--p', String(Math.min(1, Math.max(0, (start - c.top) / c.height))));
+      }
     };
     addEventListener('scroll', () => { if (!raf) raf = requestAnimationFrame(update); }, { passive: true });
     update();
