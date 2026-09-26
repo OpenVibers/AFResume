@@ -21,7 +21,7 @@
     { "icon": "fa-solid fa-credit-card", "title": "Moves money safely", "text": "Rebuilt PowerChat's payments across five processors, with ledgers that make double-charging impossible." },
     { "icon": "fa-solid fa-robot", "title": "Builds AI that does real work", "text": "Autonomous agents that researched and wrote compliance reports Amazon analysts used every day." },
     { "icon": "fa-solid fa-server", "title": "Runs it in production", "text": "25+ sites and services with zero-downtime deploys, operated by one person." },
-    { "icon": "fa-solid fa-handshake", "title": "Understands the business side", "text": "Ten years running my own company and three years leading a retail sales team." }
+    { "icon": "fa-solid fa-handshake", "title": "Understands the business side", "text": "Ten years running my own company, three leading a retail sales team, then a year each in Amazon Robotics operations and floor leadership and as an Amazon ICQA data analyst." }
   ],
   "roles": ["Software Engineer", "Full-Stack Developer", "AI Agent Builder", "Data Analyst", "Business Owner", "Automation Engineer", "Platform Architect", "Product Builder", "Team Leader", "Problem Solver"],
   "location": "Arlington · Seattle · Pacific Northwest",
