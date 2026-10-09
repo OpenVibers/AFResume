@@ -71,7 +71,7 @@
     { "key": "sites", "name": "OpenVibe.Sites", "url": "https://openvibe.chat", "role": "13 front doors", "blurb": "One catalog and one template generate the pages and nginx configs for openvibe.chat, .codes, .wiki, .news and more.", "stat": "13 domains · 1 build", "image": null }
   ],
   "networkPlanned": [
-    { "name": "OpenRe.Stream", "url": "https://openre.stream", "role": "Restreaming" },
+    { "name": "OpenRestream", "url": "https://openre.stream", "role": "Restreaming" },
     { "name": "OpenVibe.Tips", "url": "https://openvibe.tips", "role": "Creator tips" },
     { "name": "OpenVibe.VIP", "url": "https://openvibe.vip", "role": "Memberships" },
     { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting" },

@@ -78,7 +78,7 @@ const groups = [
               <span class="wk-planned__label"><i class="fa-solid fa-clock" aria-hidden="true"></i> Coming soon</span>
               <ul class="wk-planned__list">
                 {profile.networkPlanned.map((n) => (
-                  <li><a href={n.url} target="_blank" rel="noopener" title={`${n.name}: ${n.role} (placeholder page)`}>{n.name.replace("OpenVibe.", ".").replace("OpenRe.", "OpenRe.")}<small>{n.role}</small></a></li>
+                  <li><a href={n.url} target="_blank" rel="noopener" title={`${n.name}: ${n.role} (placeholder page)`}>{n.name.replace("OpenVibe.", ".")}<small>{n.role}</small></a></li>
                 ))}
               </ul>
             </div>
