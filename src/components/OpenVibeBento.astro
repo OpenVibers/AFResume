@@ -1,6 +1,11 @@
 ---
 import profile from "../data/profile.json";
-const sites = profile.network;
+// The "sites" tile stands for everything past the six core services (profile.networkLive); its
+// text carries {more} and {total} so the counts come from that list and never drift.
+const more = profile.networkLive.length;
+const total = profile.network.filter((s) => s.key !== "sites").length + more;
+const fill = (t: string) => t.replace("{more}", String(more)).replace("{total}", String(total));
+const sites = profile.network.map((s) => ({ ...s, name: fill(s.name), blurb: fill(s.blurb), stat: fill(s.stat) }));
 const big = sites[0];
 const rest = sites.slice(1);
 const icons: Record<string, string> = {
@@ -17,7 +22,7 @@ const nodes = [
   { key: "tools", label: "Tools", x: 400, y: 50 },
   { key: "games", label: "Games", x: 400, y: 372 },
   { key: "community", label: "Community", x: 670, y: 90 },
-  { key: "sites", label: "13 Sites", x: 670, y: 330 },
+  { key: "sites", label: `${more} more`, x: 670, y: 330 },
 ];
 const edges = [
   ["live", "media"],
@@ -61,7 +66,7 @@ const edges = [
     <div class="arch card" data-reveal>
       <div class="arch__copy">
         <div class="eyebrow"><i class="fa-solid fa-diagram-project" aria-hidden="true"></i> How it fits together</div>
-        <h3>One login, one wallet, seven products that feel like one.</h3>
+        <h3>One login, one wallet, {total} sites that feel like one.</h3>
         <details class="arch__more" open>
         <summary><span class="arch__more-closed">Read more</span><span class="arch__more-open">Show less</span></summary>
         <p>Sign in once and every OpenVibe site knows who you are, what you own and what you look like. The identity service in the middle handles accounts, security and the shared virtual currency; every other product plugs into it through clear, documented APIs. That's the same playbook I bring to any company: secure single sign-on, payments and APIs designed so new products can be added without breaking the old ones.</p>
@@ -73,7 +78,7 @@ const edges = [
           <li><i class="fa-solid fa-shield-halved"></i> Every migration is rehearsed as a dry run before it touches real users</li>
         </ul>
       </div>
-      <svg class="arch__svg" viewBox="0 0 800 420" role="img" aria-label="Diagram: OpenVibe.Network at the center connected to Live, Media, Tools, Games, Community and 13 static sites; Live also talks to Media.">
+      <svg class="arch__svg" viewBox="0 0 800 420" role="img" aria-label={`Diagram: OpenVibe.Network at the center connected to Live, Media, Tools, Games, Community and ${more} more sites; Live also talks to Media.`}>
         <defs>
           <linearGradient id="agrad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="var(--accent)"/><stop offset="1" stop-color="var(--accent-2)"/></linearGradient>
           <filter id="aglow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>

@@ -1280,8 +1280,9 @@ def main() -> None:
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
     # the one-column versions for tracking systems (build_ats_resume.py) live next to these: never swept
+    from build_ats_resume import VERSIONS as ATS_VERSIONS
     keep |= {p for p in (ROOT / "public").glob("Alex_Frison_Resume_*.pdf")
-             if p.name in ("Alex_Frison_Resume_Engineering.pdf", "Alex_Frison_Resume_Data_Analyst.pdf")}
+             if p.name in {v["file"] for v in ATS_VERSIONS.values()}}
     clean_old_files("Alex_Frison_Resume_*.pdf", keep)
     print(f"\ncontent hash: {h} (filenames only change when the résumé content does)")
     print(f"text font: {FONT['label']}; icons: Font Awesome 4")

@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
 """Build plain, one-column résumés for applicant tracking systems, from the same content as the site and the designed
-PDF (build_resume.py), in two versions aimed at different roles:
+PDF (build_resume.py), in versions aimed at different roles:
 
   public/Alex_Frison_Resume_Engineering.pdf    software engineering (full-stack, payments, identity, streaming)
   public/Alex_Frison_Resume_Data_Analyst.pdf   data / BI / operations analyst
+  public/Alex_Frison_Resume_IT_Support.pdf     IT, help desk and technical support (near-home jobs)
 
 The designed PDF is multi-column with icons; a tracking system reads its text layer column by column and scrambles it.
 These have one column, real text in reading order, standard fonts and plain section names, so a parser gets every
 line right. Facts only come from src/data/profile.json and src/content/; what differs per version is the headline, the
-summary, which skills lead and how many bullets each role keeps.
+summary, which skills lead and which bullets each role keeps (a count, or the bullets' indexes).
 
 Run from the repo root:  python3 resume/build_ats_resume.py
 """
@@ -79,6 +80,32 @@ VERSIONS = {
                     "founder": 2, "earlier": 1},
         "projects": ["irdr-autonomous-bot", "irdr-quality-recap", "amazon-userscripts"],
     },
+    "support": {
+        "file": "Alex_Frison_Resume_IT_Support.pdf",
+        "headline": "IT and Technical Support: Linux and servers, hardware troubleshooting, customer support and escalations",
+        "summary": (
+            "Hands-on technical generalist in Arlington, WA. Ten years running my own company's servers: self-built "
+            "and colocated 1U and 2U hardware, Linux, nginx and DDoS resilience, and later a full infrastructure "
+            "migration with zero downtime and zero data loss. At Amazon Robotics I investigated recurring pod, drive-unit "
+            "and workstation defects and escalated them to RME; as an ICQA data analyst I built tools other associates "
+            "used every day. Three years at Verizon Wireless on phones, plans and accessories, promoted to Assistant "
+            "Manager running inventory and escalations. I document what I fix: incident write-ups, runbooks and "
+            "support docs."),
+        "skills": [
+            ("Support and troubleshooting", ["hardware and electro-mechanical troubleshooting", "root-cause analysis",
+                                             "incident documentation", "escalations", "support docs and runbooks"]),
+            ("Systems", ["Linux", "server hardware (self-built and colocated 1U / 2U)", "nginx", "systemd", "Docker",
+                         "Cloudflare", "cloud storage (Backblaze B2 / R2 / S3 APIs)", "zero-downtime migrations"]),
+            ("Network and web", ["HAR network-trace debugging (HARTools)", "DDoS resilience", "WebSockets", "TURN / coturn"]),
+            ("Scripting and automation", ["Python", "JavaScript / TypeScript", "SQL", "PHP", "TamperMonkey userscripts",
+                                          "Excel / Power Query / VBA"]),
+            ("People", ["customer retention and consultative sales", "coaching a team of 4 to 8", "opens, closes and inventory",
+                        "technical writing"]),
+        ],
+        "bullets": {"PowerChat": 1, "OpenVibe": [0, 2], "Amazon/analytics": [0, 2], "Amazon/operations": 2,
+                    "Verizon Wireless": 3, "founder": 2},
+        "projects": ["amazon-userscripts", "hartools", "openvibe-cutover", "mp-select-mini"],
+    },
 }
 
 
@@ -105,12 +132,14 @@ def plain(s: str) -> str:
              .replace("‘", "'").replace("’", "'").replace("“", '"').replace("”", '"'))
 
 
-def bullets_for(role: dict, counts: dict) -> int:
+def bullets_for(role: dict, counts: dict) -> list[str]:
     key = role["company"] if role["company"] in counts else (
         f"Amazon/{role.get('kind')}" if role["company"] == "Amazon" else role.get("kind", ""))
     if role["company"].startswith("OpenVibe"):
         key = "OpenVibe"
-    return counts.get(key, counts.get(role.get("kind", ""), 2))
+    pick = counts.get(key, counts.get(role.get("kind", ""), 2))
+    bullets = role.get("bullets", [])
+    return [bullets[i] for i in pick if i < len(bullets)] if isinstance(pick, list) else bullets[:pick]
 
 
 def build(version: str, data: dict) -> Path:
@@ -143,11 +172,11 @@ def build(version: str, data: dict) -> Path:
         story.append(Paragraph(f"<b>{plain(group)}:</b> {plain(', '.join(items))}", st["body"]))
     story += [Paragraph("EXPERIENCE", st["h"]), rule()]
     for r in data["roles"]:
-        n = bullets_for(r, v["bullets"])
+        chosen = bullets_for(r, v["bullets"])
         head = Paragraph(plain(f"{r['role']}, {r['company']}"), st["role"])
         meta = Paragraph(plain(" | ".join(x for x in [r.get("location", ""), f"{r['start']} to {r['end']}"] if x)), st["meta"])
-        items = [Paragraph(plain(b), st["bullet"], bulletText="•") for b in r.get("bullets", [])[:n]]
-        if r.get("stack") and version == "engineering" and n >= 2:
+        items = [Paragraph(plain(b), st["bullet"], bulletText="•") for b in chosen]
+        if r.get("stack") and version == "engineering" and len(chosen) >= 2:
             items.append(Paragraph(plain("Stack: " + ", ".join(r["stack"])), st["meta"]))
         story.append(KeepTogether([head, meta, *items[:1]]))
         story += items[1:]

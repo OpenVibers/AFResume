@@ -36,11 +36,11 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Oct_2026_68186113.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Oct_2026_38b37ff8.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
-    "also": "Founder and sole engineer of OpenVibe: seven services, 20+ domains, one operator."
+    "also": "Founder and sole engineer of OpenVibe: 39 live sites behind one login, one operator."
   },
   "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other Amazon associates used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
   "seeking": [
@@ -68,18 +68,42 @@
     { "key": "tools", "name": "OpenVibe.Tools", "url": "https://openvibe.tools", "role": "Tools suite", "blurb": "169 server-rendered tools across 8 families, a host registry with custom-domain mirrors, and full SEO plumbing.", "stat": "169 tools · 8 families", "image": "/assets/img/sites/tools.webp" },
     { "key": "games", "name": "OpenVibe.Games", "url": "https://openvibe.games", "role": "Scraplandia", "blurb": "Browser multiplayer survival game: authoritative server, client prediction, Havok physics, physgun building.", "stat": "56k LOC TypeScript", "image": "/assets/img/sites/games.webp" },
     { "key": "community", "name": "OpenVibe.Community", "url": "https://openvibe.community", "role": "Pastes & posts", "blurb": "Server-rendered paste hub with forks, search, feeds and silent SSO, proxied to Live so identity stays consistent.", "stat": "No DB of its own", "image": "/assets/img/sites/community.webp" },
-    { "key": "sites", "name": "OpenVibe.Sites", "url": "https://openvibe.chat", "role": "13 front doors", "blurb": "One catalog and one template generate the pages and nginx configs for openvibe.chat, .codes, .wiki, .news and more.", "stat": "13 domains · 1 build", "image": null }
+    { "key": "sites", "name": "{more} more live sites", "url": "https://openvibe.network", "role": "The rest of the network", "blurb": "Chat, tips, memberships, video, blogs, wikis, cited news, restreaming, job and home search, robot control, coding agents and a developer platform, all on the same login.", "stat": "{total} live sites · 1 login", "image": null }
   ],
-  "networkPlanned": [
-    { "name": "OpenRestream", "url": "https://openre.stream", "role": "Restreaming" },
-    { "name": "OpenVibe.Tips", "url": "https://openvibe.tips", "role": "Creator tips" },
-    { "name": "OpenVibe.VIP", "url": "https://openvibe.vip", "role": "Memberships" },
-    { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting" },
-    { "name": "OpenVibe.News", "url": "https://openvibe.news", "role": "News" },
-    { "name": "OpenVibe.Reviews", "url": "https://openvibe.reviews", "role": "Reviews" },
-    { "name": "OpenVibe.Deals", "url": "https://openvibe.deals", "role": "Deals" },
-    { "name": "OpenVibe.Coupons", "url": "https://openvibe.coupons", "role": "Coupons" },
-    { "name": "OpenVibe.Trade", "url": "https://openvibe.trade", "role": "Markets" }
+  "networkLive": [
+    { "name": "OpenRestream", "url": "https://openre.stream", "role": "Restreaming", "group": "people" },
+    { "name": "OpenVibe.Chat", "url": "https://openvibe.chat", "role": "Global chat", "group": "people" },
+    { "name": "OpenVibe.Tips", "url": "https://openvibe.tips", "role": "Creator tips", "group": "people" },
+    { "name": "OpenVibe.VIP", "url": "https://openvibe.vip", "role": "Memberships", "group": "people" },
+    { "name": "OpenVibe.Video", "url": "https://openvibe.video", "role": "Video", "group": "people" },
+    { "name": "OpenVibe.Pics", "url": "https://openvibe.pics", "role": "Pictures", "group": "people" },
+    { "name": "OpenVibe.Download", "url": "https://openvibe.download", "role": "File sharing", "group": "people" },
+    { "name": "OpenVibe.Blog", "url": "https://openvibe.blog", "role": "Blogs", "group": "people" },
+    { "name": "OpenVibe.Wiki", "url": "https://openvibe.wiki", "role": "Wikis", "group": "people" },
+    { "name": "OpenVibe.News", "url": "https://openvibe.news", "role": "Cited news", "group": "people" },
+    { "name": "OpenVibe.Reviews", "url": "https://openvibe.reviews", "role": "Sourced reviews", "group": "people" },
+    { "name": "OpenVibe.Help", "url": "https://openvibe.help", "role": "Help and support", "group": "people" },
+    { "name": "OpenVibe.Quest", "url": "https://openvibe.quest", "role": "Quests", "group": "people" },
+    { "name": "OpenVibe.Play", "url": "https://play.openvibe.network", "role": "Achievements", "group": "people" },
+    { "name": "OpenVibe.Inventory", "url": "https://inventory.openvibe.network", "role": "Items", "group": "people" },
+    { "name": "OpenVibe.Deals", "url": "https://openvibe.deals", "role": "Deals", "group": "people" },
+    { "name": "OpenVibe.Coupons", "url": "https://openvibe.coupons", "role": "Coupons", "group": "people" },
+    { "name": "OpenVibe.Trade", "url": "https://openvibe.trade", "role": "Market data", "group": "people" },
+    { "name": "OpenVibe.Work", "url": "https://openvibe.work", "role": "Job search", "group": "people" },
+    { "name": "OpenVibe.Rent", "url": "https://openvibe.rent", "role": "Rentals", "group": "people" },
+    { "name": "OpenVibe.Homes", "url": "https://openvibe.homes", "role": "Home buying", "group": "people" },
+    { "name": "OpenVibe.Food", "url": "https://openvibe.food", "role": "Food and meals", "group": "people" },
+    { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting compared", "group": "people" },
+    { "name": "OpenVibe.Services", "url": "https://openvibe.services", "role": "Developer platform", "group": "builders" },
+    { "name": "OpenVibe.AI", "url": "https://ai.openvibe.services", "role": "AI layer", "group": "builders" },
+    { "name": "OpenVibe.Codes", "url": "https://openvibe.codes", "role": "Coding agents", "group": "builders" },
+    { "name": "OpenVibe.Actor", "url": "https://openvibe.actor", "role": "Task agents", "group": "builders" },
+    { "name": "OpenVibe.Bot", "url": "https://openvibe.bot", "role": "Robot control", "group": "builders" },
+    { "name": "OpenVibe.Run", "url": "https://openvibe.run", "role": "Jobs on nodes", "group": "builders" },
+    { "name": "OpenVibe.Events", "url": "https://openvibe.events", "role": "Event delivery", "group": "builders" },
+    { "name": "OpenVibe.Watch", "url": "https://openvibe.watch", "role": "Watches", "group": "builders" },
+    { "name": "OpenVibe.Space", "url": "https://openvibe.space", "role": "Static hosting", "group": "builders" },
+    { "name": "OpenVibe.Zone", "url": "https://openvibe.zone", "role": "S3 storage", "group": "builders" }
   ],
   "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs.",
   "capabilities": ["websites", "platforms", "APIs", "dashboards", "AI features", "automations", "identity systems", "payment systems", "real-time chat", "streaming infra", "whatever you need"]

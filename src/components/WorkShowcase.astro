@@ -23,11 +23,19 @@ const netIcon: Record<string, string> = {
   games: "fa-solid fa-gamepad", community: "fa-solid fa-comments", sites: "fa-solid fa-globe",
 };
 
+// Everything past the six core services: live sites, shown as chips under the bento.
+const liveMore = profile.networkLive;
+const liveTotal = profile.network.filter((s) => s.key !== "sites").length + liveMore.length;
+const liveGroups = [
+  { label: "Also live", icon: "fa-solid fa-circle-check", items: liveMore.filter((n) => n.group === "people") },
+  { label: "For builders", icon: "fa-solid fa-code", items: liveMore.filter((n) => n.group === "builders") },
+];
+
 const groups = [
   {
     key: "openvibe", tone: "a", anchor: "network", icon: "fa-solid fa-diagram-project",
-    title: "The OpenVibe network", blurb: "Seven live services behind one sign-in, all built and run by me since 2026.",
-    count: profile.network.length, allHref: "/portfolio/?cat=openvibe,infra", allLabel: "All OpenVibe case notes",
+    title: "The OpenVibe network", blurb: `${liveTotal} live sites behind one sign-in, all built and run by me since 2026.`,
+    count: liveTotal, allHref: "/portfolio/?cat=openvibe,infra", allLabel: "All OpenVibe case notes",
     items: [] as { href: string; external: boolean; image?: string | null; icon: string; title: string; sub: string; text: string; meta: string; soon?: boolean }[],
   },
   {
@@ -73,16 +81,16 @@ const groups = [
             <a class="wk-group__all" href={g.allHref}><i class="fa-solid fa-grip" aria-hidden="true"></i> <span>{g.allLabel}</span> <i class="fa-solid fa-arrow-right wk-group__arrow" aria-hidden="true"></i></a>
           </header>
           {g.key === "openvibe" && <OpenVibeBento />}
-          {g.key === "openvibe" && (
-            <div class="wk-planned" aria-label="Planned OpenVibe sites">
-              <span class="wk-planned__label"><i class="fa-solid fa-clock" aria-hidden="true"></i> Coming soon</span>
+          {g.key === "openvibe" && liveGroups.map((lg) => (
+            <div class="wk-planned" aria-label={`${lg.label}: more OpenVibe sites`}>
+              <span class="wk-planned__label"><i class={lg.icon} aria-hidden="true"></i> {lg.label}</span>
               <ul class="wk-planned__list">
-                {profile.networkPlanned.map((n) => (
-                  <li><a href={n.url} target="_blank" rel="noopener" title={`${n.name}: ${n.role} (placeholder page)`}>{n.name.replace("OpenVibe.", ".")}<small>{n.role}</small></a></li>
+                {lg.items.map((n) => (
+                  <li><a href={n.url} target="_blank" rel="noopener" title={`${n.name}: ${n.role}`}>{n.name.replace("OpenVibe.", ".")}<small>{n.role}</small></a></li>
                 ))}
               </ul>
             </div>
-          )}
+          ))}
           <ul class="wk-grid" data-stagger hidden={g.items.length === 0} style={`--cols:${Math.min(Math.max(g.items.length, 1), 4)};--cols-t:${Math.min(Math.max(g.items.length, 1), 2)}`}>
             {g.items.map((it) => (
               <li class={`wk-card ${it.image ? "wk-card--img" : ""} ${it.soon ? "wk-card--soon" : ""}`}>
@@ -167,8 +175,9 @@ const groups = [
   .mono { font-family: var(--font-mono); }
   .wk-card__soon { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: .6rem; letter-spacing: .08em; text-transform: uppercase; padding: 2px 8px; border-radius: 999px; color: var(--accent-3); background: rgba(var(--accent-3-rgb), .12); border: 1px solid rgba(var(--accent-3-rgb), .35); white-space: nowrap; }
   .wk-card--soon .wk-card__link { border-style: dashed; }
-  /* Planned domains: every one already has a truthful "coming soon" page, so the chips link there. */
-  .wk-planned { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; padding: 12px 14px; border-radius: 14px; border: 1px dashed var(--border-strong); background: var(--surface); }
+  /* The rest of the live network, as chips that open each site (2026-10: every one of them serves its product). */
+  .wk-planned { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 14px; margin-top: 14px; padding: 12px 14px; border-radius: 14px; border: 1px solid var(--border); background: var(--surface); }
+  .wk-planned + .wk-planned { margin-top: 8px; }
   .wk-planned__label { display: inline-flex; align-items: center; gap: 7px; font: 600 .68rem var(--font-mono); letter-spacing: .14em; text-transform: uppercase; color: var(--accent-3); }
   .wk-planned__list { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
   .wk-planned__list a { display: inline-flex; align-items: baseline; gap: 6px; padding: 5px 10px; border-radius: 999px; border: 1px solid var(--border); background: var(--surface-2); color: var(--fg); font: 600 .74rem var(--font-body); text-decoration: none; transition: border-color .25s var(--ease), transform .25s var(--ease); }
