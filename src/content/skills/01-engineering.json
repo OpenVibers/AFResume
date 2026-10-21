@@ -25,6 +25,10 @@
       "level": "strong"
     },
     {
+      "name": "Go",
+      "level": "familiar"
+    },
+    {
       "name": "SQLite (WAL) / MySQL",
       "level": "core"
     },

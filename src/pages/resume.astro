@@ -39,9 +39,11 @@ const pitchParts = linkify(profile.pitch, LINK_TERMS);
       <button type="button" class="btn" id="themed-pdf-toggle" data-magnetic aria-expanded="false" aria-controls="themed-pdf-swatches">
         <i class="fa-solid fa-paintbrush"></i> Themed PDF <i class="fa-solid fa-chevron-down themed-pdf-caret" aria-hidden="true"></i>
       </button>
+      <a href="/Alex_Frison_Resume_Engineering.pdf" class="btn" data-magnetic><i class="fa-solid fa-file-lines"></i> Plain: engineering</a>
+      <a href="/Alex_Frison_Resume_Data_Analyst.pdf" class="btn" data-magnetic><i class="fa-solid fa-file-lines"></i> Plain: data analyst</a>
       <button onclick="window.print()" class="btn" data-magnetic><i class="fa-solid fa-print"></i> Print this page</button>
     </div>
-    <p class="resume__pdf-note">The <strong>Download PDF</strong> is the canonical résumé — dense and ATS-safe. <strong>Themed PDF</strong> is the same content, pre-built in whichever color you pick below (every color is generated ahead of time, nothing renders in your browser).</p>
+    <p class="resume__pdf-note">The <strong>Download PDF</strong> is the full, designed résumé. <strong>Themed PDF</strong> is the same content, pre-built in whichever color you pick below (every color is generated ahead of time, nothing renders in your browser). The two <strong>plain</strong> versions are one column with standard fonts, for applicant tracking systems: one aimed at engineering roles, one at data and analytics roles.</p>
 
     <div class="themed-pdf-swatches" id="themed-pdf-swatches" hidden>
       {themePresets.map((p) => (

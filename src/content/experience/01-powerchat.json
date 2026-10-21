@@ -13,7 +13,7 @@
   "bullets": [
     "Designed and shipped the Developer API platform end to end: PowerChat became an OAuth2 authorization server with scoped consent, token lifecycle, HMAC-signed webhooks and an inbound API, so third-party apps act as pseudo-platforms feeding chat, view counts, follows, subs, currency and tips into overlays. Re-implemented Streamlabs as the first official app on the new framework.",
     "Rebuilt the payments program as one system: a provider-agnostic charge rail with five adapters (Stripe Connect, Square, PayPal, an NMI card vault and NowPayments crypto), append-only ledgers where double-crediting is structurally impossible, Tipalti payouts, recurring Pro and viewer-subscription billing, signed webhooks per provider and an admin reconciliation surface.",
-    "Delivered 400+ commits and roughly 300k changed lines in the first five weeks across integrations, payments and Rumble connection work, backed by 240+ governed backend integration tests and 1,700+ frontend unit tests, with lint, typecheck and empty-database migration proofs in CI."
+    "Kept a fast-moving rewrite safe to ship: 240+ governed backend integration tests and 1,700+ frontend unit tests across the integrations, payments and Rumble connection work, with lint, typecheck and empty-database migration proofs in CI."
   ],
   "stack": [
     "TypeScript",

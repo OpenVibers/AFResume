@@ -8,7 +8,7 @@
     "build": "astro build",
     "preview": "astro preview --host",
     "vendor:fetch": "node scripts/fetch-vendor.mjs",
-    "resume:pdf": "python3 resume/build_resume.py"
+    "resume:pdf": "python3 resume/build_resume.py && python3 resume/build_ats_resume.py"
   },
   "dependencies": {
     "@astrojs/mdx": "^3.1.9",

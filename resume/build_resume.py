@@ -52,7 +52,7 @@ SELECTED_PROJECTS = [
 ]
 # Metrics strip: pick by a keyword found in the label, in this order.
 # Falls back to the first four metrics if fewer than four match.
-METRIC_KEYWORDS = ["shipped", "lines of production", "payment processors", "sox compliance", "years running"]
+METRIC_KEYWORDS = ["shipped", "endpoints and pages", "payment processors", "sox compliance", "years running"]
 FULL_ROLES = 2            # PowerChat + OpenVibe get full treatment on page 1
 COMPACT_BULLETS = 2       # bullets per role on page 2
 
@@ -1279,6 +1279,9 @@ def main() -> None:
     (ROOT / "src/data/theme-pdf-manifest.json").write_text(
         json.dumps(manifest, indent=2, sort_keys=True) + "\n", encoding="utf-8")
 
+    # the one-column versions for tracking systems (build_ats_resume.py) live next to these: never swept
+    keep |= {p for p in (ROOT / "public").glob("Alex_Frison_Resume_*.pdf")
+             if p.name in ("Alex_Frison_Resume_Engineering.pdf", "Alex_Frison_Resume_Data_Analyst.pdf")}
     clean_old_files("Alex_Frison_Resume_*.pdf", keep)
     print(f"\ncontent hash: {h} (filenames only change when the résumé content does)")
     print(f"text font: {FONT['label']}; icons: Font Awesome 4")
