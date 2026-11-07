@@ -14,8 +14,12 @@ const countWord = WORDS[count] ?? String(count);
 <script is:inline>
   (function () {
     try {
-      if (/(?:^|[?&])pae2(?:[=&]|$)/.test(location.search)) {
-        document.documentElement.classList.add("pae2");
+      var q = location.search, d = document.documentElement;
+      if (/(?:^|[?&])PAE2(?:[=&]|$)/.test(q)) {
+        d.classList.add("pae2"); d.classList.add("pae2-crew");
+        document.title = "Welcome, coworker · Alex Frison";
+      } else if (/(?:^|[?&])pae2(?:[=&]|$)/.test(q)) {
+        d.classList.add("pae2");
         document.title = "The Amazon Robotics FC Album · Alex Frison";
       }
     } catch (e) {}
@@ -25,7 +29,8 @@ const countWord = WORDS[count] ?? String(count);
 <section class="section album" id="album" aria-labelledby="album-title">
   <div class="container">
     <div class="album__head">
-      <div class="eyebrow"><i class="fa-solid fa-hat-cowboy" aria-hidden="true"></i> You found the hat link</div>
+      <div class="eyebrow album__eyebrow-hat"><i class="fa-solid fa-hat-cowboy" aria-hidden="true"></i> You found the hat link</div>
+      <div class="eyebrow album__eyebrow-crew"><i class="fa-solid fa-people-group" aria-hidden="true"></i> Made for the PAE2 crew</div>
       <h2 class="sec-title album__title" id="album-title">{album.title.replace(/FC Album$/, "")}<em>FC Album</em></h2>
       <p class="album__edition">({album.edition})</p>
       <p class="sec-lead album__lead">{countWord} parody music videos about life on the floor: rates, andons, scanners, AR and everything in between. Turn it up, then keep scrolling for the grown-up part of the site.</p>
@@ -140,6 +145,10 @@ const countWord = WORDS[count] ?? String(count);
   .album { display: none; }
   /* Tight below: the metrics strip that follows has its own top padding. */
   :global(html.pae2) .album { display: block; padding-bottom: clamp(4px, 1vw, 16px); }
+  /* The hat line on the hat visit, the crew line on the coworker visit (?PAE2). */
+  .album__eyebrow-crew { display: none; }
+  :global(html.pae2-crew) .album__eyebrow-hat { display: none; }
+  :global(html.pae2-crew) .album__eyebrow-crew { display: inline-flex; }
   .album__head { max-width: 760px; margin-bottom: 1.75rem; }
   .album__head .eyebrow i { margin-right: .35rem; }
   .album__title em { font-style: normal; background: var(--grad); -webkit-background-clip: text; background-clip: text; color: transparent; }

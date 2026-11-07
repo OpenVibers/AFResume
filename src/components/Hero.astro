@@ -4,12 +4,29 @@ const name = "Alex Frison";
 const words = name.split(" ");
 const offsets = words.map((_, i) => words.slice(0, i).join(" ").length + (i ? 1 : 0));
 import fcAlbum from "../data/fc-album.json";
+// The coworker welcome (?PAE2): each letter is its own span so the line can ripple like a wave.
+const crewHi = "Hey, fellow PAE2 coworker!".split(" ");
+let crewI = 0;
+const crewWords = crewHi.map((w) => Array.from(w).map((c) => ({ c, i: crewI++ })));
 ---
 <section class="hero" id="top" aria-labelledby="hero-title">
   <canvas class="hero__aurora" id="aurora" aria-hidden="true"></canvas>
   <div class="hero__veil" aria-hidden="true"></div>
 
   <div class="container hero__grid">
+    <!-- Only on the coworker link (?PAE2 in capitals): a welcome, then the same album and game as the hat. -->
+    <div class="hero__crew" role="note" aria-label="Hey, fellow PAE2 coworker! Glad you're here: the album and the break room game are just below.">
+      <span class="hero__crew-hand" aria-hidden="true">
+        <span class="hero__crew-ripple"></span><span class="hero__crew-ripple"></span>
+        <span class="hero__crew-emoji">👋</span>
+      </span>
+      <span class="hero__crew-copy" aria-hidden="true">
+        <span class="hero__crew-hi">{crewWords.map((w) => (
+          <span class="hero__crew-word">{w.map((x) => <span class="hero__crew-ch" style={`--i:${x.i}`}>{x.c}</span>)}</span>
+        ))}</span>
+        <span class="hero__crew-sub">Glad you're here. The album and the break room game are just below.</span>
+      </span>
+    </div>
     <div class="hero__copy">
       <p class="hero__status hero__in" style="--d:0ms">
         <span class="hero__status-seg hero__status-seg--now"><span class="live-dot" aria-hidden="true"></span>Now</span>
@@ -226,6 +243,62 @@ import fcAlbum from "../data/fc-album.json";
     :global(html.pae2) .hero__album, .hero__eq i, .hero__album .hero__album-arrow { animation: none; }
     .hero__eq i { height: 70%; }
   }
+  /* The coworker welcome (html.pae2-crew): a hand that waves, two ripples, the line rising letter by letter like a
+     wave, and one light sweep across the card. Every animation is finite and fills backwards only, so nothing
+     keeps a GPU layer once it has played (phones painted those as blank boxes, 2026-09-26). */
+  .hero__crew { display: none; }
+  /* Wide screens: the welcome sits across the top, close to the copy it introduces. */
+  @media (min-width: 921px) { :global(html.pae2-crew) .hero__grid { row-gap: 22px; } }
+  :global(html.pae2-crew) .hero__crew {
+    position: relative; overflow: hidden; display: flex; align-items: center; gap: 14px;
+    grid-column: 1 / -1; justify-self: start;
+    width: fit-content; max-width: 100%; margin: 0; padding: 12px 20px 12px 12px; border-radius: 20px;
+    border: 1px solid rgba(var(--accent-rgb), .34);
+    background:
+      linear-gradient(115deg, rgba(var(--accent-rgb), .16), rgba(var(--accent-2-rgb), .10) 55%, rgba(var(--accent-3-rgb), .14)),
+      var(--surface);
+    box-shadow: 0 14px 34px -22px rgba(var(--accent-2-rgb), .9);
+    animation: crewIn .7s var(--ease) .1s backwards;
+  }
+  :global(html.pae2-crew) .hero__crew::after {
+    content: ""; position: absolute; inset: 0; pointer-events: none; transform: translateX(-130%);
+    background: linear-gradient(100deg, transparent 30%, rgba(255, 255, 255, .16) 50%, transparent 70%);
+    animation: crewSweep 1.4s var(--ease) 1.6s backwards;
+  }
+  .hero__crew-hand { position: relative; flex: none; display: grid; place-items: center; width: 54px; height: 54px; border-radius: 50%;
+    background: radial-gradient(circle at 35% 30%, rgba(var(--accent-2-rgb), .30), rgba(var(--accent-rgb), .14)); }
+  .hero__crew-emoji { display: inline-block; font-size: 29px; line-height: 1; transform-origin: 70% 80%;
+    animation: crewWave 1.8s ease-in-out .55s 3 backwards; }
+  .hero__crew-ripple { position: absolute; inset: 0; border-radius: 50%; border: 2px solid rgba(var(--accent-rgb), .55); opacity: 0;
+    animation: crewRipple 1.8s ease-out .55s 3 backwards; }
+  .hero__crew-ripple + .hero__crew-ripple { border-color: rgba(var(--accent-2-rgb), .5); animation-delay: 1.45s; }
+  .hero__crew-copy { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+  .hero__crew-hi { color: var(--fg); font: 700 clamp(1.02rem, 2.3vw, 1.22rem)/1.25 var(--font-display, var(--font-body)); letter-spacing: -.01em; }
+  .hero__crew-word { display: inline-block; white-space: nowrap; margin-right: .28em; }
+  .hero__crew-word:last-child { margin-right: 0; }
+  .hero__crew-ch { display: inline-block; animation: crewBob 1s var(--ease) backwards; animation-delay: calc(.35s + var(--i) * 38ms); }
+  .hero__crew-sub { color: var(--dim); font: 500 .86rem/1.35 var(--font-body); }
+  @keyframes crewIn { from { opacity: 0; transform: translateY(-8px) scale(.97); } to { opacity: 1; transform: none; } }
+  @keyframes crewSweep { from { transform: translateX(-130%); } to { transform: translateX(130%); } }
+  @keyframes crewWave {
+    0%, 62%, 100% { transform: rotate(0); }
+    10% { transform: rotate(18deg); } 20% { transform: rotate(-9deg); } 30% { transform: rotate(16deg); }
+    40% { transform: rotate(-5deg); } 50% { transform: rotate(10deg); }
+  }
+  @keyframes crewRipple { from { opacity: .85; transform: scale(.85); } to { opacity: 0; transform: scale(1.75); } }
+  @keyframes crewBob {
+    0% { opacity: 0; transform: translateY(6px); } 35% { opacity: 1; transform: translateY(-7px); }
+    65% { transform: translateY(1.5px); } 100% { opacity: 1; transform: none; }
+  }
+  @media (max-width: 520px) {
+    :global(html.pae2-crew) .hero__crew { width: 100%; gap: 12px; padding: 11px 14px 11px 11px; border-radius: 18px; }
+    .hero__crew-hand { width: 48px; height: 48px; }
+    .hero__crew-emoji { font-size: 26px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    :global(html.pae2-crew) .hero__crew, :global(html.pae2-crew) .hero__crew::after,
+    .hero__crew-emoji, .hero__crew-ripple, .hero__crew-ch { animation: none; }
+  }
   .hero__tags { max-width: 620px; }
   @media (max-width: 920px) { .hero__tags { max-width: none; } }
   .hero__tags-label { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; font: 500 .72rem var(--font-mono); letter-spacing: .16em; text-transform: uppercase; color: var(--dim); }
@@ -338,6 +411,7 @@ import fcAlbum from "../data/fc-album.json";
     .hero { min-height: auto; padding-top: calc(var(--nav-h) + 30px); padding-bottom: 16px; }
     .hero__grid { grid-template-columns: 1fr; }
     .hero__visual { order: -1; }
+    :global(html.pae2-crew) .hero__crew { order: -2; justify-self: stretch; width: auto; }
     .portrait { width: min(290px, 72vw); margin-top: 10px; }
     /* On narrow screens the tags hang off the plinth's edges instead of sitting over the face. */
     .portrait__tag--tl { top: 25%; left: -6%; font-size: .66rem; padding: 6px 10px; }

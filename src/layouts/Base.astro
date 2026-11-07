@@ -84,6 +84,13 @@ const imageUrl = new URL(image, site).toString();
     (function () {
       var d = document.documentElement;
       d.classList.remove('no-js');
+      // The FC album visits: ?pae2 from the hat (fc.tools), ?PAE2 in capitals from a link handed to coworkers
+      // (the same album and game, with a welcome instead of the hat line). Marked here, before paint.
+      try {
+        var q = location.search;
+        if (/(?:^|[?&])PAE2(?:[=&]|$)/.test(q)) { d.classList.add('pae2'); d.classList.add('pae2-crew'); }
+        else if (/(?:^|[?&])pae2(?:[=&]|$)/.test(q)) d.classList.add('pae2');
+      } catch (e) {}
       try {
         var t = localStorage.getItem('afnet-theme');
         if (t === 'light' || t === 'dark') d.dataset.theme = t;

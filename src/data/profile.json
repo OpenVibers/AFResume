@@ -20,7 +20,7 @@
     { "icon": "fa-solid fa-layer-group", "title": "Ships the whole product", "text": "Design, code, infrastructure, deployment and support, with no hand-off in between." },
     { "icon": "fa-solid fa-credit-card", "title": "Moves money safely", "text": "Rebuilt PowerChat's payments across five processors, with ledgers that make double-charging impossible." },
     { "icon": "fa-solid fa-robot", "title": "Builds AI that does real work", "text": "Autonomous agents that researched and wrote compliance reports Amazon associates used every day." },
-    { "icon": "fa-solid fa-server", "title": "Runs it in production", "text": "25+ sites and services with zero-downtime deploys, operated by one person." },
+    { "icon": "fa-solid fa-server", "title": "Runs it in production", "text": "50+ sites and services with zero-downtime deploys, operated by one person." },
     { "icon": "fa-solid fa-handshake", "title": "Understands the business side", "text": "Ten years running my own company, three leading a retail sales team, then a year each in Amazon Robotics operations and floor leadership and as an Amazon ICQA data analyst." }
   ],
   "roles": ["Software Engineer", "Full-Stack Developer", "AI Agent Builder", "Data Analyst", "Business Owner", "Automation Engineer", "Platform Architect", "Product Builder", "Team Leader", "Problem Solver"],
@@ -36,13 +36,13 @@
   "githubDisplay": "github.com/OpenVibers",
   "linkedin": "https://www.linkedin.com/in/fris/",
   "linkedinDisplay": "linkedin.com/in/fris",
-  "resumePdf": "/Alex_Frison_Resume_Oct_2026_38b37ff8.pdf",
+  "resumePdf": "/Alex_Frison_Resume_Nov_2026_e28027d7.pdf",
   "availability": "Open to pretty much anything — engineering, platform, analytics, ops, sales, whatever fits · remote or Pacific Northwest",
   "status": {
     "now": "Contract software engineer at PowerChat, building its developer platform and payments program.",
-    "also": "Founder and sole engineer of OpenVibe: 39 live sites behind one login, one operator."
+    "also": "Founder and sole engineer of OpenVibe: 53 live sites behind one login, one operator."
   },
-  "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 25+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other Amazon associates used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
+  "pitch": "I'm a software engineer and business owner who builds complete products and keeps them running: websites, platforms, payment systems, AI agents and the automation behind them. Over the last decade I've shipped 50+ sites and services, rebuilt a live payments program across five processors, led a sales team, and turned an Amazon data-analysis job into tooling other Amazon associates used every day. Give me a problem or a rough idea and I'll deliver the whole thing: design, code, deployment and support.",
   "seeking": [
     { "label": "Honestly, open to anything", "detail": "Title and level are negotiable. The team, the problem and the chance to own something matter more than the label." },
     { "label": "Software engineering", "detail": "Full-stack web apps, platforms, APIs, payments, streaming and realtime systems, designed, shipped and kept running in production." },
@@ -52,8 +52,8 @@
   "foundedOrg": "Own company, LLC",
   "lastRole": "PowerChat — Software Engineer (Contract)",
   "metrics": [
-    { "num": 25, "suffix": "+", "label": "Websites, apps and services designed, built and shipped end to end", "short": "Sites and services shipped", "icon": "fa-solid fa-cubes-stacked" },
-    { "num": 500, "suffix": "k+", "label": "Lines of production code written and maintained", "short": "Lines of production code", "icon": "fa-solid fa-code" },
+    { "num": 50, "suffix": "+", "label": "Websites, apps and services designed, built and shipped end to end", "short": "Sites and services shipped", "icon": "fa-solid fa-cubes-stacked" },
+    { "num": 1, "suffix": "M+", "label": "Lines of production code written and maintained", "short": "Lines of production code", "icon": "fa-solid fa-code" },
     { "num": 900, "suffix": "+", "label": "API endpoints and pages running in production, all built solo", "short": "Endpoints live in production", "icon": "fa-solid fa-route" },
     { "num": 169, "suffix": "", "label": "Free web tools built and published for anyone to use", "short": "Free web tools published", "icon": "fa-solid fa-toolbox" },
     { "num": 5, "suffix": "", "label": "Payment processors merged into one billing system that can't double-charge", "short": "Payment processors unified", "icon": "fa-solid fa-credit-card" },
@@ -94,6 +94,15 @@
     { "name": "OpenVibe.Homes", "url": "https://openvibe.homes", "role": "Home buying", "group": "people" },
     { "name": "OpenVibe.Food", "url": "https://openvibe.food", "role": "Food and meals", "group": "people" },
     { "name": "OpenVibe.Host", "url": "https://openvibe.host", "role": "Hosting compared", "group": "people" },
+    { "name": "OpenVibe.Design", "url": "https://openvibe.design", "role": "Themes and AI design", "group": "people" },
+    { "name": "OpenVibe.Report", "url": "https://openvibe.report", "role": "Open numbers", "group": "people" },
+    { "name": "OpenVibe.Today", "url": "https://openvibe.today", "role": "Calendar", "group": "people" },
+    { "name": "OpenVibe.Tours", "url": "https://openvibe.tours", "role": "Travel", "group": "people" },
+    { "name": "OpenVibe.Fun", "url": "https://openvibe.fun", "role": "Things to do", "group": "people" },
+    { "name": "OpenVibe.Meme", "url": "https://openvibe.meme", "role": "Meme database", "group": "people" },
+    { "name": "OpenVibe.Surf", "url": "https://openvibe.surf", "role": "Surf maps", "group": "people" },
+    { "name": "OpenVibe.Cam", "url": "https://openvibe.cam", "role": "Camera app", "group": "people" },
+    { "name": "Open.Shoes", "url": "https://open.shoes", "role": "Shoe prices", "group": "people" },
     { "name": "OpenVibe.Services", "url": "https://openvibe.services", "role": "Developer platform", "group": "builders" },
     { "name": "OpenVibe.AI", "url": "https://ai.openvibe.services", "role": "AI layer", "group": "builders" },
     { "name": "OpenVibe.Codes", "url": "https://openvibe.codes", "role": "Coding agents", "group": "builders" },
@@ -103,7 +112,12 @@
     { "name": "OpenVibe.Events", "url": "https://openvibe.events", "role": "Event delivery", "group": "builders" },
     { "name": "OpenVibe.Watch", "url": "https://openvibe.watch", "role": "Watches", "group": "builders" },
     { "name": "OpenVibe.Space", "url": "https://openvibe.space", "role": "Static hosting", "group": "builders" },
-    { "name": "OpenVibe.Zone", "url": "https://openvibe.zone", "role": "S3 storage", "group": "builders" }
+    { "name": "OpenVibe.Zone", "url": "https://openvibe.zone", "role": "S3 storage", "group": "builders" },
+    { "name": "OpenVibe.Exchange", "url": "https://openvibe.exchange", "role": "AI marketplace", "group": "builders" },
+    { "name": "OpenVibe.Vision", "url": "https://openvibe.vision", "role": "Image AI", "group": "builders" },
+    { "name": "OpenVibe.Website", "url": "https://openvibe.website", "role": "Website builder", "group": "builders" },
+    { "name": "OpenVibe.Domains", "url": "https://openvibe.domains", "role": "Domain prices", "group": "builders" },
+    { "name": "OpenVibe Node", "url": "https://node.openvibe.network", "role": "Your own computer", "group": "builders" }
   ],
   "education": "Snohomish High School, WA. AP Statistics, Calculus, English, Creative Writing and Spanish. Self-taught engineer since age 12: systems, infrastructure, graphics, hardware and whatever the problem needs.",
   "capabilities": ["websites", "platforms", "APIs", "dashboards", "AI features", "automations", "identity systems", "payment systems", "real-time chat", "streaming infra", "whatever you need"]

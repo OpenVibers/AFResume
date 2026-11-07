@@ -52,7 +52,7 @@ VERSIONS = {
                                 "zero-downtime deploys"]),
             ("AI", ["tool-use agents", "Anthropic and OpenAI-compatible APIs", "local inference (whisper.cpp, Ollama)"]),
         ],
-        "bullets": {"PowerChat": 3, "OpenVibe": 3, "Amazon/analytics": 2, "Amazon/operations": 1, "Verizon Wireless": 2,
+        "bullets": {"PowerChat": 3, "OpenVibe": 4, "Amazon/analytics": 2, "Amazon/operations": 1, "Verizon Wireless": 2,
                     "founder": 2, "earlier": 1},
         "projects": ["openvibe-live", "openvibe-network", "openvibe-games", "irdr-autonomous-bot"],
     },
