@@ -7,6 +7,6 @@ on:
   pull_request:
 jobs:
   security:
-    uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@83c998b65424fb97e6f6de55ad9cc5981767e89c
+    uses: OpenVibers/OpenVibe.Shared/.github/workflows/security.yml@e80c595ff3d4bc46b7e0f41fdb040b985885cb30
     with:
       audit-fail-level: none   # report only until fixed: astro has a critical advisory whose fix is a semver-major (astro 7)
